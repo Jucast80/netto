@@ -163,12 +163,12 @@
             supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qeHluY2J0bHd2bnJsYnZycG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNjU0MjIsImV4cCI6MjA4Njg0MTQyMn0.JTQ-sduHbjIetsurB7gGIHEscCHGAIKtU3HMoKg4hw8'
         };
 
-        let supabase;
+        let supabaseClient;
         let currentUser = null;
 
         try {
             if (!window.supabase) throw new Error("Tu navegador o red está bloqueando la conexión a la base de datos (Supabase). Por favor, usa otra conexión o desactiva tu escudo de privacidad/DNS.");
-            supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+            supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
         } catch (e) {
             document.addEventListener("DOMContentLoaded", () => {
                 const lv = document.getElementById('loading-view');
@@ -193,7 +193,7 @@
         }
 
         async function init() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 document.getElementById('user-email-display').textContent = currentUser.email;
@@ -207,7 +207,7 @@
 
         async function checkActiveSubscription() {
             if (!currentUser) return;
-            const { data } = await supabase.from('suscripciones').select('estado').eq('user_id', currentUser.id).maybeSingle();
+            const { data } = await supabaseClient.from('suscripciones').select('estado').eq('user_id', currentUser.id).maybeSingle();
             if (data && (data.estado === 'activa' || data.estado === 'trial')) {
                 document.getElementById('active-sub-banner').classList.remove('hidden');
             }
@@ -236,7 +236,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
             if (error) {
                 errBox.textContent = 'Credenciales incorrectas. Verifica tu email y contraseña.';
@@ -250,7 +250,7 @@
 
         // AUTH: Logout
         document.getElementById('logout-btn').addEventListener('click', async () => {
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             currentUser = null;
             document.getElementById('login-form').reset();
             showView('auth');
@@ -279,7 +279,7 @@
 
             try {
                 // Obtener sesión actual (JWT token) para autorizar la petición si hiciera falta
-                const { data: { session } } = await supabase.auth.getSession();
+                const { data: { session } } = await supabaseClient.auth.getSession();
                 
                 // Llamar a Edge Function
                 const response = await fetch(`${CONFIG.supabaseUrl}/functions/v1/stripe-checkout`, {
