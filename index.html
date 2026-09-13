@@ -158,6 +158,9 @@
         };
 
         let supabase;
+        init().catch(e => {
+            document.getElementById('loading-view').innerHTML = '<div style="color:red; text-align:center; padding:20px;"><b>Error Asíncrono:</b><br>' + e.message + '</div>';
+        });
         try {
             if (!window.supabase) throw new Error("La librería de base de datos fue bloqueada por el navegador (¿adblocker?).");
             supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
