@@ -157,7 +157,13 @@
             supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qeHluY2J0bHd2bnJsYnZycG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNjU0MjIsImV4cCI6MjA4Njg0MTQyMn0.JTQ-sduHbjIetsurB7gGIHEscCHGAIKtU3HMoKg4hw8'
         };
 
-        const supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+        let supabase;
+        try {
+            if (!window.supabase) throw new Error("La librería de base de datos fue bloqueada por el navegador (¿adblocker?).");
+            supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+        } catch(e) {
+            document.getElementById('loading-view').innerHTML = '<div style="color:red; text-align:center; padding:20px;"><b>Error de carga:</b><br>' + e.message + '<br><br>Si usas un bloqueador de anuncios (AdBlock, Brave), pausa la protección para esta página.</div>';
+        }
         
         let currentUser = null;
 
