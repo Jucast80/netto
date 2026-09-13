@@ -555,9 +555,11 @@
                 const { data, error } = result;
 
                 if (error) {
-                    showAuthError(isSignUpMode
-                        ? 'No se pudo crear la cuenta. La contraseña debe tener al menos 8 caracteres.'
-                        : 'Credenciales incorrectas. Verifica tu email y contraseña.');
+                    let errMsg = error.message;
+                    if (errMsg.includes('already registered')) errMsg = 'Este correo ya está registrado.';
+                    if (errMsg.includes('rate limit')) errMsg = 'Demasiados intentos. Espera unos minutos.';
+                    
+                    showAuthError(isSignUpMode ? errMsg : 'Credenciales incorrectas. Verifica tu email y contraseña.');
                     btn.disabled = false;
                     btn.textContent = 'Continuar';
                 } else if (isSignUpMode && !data.session) {
