@@ -20,8 +20,14 @@
             }
         }
     </script>
-    <!-- Supabase JS -->
+    <!-- Supabase JS con Fallback -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Si falló el primer CDN por un adblocker, intentamos otro
+        if (!window.supabase) {
+            document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\\/script>');
+        }
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col items-center py-10 px-4">
 
@@ -158,17 +164,17 @@
         };
 
         let supabase;
-        init().catch(e => {
-            document.getElementById('loading-view').innerHTML = '<div style="color:red; text-align:center; padding:20px;"><b>Error Asíncrono:</b><br>' + e.message + '</div>';
-        });
-        try {
-            if (!window.supabase) throw new Error("La librería de base de datos fue bloqueada por el navegador (¿adblocker?).");
-            supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
-        } catch(e) {
-            document.getElementById('loading-view').innerHTML = '<div style="color:red; text-align:center; padding:20px;"><b>Error de carga:</b><br>' + e.message + '<br><br>Si usas un bloqueador de anuncios (AdBlock, Brave), pausa la protección para esta página.</div>';
-        }
-        
         let currentUser = null;
+
+        try {
+            if (!window.supabase) throw new Error("Tu navegador o red está bloqueando la conexión a la base de datos (Supabase). Por favor, usa otra conexión o desactiva tu escudo de privacidad/DNS.");
+            supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+        } catch (e) {
+            document.addEventListener("DOMContentLoaded", () => {
+                const lv = document.getElementById('loading-view');
+                if (lv) lv.innerHTML = '<div style="color:red; text-align:center; padding:20px; font-weight:bold;">Error Crítico:<br>' + e.message + '</div>';
+            });
+        }
 
         // Elementos de la UI
         const views = {
@@ -178,8 +184,12 @@
         };
 
         function showView(viewName) {
-            Object.values(views).forEach(v => v.classList.add('hidden'));
+            Object.values(views).forEach(v => {
+                v.classList.add('hidden');
+                v.style.display = 'none';
+            });
             views[viewName].classList.remove('hidden');
+            views[viewName].style.display = viewName === 'loading' ? 'flex' : 'block';
         }
 
         async function init() {
