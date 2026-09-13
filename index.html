@@ -682,9 +682,10 @@
                 b.classList.add('opacity-50');
             });
 
+            // Preparar URLs de retorno dinámicas (sirve para local y github pages)
             const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace(/\/$/, '');
-            const successUrl = `${baseUrl}/success.html?redirect=stripe`;
-            const cancelUrl = `${baseUrl}/index.html`;
+            const successUrl = `${baseUrl}/success.html`;
+            const cancelUrl = `${baseUrl}/`;
 
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
