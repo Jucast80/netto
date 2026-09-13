@@ -66,6 +66,16 @@
                         Continuar
                     </button>
                 </form>
+                    <button type="button" id="google-login-btn" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center mt-3">
+                        <svg class="w-5 h-5 mr-3" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
+                        Continuar con Google
+                    </button>
+                </form>
                 <p class="text-center text-sm text-gray-500 mt-6">
                     Inicia sesión con la misma cuenta que usas en la app de Netto.
                 </p>
@@ -98,46 +108,51 @@
                         <span class="text-5xl font-extrabold tracking-tight">9.99€</span>
                         <span class="ml-1 text-xl font-medium text-gray-500">/mes</span>
                     </div>
-                    <p class="mt-4 text-gray-500 text-sm">Autónomo Básico</p>
-                    <ul role="list" class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-700">Escáner IA: 50 Facturas/mes</span></li>
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-700">Asesor IA: 5 Consultas/día</span></li>
+                    <p class="mt-2 text-sm text-gray-500">Autónomo Básico</p>
+                    <ul class="mt-8 space-y-4 flex-1">
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: 50 Facturas/mes</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA: 5 Consultas/día</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Previsión de IVA e IRPF real</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Conciliación Bancaria por PDF</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Sincronización a Drive (Manual)</li>
                     </ul>
                     <button onclick="checkout('basico')" class="plan-btn mt-8 block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors">Elegir Esencial</button>
                 </div>
 
-                <!-- Pro (Popular) -->
-                <div class="bg-cardDark text-white rounded-3xl p-8 border-2 border-brand shadow-2xl flex flex-col relative transform md:-translate-y-4">
-                    <div class="absolute top-0 inset-x-0 flex justify-center -mt-4">
-                        <span class="bg-brand text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">Más Popular</span>
+                <!-- Pro -->
+                <div class="bg-gray-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col relative transform scale-105 z-10 border-2 border-brand">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest">
+                        MÁS POPULAR
                     </div>
-                    <h3 class="text-gray-400 font-bold text-sm tracking-widest uppercase mt-2">Pro / IA</h3>
+                    <h3 class="text-gray-400 font-bold text-sm tracking-widest uppercase">Pro / Inteligencia Artificial</h3>
                     <div class="mt-4 flex items-baseline">
-                        <span class="text-5xl font-extrabold tracking-tight text-white">19.99€</span>
+                        <span class="text-5xl font-extrabold tracking-tight">19.99€</span>
                         <span class="ml-1 text-xl font-medium text-gray-400">/mes</span>
                     </div>
-                    <p class="mt-4 text-gray-400 text-sm">Gestión Inteligente Completa</p>
-                    <ul role="list" class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-300">Escáner IA: Ilimitado*</span></li>
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-300">Asesor Fiscal 24/7 (Ilimitado*)</span></li>
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-300">Drive Automático y Gestoría</span></li>
+                    <p class="mt-2 text-sm text-gray-400">Gestión Inteligente</p>
+                    <ul class="mt-8 space-y-4 flex-1">
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: Ilimitado*</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA Fiscal 24/7 (Ilimitado*)</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Drive Automático (Día 5)</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Envío a Gestoría en 1 Clic</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Libro de Bienes y Amortizaciones</li>
                     </ul>
-                    <button onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-4 px-4 rounded-xl text-center transition-colors text-lg shadow-lg">Comenzar Prueba Gratis</button>
+                    <button onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30">Comenzar Prueba Gratis</button>
                 </div>
 
                 <!-- VIP -->
-                <div class="bg-amber-50 rounded-3xl p-8 border border-amber-200 shadow-sm flex flex-col relative">
-                    <h3 class="text-amber-800 font-bold text-sm tracking-widest uppercase">VIP Embajadores</h3>
+                <div class="bg-amber-50 rounded-3xl p-8 border-2 border-amber-200 shadow-sm flex flex-col relative">
+                    <h3 class="text-amber-700 font-bold text-sm tracking-widest uppercase">Programa Embajadores VIP</h3>
                     <div class="mt-4 flex items-baseline text-gray-900">
                         <span class="text-5xl font-extrabold tracking-tight text-amber-600">11.11€</span>
-                        <span class="ml-1 text-xl font-medium text-amber-700">/mes</span>
+                        <span class="ml-1 text-xl font-semibold text-gray-500">/mes</span>
                     </div>
-                    <p class="mt-4 text-amber-700 text-sm">Tarifa Vitalicia (Plazas Limitadas)</p>
-                    <ul role="list" class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-800 font-medium">Todo el poder del Plan Pro</span></li>
-                        <li class="flex items-center space-x-3"><svg class="flex-shrink-0 w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span class="text-gray-700">Precio blindado para siempre</span></li>
+                    <p class="mt-2 text-sm text-amber-700 font-medium">Tarifa Vitalicia (Plazas Limitadas)</p>
+                    <ul class="mt-8 space-y-4 flex-1">
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo el poder del Plan Pro incluido al instante.</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>*Precio blindado para siempre (mientras no canceles).</li>
                     </ul>
-                    <button onclick="checkout('vip')" class="plan-btn mt-8 block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">Asegurar Plaza VIP</button>
+                    <button onclick="checkout('vip')" class="plan-btn mt-8 block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">Asegurar mi plaza VIP</button>
                 </div>
             </div>
             
@@ -245,6 +260,27 @@
                 btn.innerHTML = 'Continuar';
             } else {
                 init();
+            }
+        });
+
+        document.getElementById('google-login-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('google-login-btn');
+            const errBox = document.getElementById('auth-error');
+            btn.disabled = true;
+            btn.innerHTML = 'Cargando...';
+            
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + window.location.pathname
+                }
+            });
+
+            if (error) {
+                errBox.textContent = 'Error al iniciar sesión con Google.';
+                errBox.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = 'Continuar con Google';
             }
         });
 
