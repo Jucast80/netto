@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de suscripciones de Netto – Gestión inteligente para autónomos.">
+    <!-- CSP: bloquea XSS y recursos externos no autorizados -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
+    <!-- Anti-clickjacking -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
     <title>Suscripciones | Netto</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,9 +28,10 @@
     <!-- Supabase JS con Fallback -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Si falló el primer CDN por un adblocker, intentamos otro
         if (!window.supabase) {
-            document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\\/script>');
+            const s = document.createElement('script');
+            s.src = 'https://unpkg.com/@supabase/supabase-js@2';
+            document.head.appendChild(s);
         }
     </script>
 </head>
@@ -48,25 +54,33 @@
             <p class="text-gray-500 font-medium">Cargando...</p>
         </div>
 
-        <!-- AUTH VIEW (Login) -->
+        <!-- AUTH VIEW (Login / Registro) -->
         <div id="auth-view" class="hidden max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div class="p-8">
                 <h2 id="auth-title" class="text-2xl font-bold text-center mb-6">Inicia Sesión</h2>
-                <form id="login-form" class="space-y-4">
+                
+                <!-- ÚNICO FORM: solo el botón submit está dentro del form -->
+                <form id="login-form" class="space-y-4" novalidate>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
-                        <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all" placeholder="tu@email.com">
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required autocomplete="email"
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
+                               placeholder="tu@email.com" maxlength="254">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
-                        <input type="password" id="password" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all" placeholder="••••••••">
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password"
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
+                               placeholder="••••••••" maxlength="128">
                     </div>
-                    <div id="auth-error" class="hidden bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium"></div>
                     
+                    <div id="auth-error" class="hidden bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium" role="alert" aria-live="polite"></div>
+                    <div id="auth-success" class="hidden bg-green-50 text-green-700 text-sm p-3 rounded-lg font-medium" role="status" aria-live="polite"></div>
+
                     <div class="flex items-start space-x-2 mt-4 mb-2">
                         <input type="checkbox" id="terms-checkbox" class="w-4 h-4 mt-0.5 text-brand rounded focus:ring-brand border-gray-300 cursor-pointer">
                         <label for="terms-checkbox" class="text-xs text-gray-600 cursor-pointer leading-tight">
-                            He leído y acepto los <a href="#" onclick="event.preventDefault(); showLegalModal('terms')" class="text-brand underline font-semibold">Términos del Servicio</a> y la <a href="#" onclick="event.preventDefault(); showLegalModal('privacy')" class="text-brand underline font-semibold">Política de Privacidad</a>.
+                            He leído y acepto los <a href="#" id="link-terms" class="text-brand underline font-semibold">Términos del Servicio</a> y la <a href="#" id="link-privacy" class="text-brand underline font-semibold">Política de Privacidad</a>.
                         </label>
                     </div>
 
@@ -74,9 +88,10 @@
                         Continuar
                     </button>
                 </form>
-                
+
+                <!-- Google fuera del form pero DENTRO de la tarjeta -->
                 <button type="button" id="google-login-btn" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center mt-3">
-                    <svg class="w-5 h-5 mr-3" viewBox="0 0 48 48">
+                    <svg class="w-5 h-5 mr-3" viewBox="0 0 48 48" aria-hidden="true">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/>
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
@@ -84,14 +99,14 @@
                     </svg>
                     Continuar con Google
                 </button>
-                
+
                 <div class="mt-6 text-center text-sm">
-                    <span id="auth-switch-text" class="text-gray-600">¿No tienes cuenta?</span> 
+                    <span id="auth-switch-text" class="text-gray-600">¿No tienes cuenta?</span>
                     <button type="button" id="toggle-auth-mode" class="text-brand font-bold hover:underline ml-1">Regístrate</button>
                 </div>
-                
-                <p class="text-center text-xs text-gray-400 mt-6 px-2">
-                    Usa la misma cuenta si ya estás registrado en la app móvil.
+
+                <p class="text-center text-xs text-gray-400 mt-4 px-2">
+                    Usa la misma cuenta si ya estás registrado en la app móvil de Netto.
                 </p>
             </div>
         </div>
@@ -100,25 +115,25 @@
         <div id="plans-view" class="hidden">
             <div class="flex justify-between items-center mb-8 px-2">
                 <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center" aria-hidden="true">
                         <svg class="w-4 h-4 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                     </div>
-                    <span id="user-email-display" class="font-medium text-gray-700">usuario@email.com</span>
+                    <span id="user-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[200px]">usuario@email.com</span>
                 </div>
                 <button id="logout-btn" class="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
             </div>
 
-            <!-- Active Subscription Banner (Hidden by default) -->
-            <div id="active-sub-banner" class="hidden mb-8 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+            <!-- Active Subscription Banner -->
+            <div id="active-sub-banner" class="hidden mb-8 bg-green-50 border border-green-200 rounded-xl p-6 text-center" role="status">
                 <h3 class="text-green-800 font-bold text-lg mb-2">✅ Ya tienes una suscripción activa</h3>
                 <p class="text-green-700 mb-4">No necesitas contratar nada más. Ya puedes volver a la aplicación.</p>
             </div>
 
             <!-- Toggle Anual/Mensual -->
             <div class="flex justify-center mb-10">
-                <div class="bg-white border border-gray-200 p-1.5 rounded-full inline-flex items-center shadow-sm">
-                    <button id="toggle-monthly" class="px-6 py-2.5 rounded-full text-sm font-bold bg-brand text-white shadow-md transition-all">Mensual</button>
-                    <button id="toggle-annual" class="px-6 py-2.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 transition-all">Anual (-2 Meses)</button>
+                <div class="bg-white border border-gray-200 p-1.5 rounded-full inline-flex items-center shadow-sm" role="group" aria-label="Seleccionar período de facturación">
+                    <button id="toggle-monthly" class="px-6 py-2.5 rounded-full text-sm font-bold bg-brand text-white shadow-md transition-all" aria-pressed="true">Mensual</button>
+                    <button id="toggle-annual" class="px-6 py-2.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 transition-all" aria-pressed="false">Anual (-2 Meses)</button>
                 </div>
             </div>
 
@@ -133,11 +148,11 @@
                     </div>
                     <p class="mt-2 text-sm text-gray-500">Autónomo Básico</p>
                     <ul class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: 50 Facturas/mes</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA: 5 Consultas/día</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Previsión de IVA e IRPF real</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Conciliación Bancaria por PDF</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Sincronización a Drive (Manual)</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: 50 Facturas/mes</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA: 5 Consultas/día</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Previsión de IVA e IRPF real</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Conciliación Bancaria por PDF</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Sincronización a Drive (Manual)</li>
                     </ul>
                     <button onclick="checkout('basico')" class="plan-btn mt-8 block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors">Elegir Esencial</button>
                 </div>
@@ -155,11 +170,11 @@
                     </div>
                     <p class="mt-2 text-sm text-gray-400">Gestión Inteligente</p>
                     <ul class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: Ilimitado*</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA Fiscal 24/7 (Ilimitado*)</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Drive Automático (Día 5)</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Envío a Gestoría en 1 Clic</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Libro de Bienes y Amortizaciones</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Escáner IA: Ilimitado*</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Asesor IA Fiscal 24/7 (Ilimitado*)</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Drive Automático (Día 5)</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Envío a Gestoría en 1 Clic</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Libro de Bienes y Amortizaciones</li>
                     </ul>
                     <button onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30">Comenzar Prueba Gratis</button>
                 </div>
@@ -167,10 +182,10 @@
                 <!-- VIP -->
                 <div class="bg-amber-50 rounded-3xl p-8 border-2 border-amber-200 shadow-sm flex flex-col relative">
                     <div class="flex items-center space-x-2 mb-2">
-                        <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         <h3 class="text-amber-700 font-bold text-sm tracking-widest uppercase">Programa Embajadores VIP</h3>
                     </div>
-                    
+
                     <div class="inline-block bg-amber-100/50 border border-amber-400 px-3 py-1.5 rounded-lg mb-4 mt-2">
                         <span id="vip-counter" class="text-amber-600 font-bold text-xs">Cargando plazas...</span>
                     </div>
@@ -181,13 +196,13 @@
                     </div>
                     <p class="mt-2 text-sm text-amber-700 font-medium">Tarifa Vitalicia (Plazas Limitadas)</p>
                     <ul class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo el poder del Plan Pro incluido al instante.</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>*Precio blindado para siempre (mientras no canceles).</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo el poder del Plan Pro incluido al instante.</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>*Precio blindado para siempre (mientras no canceles).</li>
                     </ul>
                     <button id="vip-btn" onclick="checkout('vip')" class="plan-btn mt-8 block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">Asegurar mi plaza VIP</button>
                 </div>
             </div>
-            
+
             <p class="text-center text-xs text-gray-400 mt-8 max-w-3xl mx-auto px-4 pb-12">
                 *Sujeto a Política de Uso Justo (Fair Use). El uso ilimitado del Asesor IA y el Escáner cuenta con topes técnicos de seguridad diaria (100 consultas/día) para prevenir usos automatizados, garantizando un servicio ininterrumpido para el uso humano normal. Pagos procesados de forma 100% segura por Stripe. Cancela en cualquier momento.
             </p>
@@ -195,17 +210,17 @@
     </div>
 
     <!-- LEGAL MODAL -->
-    <div id="legal-modal" class="fixed inset-0 z-50 hidden">
+    <div id="legal-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeLegalModal()"></div>
-        <div class="absolute bottom-0 left-0 right-0 md:top-10 md:bottom-10 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-2xl bg-white rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] md:max-h-none overflow-hidden transition-transform transform translate-y-full" id="legal-modal-content">
+        <div class="absolute bottom-0 left-0 right-0 md:top-10 md:bottom-10 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-2xl bg-white rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transition-transform duration-300 transform translate-y-full" id="legal-modal-content">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
                 <h2 id="legal-modal-title" class="text-xl font-bold text-gray-900">Términos</h2>
-                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Cerrar">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <div id="legal-modal-body" class="p-6 overflow-y-auto flex-1 bg-gray-50/50">
-                <!-- Content injected via JS -->
+                <!-- Content injected via JS (contenido estático fijo, sin XSS) -->
             </div>
             <div class="p-6 border-t border-gray-100 bg-white">
                 <button onclick="closeLegalModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">
@@ -217,11 +232,9 @@
 
     <script>
         // ==========================================
-        // ⚠️ CONFIGURACIÓN: Reemplaza estos valores
+        // CONFIG
         // ==========================================
         const CONFIG = {
-            // IDs de Precios de Stripe (Empiezan por price_)
-            // DEBES CAMBIAR ESTO CUANDO CRES TUS PRODUCTOS EN STRIPE
             prices: {
                 basico_mensual: 'price_1UFFsr2OTeTbwGOB33OLwa46',
                 basico_anual: 'price_1UFFss2OTeTbwGOBBdYI76UL',
@@ -229,327 +242,429 @@
                 pro_anual: 'price_1UFFsu2OTeTbwGOBdypAxZZm',
                 vip_mensual: 'price_1UFFsv2OTeTbwGOBMquufsp3'
             },
+            // Lista blanca de planIds válidos permitidos vía URL param
+            validPlans: ['basico', 'pro', 'vip'],
             supabaseUrl: 'https://mjxyncbtlwvnrlbvrpmq.supabase.co',
             supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qeHluY2J0bHd2bnJsYnZycG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNjU0MjIsImV4cCI6MjA4Njg0MTQyMn0.JTQ-sduHbjIetsurB7gGIHEscCHGAIKtU3HMoKg4hw8'
         };
 
-        const LEGAL_TEXTS = {
-            terms: `
-                <h3 class="font-bold text-lg mb-2 text-gray-900">1. Naturaleza del Servicio</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Netto es una herramienta tecnológica de asistencia para la gestión administrativa y contable. Netto NO es una asesoría fiscal, contable o legal humana certificada. Toda la información, previsiones de impuestos (IVA, IRPF) y sugerencias proporcionadas por el "Asesor IA" o los algoritmos de la aplicación son meramente orientativas. El usuario es el único y exclusivo responsable de la veracidad de los datos introducidos y de la presentación final de sus obligaciones tributarias ante la Agencia Tributaria.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">2. Limitación de Responsabilidad</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Netto no se hace responsable de posibles sanciones, recargos, errores de cálculo o problemas legales derivados de la presentación de impuestos basados en la información de la aplicación. Recomendamos siempre revisar los datos con un profesional cualificado. El uso del sistema de escáner OCR mediante IA puede contener errores de interpretación; es absoluta responsabilidad del usuario verificar manualmente los montos, fechas y NIFs escaneados antes de guardarlos.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">3. Política de Uso Razonable (Fair Use Policy)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">El uso de las funciones "Escáner IA Ilimitado" y "Asesor IA Ilimitado" en el Plan Pro está sujeto a límites de seguridad técnica (500 escaneos por mes y 100 consultas diarias, respectivamente) para prevenir fraudes, minería de datos, uso automatizado mediante bots o el uso de una cuenta individual por parte de agencias o gestorías con múltiples clientes. Al superar este límite razonable, diseñado para garantizar un servicio ininterrumpido para el uso humano normal, la cuenta podrá ser temporalmente pausada en dichas funciones hasta el siguiente ciclo.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">4. Suscripciones y Renuncia Expresa al Desistimiento (B2C)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Al tratarse de un servicio digital con acceso inmediato a su contenido y herramientas, el usuario consiente de forma expresa que la ejecución del contrato comience en el momento de la suscripción. Por consiguiente, de conformidad con la normativa europea de protección al consumidor (Directiva 93/13/CEE), el usuario reconoce y acepta explícitamente que PIERDE SU DERECHO DE DESISTIMIENTO de 14 días en el instante en que accede al servicio. Todos los planes son de pago recurrente y no tienen permanencia. La cancelación detiene el cobro del siguiente ciclo sin reembolsos prorrateados.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">5. Carga de Documentos Bancarios</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">La conciliación bancaria se realiza mediante la subida manual de extractos bancarios en PDF por parte del usuario. Netto no se conecta automáticamente a las cuentas bancarias del usuario, garantizando así que no tenemos acceso a credenciales bancarias.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">6. Disponibilidad del Servicio</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Netto no garantiza una disponibilidad del 100% del servicio y se exime de responsabilidad por pérdidas de datos derivadas de fallos en servicios de terceros.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">7. Resolución de Litigios (UE) y Reportes (DSA)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Conforme al Art. 14.1 del Reglamento (UE) 524/2013, la Comisión Europea facilita una plataforma de resolución de litigios en línea: http://ec.europa.eu/consumers/odr/. Para reportar contenido ilegal o infracciones de propiedad intelectual según la Ley de Servicios Digitales (DSA), el usuario puede usar la función "Reportar contenido (DSA)" en los ajustes de la aplicación. Netto no está obligada a participar en un procedimiento de resolución de litigios ante una junta arbitral de consumo.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">8. Sincronización con Google Drive</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Al habilitar la Sincronización Automática con Google Drive, usted autoriza a Netto App a subir y gestionar los documentos de facturación en su cuenta de Google. Netto App realizará los mejores esfuerzos para asegurar que sus documentos se sincronicen correctamente; sin embargo, no se hace responsable de fallos de sincronización debido a cambios de contraseña en su cuenta de Google, revocación de permisos, bloqueos por parte de los servidores de Google o cualquier otra causa externa a la aplicación.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">9. Facturación Electrónica y Reglamento SIF (Veri*Factu)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Netto genera facturas aplicando el encadenamiento criptográfico (Huellas SIF) y manteniendo un registro de eventos inalterable, cumpliendo con los requisitos de integridad y trazabilidad exigidos por el Real Decreto 1007/2023. No obstante, Netto opera exclusivamente bajo la modalidad de «Sistema Informático No Veri*Factu». Esto significa que la aplicación NO transmite de forma automática ni en tiempo real las facturas a los servidores de la Agencia Tributaria (AEAT). Es responsabilidad única y exclusiva del usuario descargar, declarar y presentar sus libros de facturación ante la AEAT o facilitarlos en caso de requerimiento fiscal.</p>
-            `,
-            privacy: `
-                <h3 class="font-bold text-lg mb-2 text-gray-900">1. Responsable del Tratamiento</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Identidad: Juan C. Sierra T.<br>Contacto Legal y DPO (Delegado de Protección de Datos): info@nettoapp.eu<br>Registro de Actividades de Tratamiento (RAT): Mantenemos un registro interno de actividades conforme al Art. 30 del RGPD.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">2. Finalidad y Base Legitimadora (Arts. 13 y 14 RGPD)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Recopilamos información básica (email, nombre) y financiera (facturas, NIF, clientes).<br>- Base Legitimadora 1 (Ejecución de contrato): Para proveer el servicio principal de digitalización, cálculo de impuestos y alertas.<br>- Base Legitimadora 2 (Obligación Legal): Mantenimiento de registros fiscales a efectos de cumplimiento de la normativa de facturación antifraude (RD 1007/2023). Netto no comparte ni transfiere de forma automatizada estos registros con la Administración Pública; la custodia de los datos se realiza a nivel de usuario.<br>- Base Legitimadora 3 (Consentimiento Explícito): Sincronización voluntaria con Google Drive (token con alcance restringido a "Netto_App_Backups").</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">3. Integración con Inteligencia Artificial (AI Act) y Asistencia Proactiva</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Para ofrecer lectura de facturas (OCR) y asistencia interactiva, Netto procesa información a través de proveedores de IA líderes.<br>Asistencia Proactiva mediante IA: Para ofrecer un servicio de "Coaching de Negocio" personalizado, Netto utiliza sistemas de IA que analizan metadatos de uso de la app (volumen de facturas, estado de sincronización con Google Drive, configuración de gestoría, etc.). Este análisis se emplea EXCLUSIVAMENTE para generar consejos automatizados en la app que ayuden a optimizar su negocio, sin comprometer datos personales sensibles.<br>Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos. En la app, las interacciones con IA están explícitamente etiquetadas para evitar confusión.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">4. Plazos de Conservación</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">Los datos financieros y fiscales se retendrán durante un plazo de 4 años desde el final del ejercicio fiscal correspondiente, para cumplir con las obligaciones de la Ley General Tributaria de España. Tras este periodo, o en caso de eliminación de cuenta por el usuario, los datos serán destruidos o anonimizados irreversiblemente.</p>
-
-                <h3 class="font-bold text-lg mb-2 text-gray-900">5. Derechos del Usuario (ARCO+)</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">El usuario tiene derecho de Acceso, Rectificación, Cancelación, Oposición, y Portabilidad de sus datos. Puede ejercer estos derechos solicitando la eliminación total de su cuenta desde los Ajustes, lo que destruirá permanentemente sus registros de nuestros servidores, o escribiendo al correo legal indicado.</p>
-            `
+        // ==========================================
+        // TEXTOS LEGALES (estáticos, sin HTML externo)
+        // ==========================================
+        const LEGAL_SECTIONS = {
+            terms: [
+                { title: '1. Naturaleza del Servicio', text: 'Netto es una herramienta tecnológica de asistencia para la gestión administrativa y contable. Netto NO es una asesoría fiscal, contable o legal humana certificada. Toda la información, previsiones de impuestos (IVA, IRPF) y sugerencias proporcionadas por el "Asesor IA" o los algoritmos de la aplicación son meramente orientativas. El usuario es el único y exclusivo responsable de la veracidad de los datos introducidos y de la presentación final de sus obligaciones tributarias ante la Agencia Tributaria.' },
+                { title: '2. Limitación de Responsabilidad', text: 'Netto no se hace responsable de posibles sanciones, recargos, errores de cálculo o problemas legales derivados de la presentación de impuestos basados en la información de la aplicación. Recomendamos siempre revisar los datos con un profesional cualificado. El uso del sistema de escáner OCR mediante IA puede contener errores de interpretación; es absoluta responsabilidad del usuario verificar manualmente los montos, fechas y NIFs escaneados antes de guardarlos.' },
+                { title: '3. Política de Uso Razonable (Fair Use Policy)', text: 'El uso de las funciones "Escáner IA Ilimitado" y "Asesor IA Ilimitado" en el Plan Pro está sujeto a límites de seguridad técnica (500 escaneos por mes y 100 consultas diarias, respectivamente) para prevenir fraudes, minería de datos, uso automatizado mediante bots o el uso de una cuenta individual por parte de agencias o gestorías con múltiples clientes.' },
+                { title: '4. Suscripciones y Renuncia Expresa al Desistimiento (B2C)', text: 'Al tratarse de un servicio digital con acceso inmediato a su contenido y herramientas, el usuario consiente de forma expresa que la ejecución del contrato comience en el momento de la suscripción. Por consiguiente, de conformidad con la normativa europea de protección al consumidor (Directiva 93/13/CEE), el usuario reconoce y acepta explícitamente que PIERDE SU DERECHO DE DESISTIMIENTO de 14 días en el instante en que accede al servicio. Todos los planes son de pago recurrente y no tienen permanencia. La cancelación detiene el cobro del siguiente ciclo sin reembolsos prorrateados.' },
+                { title: '5. Carga de Documentos Bancarios', text: 'La conciliación bancaria se realiza mediante la subida manual de extractos bancarios en PDF por parte del usuario. Netto no se conecta automáticamente a las cuentas bancarias del usuario, garantizando así que no tenemos acceso a credenciales bancarias.' },
+                { title: '6. Disponibilidad del Servicio', text: 'Netto no garantiza una disponibilidad del 100% del servicio y se exime de responsabilidad por pérdidas de datos derivadas de fallos en servicios de terceros.' },
+                { title: '7. Resolución de Litigios (UE) y Reportes (DSA)', text: 'Conforme al Art. 14.1 del Reglamento (UE) 524/2013, la Comisión Europea facilita una plataforma de resolución de litigios en línea: http://ec.europa.eu/consumers/odr/. Netto no está obligada a participar en un procedimiento de resolución de litigios ante una junta arbitral de consumo.' },
+                { title: '8. Sincronización con Google Drive', text: 'Al habilitar la Sincronización Automática con Google Drive, usted autoriza a Netto App a subir y gestionar los documentos de facturación en su cuenta de Google. Netto App realizará los mejores esfuerzos para asegurar que sus documentos se sincronicen correctamente; sin embargo, no se hace responsable de fallos de sincronización por causas externas.' },
+                { title: '9. Facturación Electrónica y Reglamento SIF (Veri*Factu)', text: 'Netto genera facturas aplicando el encadenamiento criptográfico (Huellas SIF) cumpliendo con los requisitos del Real Decreto 1007/2023. No obstante, Netto opera bajo la modalidad «Sistema Informático No Veri*Factu». La aplicación NO transmite facturas automáticamente a la AEAT. Es responsabilidad del usuario descargar y presentar sus libros de facturación ante la AEAT.' },
+            ],
+            privacy: [
+                { title: '1. Responsable del Tratamiento', text: 'Identidad: Juan C. Sierra T.\nContacto Legal y DPO: info@nettoapp.eu\nRegistro de Actividades de Tratamiento (RAT): Mantenemos un registro interno conforme al Art. 30 del RGPD.' },
+                { title: '2. Finalidad y Base Legitimadora (Arts. 13 y 14 RGPD)', text: 'Recopilamos información básica (email, nombre) y financiera (facturas, NIF, clientes).\n- Base 1 (Ejecución de contrato): Para proveer el servicio de digitalización y cálculo de impuestos.\n- Base 2 (Obligación Legal): Mantenimiento de registros fiscales (RD 1007/2023). Netto no transfiere estos registros a la Administración Pública automáticamente.\n- Base 3 (Consentimiento): Sincronización voluntaria con Google Drive.' },
+                { title: '3. Integración con Inteligencia Artificial (AI Act)', text: 'Para ofrecer lectura de facturas (OCR) y asistencia interactiva, Netto procesa información a través de proveedores de IA líderes. Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos.' },
+                { title: '4. Plazos de Conservación', text: 'Los datos financieros y fiscales se retendrán durante 4 años desde el final del ejercicio fiscal correspondiente, para cumplir con la Ley General Tributaria de España. Tras este periodo, o en caso de eliminación de cuenta, los datos serán destruidos o anonimizados irreversiblemente.' },
+                { title: '5. Derechos del Usuario (ARCO+)', text: 'El usuario tiene derecho de Acceso, Rectificación, Cancelación, Oposición y Portabilidad. Puede ejercer estos derechos eliminando su cuenta desde los Ajustes de la app, o escribiendo a info@nettoapp.eu.' },
+            ]
         };
 
-        let supabaseClient;
+        // ==========================================
+        // SUPABASE INIT
+        // ==========================================
+        let supabaseClient = null;
         let currentUser = null;
 
-        try {
-            if (!window.supabase) throw new Error("Tu navegador o red está bloqueando la conexión a la base de datos (Supabase). Por favor, usa otra conexión o desactiva tu escudo de privacidad/DNS.");
-            supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
-        } catch (e) {
-            document.addEventListener("DOMContentLoaded", () => {
-                const lv = document.getElementById('loading-view');
-                if (lv) lv.innerHTML = '<div style="color:red; text-align:center; padding:20px; font-weight:bold;">Error Crítico:<br>' + e.message + '</div>';
+        function initSupabase() {
+            if (!window.supabase) {
+                showCriticalError('Tu navegador o red está bloqueando la conexión necesaria. Desactiva escudos de privacidad/DNS o prueba otra red.');
+                return false;
+            }
+            supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, {
+                auth: { persistSession: true, detectSessionInUrl: true }
             });
+            return true;
         }
 
-        // Elementos de la UI
-        const views = {
-            loading: document.getElementById('loading-view'),
-            auth: document.getElementById('auth-view'),
-            plans: document.getElementById('plans-view')
-        };
+        function showCriticalError(msg) {
+            const lv = document.getElementById('loading-view');
+            if (lv) lv.innerHTML = `<div class="text-center p-8"><div class="text-red-500 text-4xl mb-4">⚠️</div><p class="font-bold text-red-700 text-lg">Error de Conexión</p><p class="text-gray-600 mt-2 max-w-sm">${msg}</p></div>`;
+        }
+
+        // ==========================================
+        // VISTA / UI
+        // ==========================================
+        const views = {};
 
         function showView(viewName) {
-            Object.values(views).forEach(v => {
-                v.classList.add('hidden');
-                v.style.display = 'none';
+            ['loading', 'auth', 'plans'].forEach(v => {
+                const el = views[v] || document.getElementById(v + '-view');
+                if (!views[v]) views[v] = el;
+                if (el) {
+                    el.classList.add('hidden');
+                    el.style.display = 'none';
+                }
             });
-            views[viewName].classList.remove('hidden');
-            views[viewName].style.display = viewName === 'loading' ? 'flex' : 'block';
+            const target = views[viewName] || document.getElementById(viewName + '-view');
+            if (target) {
+                target.classList.remove('hidden');
+                target.style.display = viewName === 'loading' ? 'flex' : 'block';
+            }
         }
 
+        // ==========================================
+        // AUTH: helpers para mensajes
+        // ==========================================
+        function showAuthError(msg) {
+            const el = document.getElementById('auth-error');
+            const suc = document.getElementById('auth-success');
+            el.textContent = msg;
+            el.classList.remove('hidden');
+            suc.classList.add('hidden');
+        }
+
+        function showAuthSuccess(msg) {
+            const el = document.getElementById('auth-success');
+            const err = document.getElementById('auth-error');
+            el.textContent = msg;
+            el.classList.remove('hidden');
+            err.classList.add('hidden');
+        }
+
+        function clearAuthMessages() {
+            document.getElementById('auth-error').classList.add('hidden');
+            document.getElementById('auth-success').classList.add('hidden');
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
         async function init() {
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                document.getElementById('user-email-display').textContent = currentUser.email;
-                await checkActiveSubscription();
-                await loadVipCounter();
-                showView('plans');
-                checkUrlIntent();
-            } else {
+            if (!supabaseClient) return;
+            showView('loading');
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                if (error) throw error;
+                if (session) {
+                    currentUser = session.user;
+                    document.getElementById('user-email-display').textContent = currentUser.email || '';
+                    await Promise.all([checkActiveSubscription(), loadVipCounter()]);
+                    showView('plans');
+                    checkUrlIntent();
+                } else {
+                    showView('auth');
+                }
+            } catch (e) {
+                console.error('[init] Error:', e);
+                // Si falla, mostramos el login en lugar de un spinner infinito
                 showView('auth');
             }
         }
 
+        // ==========================================
+        // CONTADOR VIP
+        // ==========================================
         async function loadVipCounter() {
             try {
                 const { data, error } = await supabaseClient.rpc('get_founder_count');
-                if (!error && data) {
-                    const count = Number(data.count || 0);
-                    const remaining = Math.max(0, 111 - count);
-                    const vipBtn = document.getElementById('vip-btn');
-                    if (remaining <= 0) {
-                        document.getElementById('vip-counter').innerText = '🔥 SOLD OUT - Cupo Lleno';
-                        vipBtn.innerText = '🔥 SOLD OUT';
+                if (error) throw error;
+                // La RPC devuelve el número directamente
+                const count = Number(data) || 0;
+                const remaining = Math.max(0, 111 - count);
+                const counterEl = document.getElementById('vip-counter');
+                const vipBtn = document.getElementById('vip-btn');
+                if (remaining <= 0) {
+                    if (counterEl) counterEl.textContent = '🔥 SOLD OUT - Cupo Lleno';
+                    if (vipBtn) {
+                        vipBtn.textContent = '🔥 SOLD OUT';
                         vipBtn.disabled = true;
                         vipBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    } else {
-                        document.getElementById('vip-counter').innerText = `🔥 Quedan ${remaining} de 111 plazas`;
                     }
+                } else {
+                    if (counterEl) counterEl.textContent = `🔥 Quedan ${remaining} de 111 plazas`;
                 }
             } catch (e) {
-                console.error("Error cargando contador VIP", e);
+                console.warn('[VIP Counter] No se pudo cargar:', e.message);
+                const counterEl = document.getElementById('vip-counter');
+                if (counterEl) counterEl.textContent = '🔥 Plazas disponibles';
             }
         }
 
+        // ==========================================
+        // SUBSCRIPCIÓN ACTIVA
+        // ==========================================
         async function checkActiveSubscription() {
             if (!currentUser) return;
-            const { data } = await supabaseClient.from('suscripciones').select('estado').eq('user_id', currentUser.id).maybeSingle();
-            if (data && (data.estado === 'activa' || data.estado === 'trial')) {
-                document.getElementById('active-sub-banner').classList.remove('hidden');
+            try {
+                const { data } = await supabaseClient
+                    .from('suscripciones')
+                    .select('estado')
+                    .eq('user_id', currentUser.id)
+                    .maybeSingle();
+                if (data && (data.estado === 'activa' || data.estado === 'trial')) {
+                    document.getElementById('active-sub-banner').classList.remove('hidden');
+                }
+            } catch (e) {
+                console.warn('[checkActiveSub] Error:', e.message);
             }
         }
 
-        // Si el usuario viene de la app y tocó un plan concreto (ej: ?plan=pro)
+        // ==========================================
+        // URL INTENT (whitelist de planes válidos)
+        // ==========================================
         function checkUrlIntent() {
             const urlParams = new URLSearchParams(window.location.search);
             const intentPlan = urlParams.get('plan');
-            if (intentPlan && CONFIG.prices[intentPlan]) {
-                // Auto checkout
+            // Solo ejecutamos checkout si el plan está en la lista blanca estricta
+            if (intentPlan && CONFIG.validPlans.includes(intentPlan)) {
                 checkout(intentPlan);
             }
         }
 
-        // LÓGICA DE MODALES LEGALES
+        // ==========================================
+        // MODALES LEGALES (sin innerHTML de datos externos)
+        // ==========================================
         function showLegalModal(type) {
+            const sections = LEGAL_SECTIONS[type];
+            if (!sections) return;
+
             const modal = document.getElementById('legal-modal');
             const content = document.getElementById('legal-modal-content');
-            
-            document.getElementById('legal-modal-title').innerText = type === 'terms' ? 'Términos de Servicio' : 'Política de Privacidad';
-            document.getElementById('legal-modal-body').innerHTML = LEGAL_TEXTS[type];
-            
+            const body = document.getElementById('legal-modal-body');
+            const titleEl = document.getElementById('legal-modal-title');
+
+            titleEl.textContent = type === 'terms' ? 'Términos de Servicio' : 'Política de Privacidad';
+
+            // Construimos el DOM de forma segura (sin innerHTML de datos externos)
+            body.innerHTML = '';
+            sections.forEach(section => {
+                const h3 = document.createElement('h3');
+                h3.className = 'font-bold text-base mb-2 text-gray-900 mt-4';
+                h3.textContent = section.title;
+
+                const p = document.createElement('p');
+                p.className = 'text-sm text-gray-600 mb-4 leading-relaxed whitespace-pre-line';
+                p.textContent = section.text;
+
+                body.appendChild(h3);
+                body.appendChild(p);
+            });
+
             modal.classList.remove('hidden');
-            // Timeout para permitir que el display:block surta efecto antes de la transición CSS
-            setTimeout(() => {
-                content.classList.remove('translate-y-full');
-            }, 10);
+            setTimeout(() => content.classList.remove('translate-y-full'), 10);
         }
 
         function closeLegalModal() {
             const modal = document.getElementById('legal-modal');
             const content = document.getElementById('legal-modal-content');
-            
             content.classList.add('translate-y-full');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300); // Esperar a la animación
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        let isSignUpMode = false;
-        document.getElementById('toggle-auth-mode').addEventListener('click', () => {
-            isSignUpMode = !isSignUpMode;
-            document.getElementById('auth-title').innerText = isSignUpMode ? 'Crear Cuenta' : 'Inicia Sesión';
-            document.getElementById('auth-switch-text').innerText = isSignUpMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
-            document.getElementById('toggle-auth-mode').innerText = isSignUpMode ? 'Inicia Sesión' : 'Regístrate';
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLegalModal();
         });
 
-        // AUTH: Login / Register
+        // ==========================================
+        // TOGGLE MODO LOGIN / REGISTRO
+        // ==========================================
+        let isSignUpMode = false;
+        let authCooldown = false; // Rate limiting básico
+
+        document.getElementById('toggle-auth-mode').addEventListener('click', () => {
+            isSignUpMode = !isSignUpMode;
+            clearAuthMessages();
+            document.getElementById('auth-title').textContent = isSignUpMode ? 'Crear Cuenta' : 'Inicia Sesión';
+            document.getElementById('auth-switch-text').textContent = isSignUpMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
+            document.getElementById('toggle-auth-mode').textContent = isSignUpMode ? 'Inicia Sesión' : 'Regístrate';
+        });
+
+        // ==========================================
+        // AUTH: Login / Registro
+        // ==========================================
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('login-btn');
-            const errBox = document.getElementById('auth-error');
-            
-            if (!document.getElementById('terms-checkbox').checked) {
-                errBox.textContent = 'Debes aceptar los términos y condiciones para continuar.';
-                errBox.classList.remove('hidden');
+
+            if (authCooldown) {
+                showAuthError('Espera un momento antes de intentarlo de nuevo.');
                 return;
             }
-            
-            btn.disabled = true;
-            btn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-            errBox.classList.add('hidden');
 
-            const email = document.getElementById('email').value;
+            if (!document.getElementById('terms-checkbox').checked) {
+                showAuthError('Debes aceptar los términos y condiciones para continuar.');
+                return;
+            }
+
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            let result;
-            if (isSignUpMode) {
-                result = await supabaseClient.auth.signUp({ email, password });
-            } else {
-                result = await supabaseClient.auth.signInWithPassword({ email, password });
-            }
-
-            const { data, error } = result;
-
-            if (error) {
-                errBox.textContent = isSignUpMode ? 'Error al crear la cuenta. Intenta con otra contraseña.' : 'Credenciales incorrectas. Verifica tu email y contraseña.';
-                errBox.classList.remove('hidden');
-                btn.disabled = false;
-                btn.innerHTML = 'Continuar';
-            } else {
-                if (isSignUpMode && !data.session) {
-                    errBox.textContent = '¡Cuenta creada! Revisa tu email para confirmar el correo electrónico.';
-                    errBox.classList.remove('hidden');
-                    errBox.classList.replace('bg-red-50', 'bg-green-50');
-                    errBox.classList.replace('text-red-600', 'text-green-700');
-                    btn.disabled = false;
-                    btn.innerHTML = 'Continuar';
-                } else {
-                    init();
-                }
-            }
-        });
-
-        document.getElementById('google-login-btn').addEventListener('click', async () => {
-            const btn = document.getElementById('google-login-btn');
-            const errBox = document.getElementById('auth-error');
-            
-            if (!document.getElementById('terms-checkbox').checked) {
-                errBox.textContent = 'Debes aceptar los términos y condiciones para continuar.';
-                errBox.classList.remove('hidden');
+            // Validación de contraseña en registro
+            if (isSignUpMode && password.length < 8) {
+                showAuthError('La contraseña debe tener al menos 8 caracteres.');
                 return;
             }
-            
-            btn.disabled = true;
-            btn.innerHTML = 'Cargando...';
-            errBox.classList.add('hidden');
-            
-            const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin + window.location.pathname
-                }
-            });
 
-            if (error) {
-                errBox.textContent = 'Error al iniciar sesión con Google.';
-                errBox.classList.remove('hidden');
+            // Cooldown de 3 segundos entre intentos
+            authCooldown = true;
+            setTimeout(() => { authCooldown = false; }, 3000);
+
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            clearAuthMessages();
+
+            try {
+                let result;
+                if (isSignUpMode) {
+                    result = await supabaseClient.auth.signUp({ email, password });
+                } else {
+                    result = await supabaseClient.auth.signInWithPassword({ email, password });
+                }
+
+                const { data, error } = result;
+
+                if (error) {
+                    showAuthError(isSignUpMode
+                        ? 'No se pudo crear la cuenta. La contraseña debe tener al menos 8 caracteres.'
+                        : 'Credenciales incorrectas. Verifica tu email y contraseña.');
+                    btn.disabled = false;
+                    btn.textContent = 'Continuar';
+                } else if (isSignUpMode && !data.session) {
+                    // Email de confirmación enviado
+                    showAuthSuccess('✅ ¡Cuenta creada! Revisa tu correo para confirmar tu email y luego vuelve aquí para iniciar sesión.');
+                    btn.disabled = false;
+                    btn.textContent = 'Continuar';
+                } else {
+                    await init();
+                }
+            } catch (err) {
+                showAuthError('Error de conexión. Por favor, inténtalo de nuevo.');
                 btn.disabled = false;
-                btn.innerHTML = 'Continuar con Google';
+                btn.textContent = 'Continuar';
             }
         });
 
-        // Lógica del Toggle Anual/Mensual
+        // ==========================================
+        // AUTH: Google OAuth
+        // ==========================================
+        document.getElementById('google-login-btn').addEventListener('click', async () => {
+            if (!document.getElementById('terms-checkbox').checked) {
+                showAuthError('Debes aceptar los términos y condiciones para continuar.');
+                return;
+            }
+
+            const btn = document.getElementById('google-login-btn');
+            btn.disabled = true;
+            btn.textContent = 'Cargando...';
+            clearAuthMessages();
+
+            try {
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin + window.location.pathname }
+                });
+                if (error) throw error;
+            } catch (err) {
+                showAuthError('Error al iniciar sesión con Google. Inténtalo de nuevo.');
+                btn.disabled = false;
+                btn.innerHTML = `<svg class="w-5 h-5 mr-3" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar con Google`;
+            }
+        });
+
+        // ==========================================
+        // ENLACES LEGALES (event listeners, no inline onclick)
+        // ==========================================
+        document.getElementById('link-terms').addEventListener('click', (e) => {
+            e.preventDefault();
+            showLegalModal('terms');
+        });
+        document.getElementById('link-privacy').addEventListener('click', (e) => {
+            e.preventDefault();
+            showLegalModal('privacy');
+        });
+
+        // ==========================================
+        // TOGGLE ANUAL / MENSUAL
+        // ==========================================
         let isAnnual = false;
-        
-        document.getElementById('toggle-monthly').addEventListener('click', (e) => {
-            isAnnual = false;
-            e.target.classList.replace('text-gray-500', 'text-white');
-            e.target.classList.replace('hover:text-gray-900', 'bg-brand');
-            e.target.classList.add('shadow-md');
-            e.target.classList.remove('font-medium');
-            e.target.classList.add('font-bold');
-            
-            const btnAnual = document.getElementById('toggle-annual');
-            btnAnual.classList.replace('text-white', 'text-gray-500');
-            btnAnual.classList.replace('bg-brand', 'hover:text-gray-900');
-            btnAnual.classList.remove('shadow-md');
-            btnAnual.classList.replace('font-bold', 'font-medium');
 
-            document.getElementById('price-basico').innerText = '9.99';
-            document.getElementById('period-basico').innerText = '/mes';
-            document.getElementById('price-pro').innerText = '19.99';
-            document.getElementById('period-pro').innerText = '/mes';
-        });
+        function setToggle(annual) {
+            isAnnual = annual;
+            const btnM = document.getElementById('toggle-monthly');
+            const btnA = document.getElementById('toggle-annual');
 
-        document.getElementById('toggle-annual').addEventListener('click', (e) => {
-            isAnnual = true;
-            e.target.classList.replace('text-gray-500', 'text-white');
-            e.target.classList.replace('hover:text-gray-900', 'bg-brand');
-            e.target.classList.add('shadow-md');
-            e.target.classList.remove('font-medium');
-            e.target.classList.add('font-bold');
-            
-            const btnMensual = document.getElementById('toggle-monthly');
-            btnMensual.classList.replace('text-white', 'text-gray-500');
-            btnMensual.classList.replace('bg-brand', 'hover:text-gray-900');
-            btnMensual.classList.remove('shadow-md');
-            btnMensual.classList.replace('font-bold', 'font-medium');
+            // Limpiar clases y asignar de nuevo para evitar estados incorrectos
+            btnM.className = 'px-6 py-2.5 rounded-full text-sm transition-all ' +
+                (!annual ? 'font-bold bg-brand text-white shadow-md' : 'font-medium text-gray-500 hover:text-gray-900');
+            btnA.className = 'px-6 py-2.5 rounded-full text-sm transition-all ' +
+                (annual ? 'font-bold bg-brand text-white shadow-md' : 'font-medium text-gray-500 hover:text-gray-900');
 
-            document.getElementById('price-basico').innerText = '99';
-            document.getElementById('period-basico').innerText = '/año';
-            document.getElementById('price-pro').innerText = '199';
-            document.getElementById('period-pro').innerText = '/año';
-        });
+            btnM.setAttribute('aria-pressed', String(!annual));
+            btnA.setAttribute('aria-pressed', String(annual));
 
+            document.getElementById('price-basico').textContent = annual ? '99' : '9.99';
+            document.getElementById('period-basico').textContent = annual ? '/año' : '/mes';
+            document.getElementById('price-pro').textContent = annual ? '199' : '19.99';
+            document.getElementById('period-pro').textContent = annual ? '/año' : '/mes';
+        }
+
+        document.getElementById('toggle-monthly').addEventListener('click', () => setToggle(false));
+        document.getElementById('toggle-annual').addEventListener('click', () => setToggle(true));
+
+        // ==========================================
         // AUTH: Logout
+        // ==========================================
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await supabaseClient.auth.signOut();
+            currentUser = null;
             window.location.reload();
         });
 
-        // INICIAR PAGO
+        // ==========================================
+        // CHECKOUT
+        // ==========================================
         window.checkout = async function(planId) {
-            if (!currentUser) return;
-            
+            // Validar que el plan esté en la lista blanca
+            if (!CONFIG.validPlans.includes(planId)) {
+                console.warn('[checkout] Plan no válido:', planId);
+                return;
+            }
+            if (!currentUser) {
+                showView('auth');
+                return;
+            }
+
             let priceId = '';
             if (planId === 'vip') priceId = CONFIG.prices.vip_mensual;
             else if (planId === 'basico') priceId = isAnnual ? CONFIG.prices.basico_anual : CONFIG.prices.basico_mensual;
             else if (planId === 'pro') priceId = isAnnual ? CONFIG.prices.pro_anual : CONFIG.prices.pro_mensual;
-            
-            if (!priceId || priceId.includes('REEMPLAZAME')) {
-                alert('⚠️ El identificador del precio aún no ha sido configurado en el código (falta el priceId de Stripe). Crea los productos en Stripe y pon su ID en el archivo index.html.');
+
+            if (!priceId) {
+                alert('⚠️ Precio no configurado. Contacta con soporte: info@nettoapp.eu');
                 return;
             }
 
-            // Deshabilitar todos los botones mientras carga
             document.querySelectorAll('.plan-btn').forEach(b => {
                 b.disabled = true;
                 b.classList.add('opacity-50');
             });
 
-            // Preparar URLs de retorno dinámicas (sirve para local y github pages)
-            const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace(/\/$/, "");
+            const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace(/\/$/, '');
             const successUrl = `${baseUrl}/success.html?redirect=stripe`;
             const cancelUrl = `${baseUrl}/index.html`;
 
             try {
-                // Obtener sesión actual (JWT token) para autorizar la petición si hiciera falta
                 const { data: { session } } = await supabaseClient.auth.getSession();
-                
-                // Llamar a Edge Function
+                if (!session) {
+                    showView('auth');
+                    resetButtons();
+                    return;
+                }
+
                 const response = await fetch(`${CONFIG.supabaseUrl}/functions/v1/stripe-checkout`, {
                     method: 'POST',
                     headers: {
@@ -558,28 +673,27 @@
                     },
                     body: JSON.stringify({
                         plan: planId,
-                        priceId: priceId,
+                        priceId,
                         userId: currentUser.id,
                         userEmail: currentUser.email,
-                        successUrl: successUrl,
-                        cancelUrl: cancelUrl
+                        successUrl,
+                        cancelUrl
                     })
                 });
 
                 const data = await response.json();
 
                 if (response.ok && data.url) {
-                    window.location.href = data.url; // Redirigir a Stripe
+                    window.location.href = data.url;
                 } else {
-                    alert('Error conectando con la pasarela: ' + (data.error || 'Desconocido'));
+                    alert('Error al conectar con la pasarela de pago. Inténtalo de nuevo o contacta a info@nettoapp.eu');
                     resetButtons();
                 }
-
             } catch (err) {
-                alert('Fallo de red: ' + err.message);
+                alert('Error de red. Comprueba tu conexión e inténtalo de nuevo.');
                 resetButtons();
             }
-        }
+        };
 
         function resetButtons() {
             document.querySelectorAll('.plan-btn').forEach(b => {
@@ -588,8 +702,14 @@
             });
         }
 
-        // Arrancar app
-        document.addEventListener("DOMContentLoaded", init);
+        // ==========================================
+        // ARRANQUE
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            if (initSupabase()) {
+                init();
+            }
+        });
     </script>
 </body>
 </html>
