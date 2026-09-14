@@ -517,6 +517,32 @@
             if (intentPlan && CONFIG.validPlans.includes(intentPlan)) {
                 checkout(intentPlan);
             }
+            // Si viene de una compra exitosa, hacer polling hasta que la BD se actualice
+            if (urlParams.get('refreshed') === 'true') {
+                pollForPlanUpdate();
+            }
+        }
+
+        // Polling post-pago: espera hasta 5 intentos (15s) a que el webhook actualice la BD
+        async function pollForPlanUpdate(attempt = 1) {
+            if (attempt > 5) return; // máximo 5 intentos
+            
+            const banner = document.getElementById('active-sub-banner');
+            const label = document.getElementById('active-plan-label');
+            const previousPlan = label ? label.textContent : '';
+            
+            console.log(`[pollForPlanUpdate] Intento ${attempt}/5...`);
+            await checkActiveSubscription();
+            
+            const newPlan = label ? label.textContent : '';
+            if (newPlan !== previousPlan) {
+                // El plan cambió, stop
+                console.log(`[pollForPlanUpdate] ✅ Plan actualizado a: ${newPlan}`);
+                return;
+            }
+            
+            // Aún no cambió, esperar 3s y reintentar
+            setTimeout(() => pollForPlanUpdate(attempt + 1), 3000);
         }
 
         // ==========================================
