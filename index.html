@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal de suscripciones de Netto – Gestión inteligente para autónomos.">
     <!-- CSP: bloquea XSS y recursos externos no autorizados -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https://developer.apple.com https://upload.wikimedia.org https://developers.google.com https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
     <!-- Anti-clickjacking -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <title>Suscripciones | Netto</title>
@@ -119,6 +119,37 @@
                 <p class="text-center text-xs text-gray-400 mt-4 px-2">
                     Usa la misma cuenta si ya estás registrado en la app móvil de Netto.
                 </p>
+
+                <!-- BADGES DE DESCARGA -->
+                <div class="mt-5 pt-4 border-t border-gray-100">
+                    <p class="text-center text-xs text-gray-400 mb-3 font-medium">¿Aún no tienes la app?</p>
+                    <div class="flex items-center justify-center gap-3 flex-wrap">
+                        <!-- App Store -->
+                        <a href="https://apps.apple.com/app/netto/id0000000000"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="transition-transform hover:scale-105 active:scale-95"
+                           aria-label="Descargar Netto en el App Store">
+                            <img
+                                src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg"
+                                alt="Download on the App Store"
+                                class="h-10"
+                            />
+                        </a>
+                        <!-- Google Play -->
+                        <a href="https://play.google.com/store/apps/details?id=eu.nettoapp.netto"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="transition-transform hover:scale-105 active:scale-95"
+                           aria-label="Descargar Netto en Google Play">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                                alt="Get it on Google Play"
+                                class="h-10"
+                            />
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
