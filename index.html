@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal de suscripciones de Netto – Gestión inteligente para autónomos.">
     <!-- CSP: bloquea XSS y recursos externos no autorizados -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https://developer.apple.com https://upload.wikimedia.org https://developers.google.com https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
     <!-- Anti-clickjacking -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <title>Suscripciones | Netto</title>
@@ -119,37 +119,6 @@
                 <p class="text-center text-xs text-gray-400 mt-4 px-2">
                     Usa la misma cuenta si ya estás registrado en la app móvil de Netto.
                 </p>
-
-                <!-- BADGES DE DESCARGA -->
-                <div class="mt-5 pt-4 border-t border-gray-100">
-                    <p class="text-center text-xs text-gray-400 mb-3 font-medium">¿Aún no tienes la app?</p>
-                    <div class="flex items-center justify-center gap-3 flex-wrap">
-                        <!-- App Store -->
-                        <a href="https://apps.apple.com/app/netto/id0000000000"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="transition-transform hover:scale-105 active:scale-95"
-                           aria-label="Descargar Netto en el App Store">
-                            <img
-                                src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg"
-                                alt="Download on the App Store"
-                                class="h-10"
-                            />
-                        </a>
-                        <!-- Google Play -->
-                        <a href="https://play.google.com/store/apps/details?id=eu.nettoapp.netto"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="transition-transform hover:scale-105 active:scale-95"
-                           aria-label="Descargar Netto en Google Play">
-                            <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                                alt="Get it on Google Play"
-                                class="h-10"
-                            />
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -295,6 +264,48 @@
             <div class="p-6 border-t border-gray-100 bg-white">
                 <button onclick="closeLegalModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">
                     Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WELCOME TRIAL MODAL -->
+    <div id="welcome-trial-modal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeWelcomeTrialModal()"></div>
+        <div class="absolute inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:max-w-xl bg-white rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden z-10 transition-transform duration-300">
+            <div class="overflow-y-auto p-6 md:p-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand to-emerald-400 mx-auto mb-4 flex items-center justify-center shadow-lg shadow-brand/30">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight">¡Bienvenido a Netto PRO!<br>Tienes 14 días gratis.</h2>
+                    <p class="text-gray-500 text-sm">Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso total y sin restricciones.</p>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-900 mb-3">Tu acceso actual incluye:</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Escáner IA Ilimitado</li>
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Asesor Fiscal IA 24/7</li>
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Conciliación Bancaria Inteligente</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                    <h3 class="font-bold text-gray-900 text-sm mb-2">Transparencia Total:</h3>
+                    <p class="text-xs text-gray-600 mb-3">Una vez finalicen tus 14 días, <strong>NO se te cobrará nada</strong>. Si decides no activar una suscripción, tu cuenta pasará automáticamente a nuestro <strong>Plan Gratis (Freemium)</strong>. ¿Qué incluye el plan gratuito?</p>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li class="flex items-start">📸 <span class="ml-1">Escáner IA limitado (3 facturas/mes).</span></li>
+                        <li class="flex items-start">💬 <span class="ml-1">Asesor IA restringido (1 consulta/mes).</span></li>
+                        <li class="flex items-start">✋ <span class="ml-1">Conciliación bancaria manual.</span></li>
+                        <li class="flex items-start">❌ <span class="ml-1">Sin Alertas Proactivas.</span></li>
+                        <li class="flex items-start">✅ <span class="ml-1">Presupuestos y facturas ilimitadas manualmente.</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="p-4 md:p-6 bg-white border-t border-gray-100 mt-auto">
+                <button onclick="closeWelcomeTrialModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl text-center shadow-lg transition-transform active:scale-95">
+                    ¡Entendido, vamos a exprimirlo!
                 </button>
             </div>
         </div>
@@ -464,31 +475,18 @@
         }
 
         // ==========================================
-        // SUBSCRIPCIÓN ACTIVA
+        // SUBSCRIPCIÓN ACTIVA Y WELCOME MODAL
         // ==========================================
+        function closeWelcomeTrialModal() {
+            document.getElementById('welcome-trial-modal').classList.add('hidden');
+            if (currentUser) {
+                localStorage.setItem(`netto_seen_welcome_trial_${currentUser.id}`, 'true');
+            }
+        }
+
         async function checkActiveSubscription() {
             if (!currentUser) return;
             try {
-                // [INTER-CO] Sincronización silenciosa contra Stripe.
-                // Antes de leer de la BD, llamamos a sync-subscription para que
-                // corrija cualquier cambio de plan (downgrade/upgrade) que el
-                // webhook no haya podido entregar. Silencioso: si falla, continuamos.
-                try {
-                    const { data: { session } } = await supabaseClient.auth.getSession();
-                    if (session?.access_token) {
-                        await fetch(`${CONFIG.supabaseUrl}/functions/v1/sync-subscription`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${session.access_token}`,
-                                'Content-Type': 'application/json',
-                            },
-                        });
-                    }
-                } catch (syncErr) {
-                    console.warn('[INTER-CO] silentSync web falló silenciosamente:', syncErr.message);
-                }
-
-                // Ahora leemos el plan ya corregido de la BD
                 const { data } = await supabaseClient
                     .from('suscripciones')
                     .select('estado, plan, fecha_renovacion')
@@ -499,16 +497,23 @@
                     // Mostrar nombre del plan
                     const planNames = { basico: 'Plan Esencial', pro: 'Plan Autónomo Pro', vip: 'Plan VIP Embajadores' };
                     const planLabel = document.getElementById('active-plan-label');
-                    if (planLabel) planLabel.textContent = planNames[data.plan] || data.plan || 'Plan activo';
+                    if (planLabel) planLabel.textContent = (planNames[data.plan] || data.plan || 'Plan activo') + (data.estado === 'trial' ? ' (Prueba 14 Días)' : '');
                     // Mostrar fecha de renovación si existe
                     if (data.fecha_renovacion) {
                         const renewalLabel = document.getElementById('active-renewal-label');
                         const date = new Date(data.fecha_renovacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
                         if (renewalLabel) renewalLabel.textContent = `Próxima renovación: ${date}`;
                     }
-                } else {
-                    // Sin suscripción activa: ocultar el banner
-                    document.getElementById('active-sub-banner').classList.add('hidden');
+
+                    // Lógica del Welcome Trial Modal
+                    if (data.estado === 'trial' && (data.plan === 'pro' || data.plan === 'vip')) {
+                        const hasSeen = localStorage.getItem(`netto_seen_welcome_trial_${currentUser.id}`);
+                        if (!hasSeen) {
+                            setTimeout(() => {
+                                document.getElementById('welcome-trial-modal').classList.remove('hidden');
+                            }, 500); // Pequeño delay para UX
+                        }
+                    }
                 }
             } catch (e) {
                 console.warn('[checkActiveSub] Error:', e.message);
@@ -711,7 +716,16 @@
             try {
                 let result;
                 if (isSignUpMode) {
-                    result = await supabaseClient.auth.signUp({ email, password });
+                    let deviceId = localStorage.getItem('netto_device_id');
+                    if (!deviceId) {
+                        deviceId = crypto.randomUUID();
+                        localStorage.setItem('netto_device_id', deviceId);
+                    }
+                    result = await supabaseClient.auth.signUp({ 
+                        email, 
+                        password,
+                        options: { data: { device_id: deviceId } }
+                    });
                 } else {
                     result = await supabaseClient.auth.signInWithPassword({ email, password });
                 }
