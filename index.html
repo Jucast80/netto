@@ -83,6 +83,9 @@
                                 </svg>
                             </button>
                         </div>
+                        <div id="forgot-password-container" class="mt-2 text-right">
+                            <button type="button" id="forgot-password-btn" class="text-sm font-semibold text-brand hover:text-brand-dark transition-colors">¿Olvidaste tu contraseña?</button>
+                        </div>
                     </div>
                     
                     <div id="auth-error" class="hidden bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium" role="alert" aria-live="polite"></div>
@@ -343,11 +346,12 @@
                 { title: '7. Resolución de Litigios (UE) y Reportes (DSA)', text: 'Conforme al Art. 14.1 del Reglamento (UE) 524/2013, la Comisión Europea facilita una plataforma de resolución de litigios en línea: http://ec.europa.eu/consumers/odr/. Netto no está obligada a participar en un procedimiento de resolución de litigios ante una junta arbitral de consumo.' },
                 { title: '8. Sincronización con Google Drive', text: 'Al habilitar la Sincronización Automática con Google Drive, usted autoriza a Netto App a subir y gestionar los documentos de facturación en su cuenta de Google. Netto App realizará los mejores esfuerzos para asegurar que sus documentos se sincronicen correctamente; sin embargo, no se hace responsable de fallos de sincronización por causas externas.' },
                 { title: '9. Facturación Electrónica y Reglamento SIF (Veri*Factu)', text: 'Netto genera facturas aplicando el encadenamiento criptográfico (Huellas SIF) cumpliendo con los requisitos del Real Decreto 1007/2023. No obstante, Netto opera bajo la modalidad «Sistema Informático No Veri*Factu». La aplicación NO transmite facturas automáticamente a la AEAT. Es responsabilidad del usuario descargar y presentar sus libros de facturación ante la AEAT.' },
+                { title: '10. Inteligencia Artificial y Conocimiento Colectivo (RAG)', text: 'Netto integra modelos avanzados de Inteligencia Artificial que utilizan un sistema de Conocimiento Colectivo. La IA aprende de patrones genéricos, consultas y resoluciones contables de toda la comunidad para mejorar sus respuestas. Garantizamos que todos los datos sensibles de los usuarios se procesan con estricta confidencialidad y NUNCA se utilizan para entrenar modelos de IA exponiendo su identidad o datos privados. Las funciones de "Análisis Financiero Profundo" (donde la IA consulta su facturación y clientes en tiempo real para coaching proactivo) son una funcionalidad premium reservada exclusivamente para suscriptores del Plan Pro.' }
             ],
             privacy: [
                 { title: '1. Responsable del Tratamiento', text: 'Identidad: Juan C. Sierra T.\nContacto Legal y DPO: info@nettoapp.eu\nRegistro de Actividades de Tratamiento (RAT): Mantenemos un registro interno conforme al Art. 30 del RGPD.' },
                 { title: '2. Finalidad y Base Legitimadora (Arts. 13 y 14 RGPD)', text: 'Recopilamos información básica (email, nombre) y financiera (facturas, NIF, clientes).\n- Base 1 (Ejecución de contrato): Para proveer el servicio de digitalización y cálculo de impuestos.\n- Base 2 (Obligación Legal): Mantenimiento de registros fiscales (RD 1007/2023). Netto no transfiere estos registros a la Administración Pública automáticamente.\n- Base 3 (Consentimiento): Sincronización voluntaria con Google Drive.' },
-                { title: '3. Integración con Inteligencia Artificial (AI Act)', text: 'Para ofrecer lectura de facturas (OCR) y asistencia interactiva, Netto procesa información a través de proveedores de IA líderes. Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos.' },
+                { title: '3. Integración con Inteligencia Artificial (AI Act)', text: 'Para ofrecer lectura de facturas (OCR) y asistencia financiera avanzada, Netto procesa información a través de proveedores de IA líderes (ej. OpenAI). La IA tiene acceso bajo demanda a los registros financieros del usuario (facturas, gastos, clientes) estrictamente para proporcionar análisis personalizados y proactivos (ej. detectar facturas impagadas). Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos públicos. Los datos quedan aislados por usuario y las interacciones están explícitamente etiquetadas para evitar confusión.' },
                 { title: '4. Plazos de Conservación', text: 'Los datos financieros y fiscales se retendrán durante 4 años desde el final del ejercicio fiscal correspondiente, para cumplir con la Ley General Tributaria de España. Tras este periodo, o en caso de eliminación de cuenta, los datos serán destruidos o anonimizados irreversiblemente.' },
                 { title: '5. Derechos del Usuario (ARCO+)', text: 'El usuario tiene derecho de Acceso, Rectificación, Cancelación, Oposición y Portabilidad. Puede ejercer estos derechos eliminando su cuenta desde los Ajustes de la app, o escribiendo a info@nettoapp.eu.' },
             ]
@@ -661,6 +665,31 @@
             document.getElementById('auth-title').textContent = isSignUpMode ? 'Crear Cuenta' : 'Inicia Sesión';
             document.getElementById('auth-switch-text').textContent = isSignUpMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
             document.getElementById('toggle-auth-mode').textContent = isSignUpMode ? 'Inicia Sesión' : 'Regístrate';
+            
+            if (isSignUpMode) {
+                document.getElementById('forgot-password-container').classList.add('hidden');
+            } else {
+                document.getElementById('forgot-password-container').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                showAuthError('Por favor, ingresa tu correo electrónico arriba para restablecer tu contraseña.');
+                return;
+            }
+            clearAuthMessages();
+            document.getElementById('login-btn').disabled = true;
+            try {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+                if (error) throw error;
+                showAuthSuccess('Te hemos enviado un enlace para restablecer tu contraseña.');
+            } catch (error) {
+                showAuthError('No se pudo enviar el correo. Verifica que tu email sea correcto.');
+            } finally {
+                document.getElementById('login-btn').disabled = false;
+            }
         });
 
         document.getElementById('toggle-password').addEventListener('click', () => {
