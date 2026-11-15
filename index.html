@@ -352,19 +352,19 @@
                 <button id="logout-btn" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
             </div>
 
-            <!-- Active Subscription Banner -->
+            <!-- Active / Free Subscription Banner -->
             <div id="active-sub-banner" class="hidden mb-8" role="status">
                 <!-- Tarjeta de estado del plan -->
-                <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4">
+                <div id="active-sub-card" class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4">
                     <div class="flex items-center justify-between flex-wrap gap-4">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                            <div id="active-sub-icon-bg" class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
                             <div class="text-left">
-                                <div class="text-green-800 font-bold text-lg leading-tight">Suscripción Activa ✅</div>
+                                <div id="active-sub-title" class="text-green-800 font-bold text-lg leading-tight">Suscripción Activa ✅</div>
                                 <div id="active-plan-label" class="text-green-700 text-sm font-medium mt-0.5">Plan activo</div>
                                 <div id="active-renewal-label" class="text-green-600 text-xs mt-0.5"></div>
                             </div>
@@ -381,7 +381,7 @@
                             Gestionar Facturación
                         </button>
                     </div>
-                    <p class="text-green-700 text-sm mt-4 text-center">Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.</p>
+                    <p id="active-sub-note" class="text-green-700 text-sm mt-4 text-center">Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.</p>
                 </div>
             </div>
 
@@ -436,7 +436,7 @@
                         <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Libro de Bienes y Amortizaciones</li>
                         <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Control Horario y 1er Empleado Incluido (0€ extra)</li>
                     </ul>
-                    <button onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30">Comenzar Prueba Gratis</button>
+                    <button id="pro-plan-btn" onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30">Comenzar Prueba Gratis</button>
                 </div>
 
                 <!-- VIP -->
@@ -864,36 +864,109 @@
 
         async function checkActiveSubscription() {
             const banner = document.getElementById('active-sub-banner');
+            const card = document.getElementById('active-sub-card');
+            const iconBg = document.getElementById('active-sub-icon-bg');
+            const titleEl = document.getElementById('active-sub-title');
             const planLabel = document.getElementById('active-plan-label');
             const renewalLabel = document.getElementById('active-renewal-label');
+            const manageBtn = document.getElementById('manage-billing-btn');
+            const noteEl = document.getElementById('active-sub-note');
+            const proBtn = document.getElementById('pro-plan-btn');
+
             if (banner) banner.classList.add('hidden');
             if (renewalLabel) renewalLabel.textContent = '';
             if (!currentUser) return;
+
             try {
-                const { data } = await supabaseClient
-                    .from('suscripciones')
-                    .select('estado, plan, fecha_renovacion')
-                    .eq('user_id', currentUser.id)
-                    .maybeSingle();
-                if (data && (data.estado === 'activa' || data.estado === 'trial')) {
+                const [stateRes, subRes] = await Promise.all([
+                    supabaseClient.rpc('get_user_subscription_state', { p_user_id: currentUser.id }),
+                    supabaseClient.from('suscripciones').select('estado, plan, fecha_renovacion, stripe_subscription_id').eq('user_id', currentUser.id).maybeSingle(),
+                ]);
+
+                if (stateRes.error || !stateRes.data) {
+                    console.warn('[checkActiveSub] SSOT RPC error:', stateRes.error?.message);
+                    return;
+                }
+
+                const state = stateRes.data;
+                const subRow = subRes.data || null;
+                const estado = String(state.estado || 'inactiva').toLowerCase();
+                const plan = String(state.plan || 'basico').toLowerCase();
+                const isTrialExpired = Boolean(state.is_trial_expired);
+                const isValidTrial = estado === 'trial' && !isTrialExpired;
+                const isActivePaid = estado === 'activa';
+
+                if (proBtn) {
+                    proBtn.textContent = (subRow || isTrialExpired || estado === 'freemium') ? 'Elegir Plan Pro' : 'Comenzar Prueba Gratis';
+                }
+
+                if (isActivePaid || isValidTrial) {
                     if (banner) banner.classList.remove('hidden');
-                    // Mostrar nombre del plan
-                    const planNames = { basico: 'Plan Básico', pro: 'Plan Autónomo Pro', vip: 'Plan VIP Embajadores' };
-                    if (planLabel) planLabel.textContent = (planNames[data.plan] || data.plan || 'Plan activo') + (data.estado === 'trial' ? ' (Prueba 14 Días)' : '');
-                    // Mostrar fecha de renovación si existe
-                    if (data.fecha_renovacion && renewalLabel) {
-                        const date = new Date(data.fecha_renovacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-                        renewalLabel.textContent = `Próxima renovación: ${date}`;
+                    if (card) card.className = 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4';
+                    if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0';
+                    if (titleEl) {
+                        titleEl.className = 'text-green-800 font-bold text-lg leading-tight';
+                        titleEl.textContent = isValidTrial ? 'Prueba de 14 Días Activa ✨' : 'Suscripción Activa ✅';
+                    }
+                    if (planLabel) planLabel.className = 'text-green-700 text-sm font-medium mt-0.5';
+                    if (renewalLabel) renewalLabel.className = 'text-green-600 text-xs mt-0.5';
+
+                    const planNames = { basico: 'Plan Básico', pro: 'Plan Autónomo Pro', vip: 'Plan VIP Embajadores', elite: 'Plan Autónomo Pro' };
+                    if (planLabel) {
+                        planLabel.textContent = (planNames[plan] || plan || 'Plan activo') + (isValidTrial ? ' (Prueba 14 Días en curso)' : '');
                     }
 
-                    // Lógica del Welcome Trial Modal
-                    if (data.estado === 'trial' && (data.plan === 'pro' || data.plan === 'vip')) {
+                    if (subRow?.fecha_renovacion && renewalLabel) {
+                        const date = new Date(subRow.fecha_renovacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                        renewalLabel.textContent = isValidTrial ? `Fin del periodo de prueba: ${date}` : `Próxima renovación: ${date}`;
+                    }
+
+                    const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
+                    if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal && !isActivePaid);
+                    if (noteEl) {
+                        noteEl.className = 'text-green-700 text-sm mt-4 text-center';
+                        noteEl.textContent = hasStripePortal || isActivePaid
+                            ? 'Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.'
+                            : 'Estás disfrutando de tu prueba gratuita. Al terminar los 14 días no se te cobrará nada salvo que elijas un plan.';
+                    }
+
+                    // Modal de bienvenida SOLO si la prueba sigue vigente (nunca si ya caducó)
+                    if (isValidTrial && Boolean(state.is_pro)) {
                         const hasSeen = localStorage.getItem(`netto_seen_welcome_trial_${currentUser.id}`);
                         if (!hasSeen) {
                             setTimeout(() => {
                                 document.getElementById('welcome-trial-modal').classList.remove('hidden');
-                            }, 500); // Pequeño delay para UX
+                            }, 500);
                         }
+                    }
+                } else {
+                    // Cuenta Gratuita / Prueba Finalizada (SSOT)
+                    if (banner) banner.classList.remove('hidden');
+                    if (card) card.className = 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 mb-4';
+                    if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0';
+                    if (titleEl) {
+                        titleEl.className = 'text-amber-900 font-bold text-lg leading-tight';
+                        titleEl.textContent = isTrialExpired ? 'Cuenta Gratuita · Prueba Finalizada' : 'Cuenta Gratuita (Free)';
+                    }
+                    if (planLabel) {
+                        planLabel.className = 'text-amber-800 text-sm font-medium mt-0.5';
+                        const scanLimit = Number(state.scan_limit) || 3;
+                        const chatLimit = Number(state.chat_limit) || 1;
+                        planLabel.textContent = `Límites Free activos: ${scanLimit} escaneos/mes · ${chatLimit} consulta IA/mes · Facturación ilimitada`;
+                    }
+                    if (renewalLabel) {
+                        renewalLabel.className = 'text-amber-700 text-xs mt-0.5';
+                        renewalLabel.textContent = isTrialExpired
+                            ? 'Tu prueba gratuita de 14 días ya ha terminado. Selecciona Plan Básico o Pro para ampliar tus límites.'
+                            : 'Sin suscripción activa. Puedes ampliar límites cuando quieras eligiendo un plan.';
+                    }
+                    const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
+                    if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal);
+                    if (noteEl) {
+                        noteEl.className = 'text-amber-800 text-xs mt-4 text-center';
+                        noteEl.textContent = hasStripePortal
+                            ? 'Puedes consultar tus facturas anteriores en el portal de Stripe o reactivar un plan abajo.'
+                            : 'No tienes ningún cobro programado. Elige un plan abajo cuando necesites mayor capacidad de IA.';
                     }
                 }
             } catch (e) {
