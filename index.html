@@ -76,6 +76,33 @@
                 
                 <!-- ÚNICO FORM: solo el botón submit está dentro del form -->
                 <form id="login-form" class="space-y-4" novalidate>
+                    <!-- Campos exclusivos de Registro (paridad con la app móvil) -->
+                    <div id="signup-only-fields" class="hidden space-y-4">
+                        <div>
+                            <span class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo vas a usar Netto?</span>
+                            <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?">
+                                <button type="button" role="radio" aria-checked="false" data-signup-role="autonomo"
+                                        class="signup-role-card text-left p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-brand transition-all focus:outline-none focus:ring-2 focus:ring-brand">
+                                    <div class="text-sm font-extrabold text-gray-900">Autónomo / Empresa</div>
+                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug">Facturación AEAT, gastos y equipo</div>
+                                </button>
+                                <button type="button" role="radio" aria-checked="false" data-signup-role="empleado"
+                                        class="signup-role-card text-left p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <div class="text-sm font-extrabold text-gray-900">Empleado</div>
+                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug">Control horario y código NET</div>
+                                </button>
+                            </div>
+                            <div id="signup-role-note" class="hidden mt-2.5 p-3 rounded-xl border text-xs font-semibold leading-relaxed"></div>
+                        </div>
+
+                        <div>
+                            <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1">Nombre completo</label>
+                            <input type="text" id="full-name" name="fullName" autocomplete="name"
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
+                                   placeholder="Ej. Laura García" maxlength="120">
+                        </div>
+                    </div>
+
                     <div>
                         <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
                         <input type="email" id="email" name="email" required autocomplete="email"
@@ -140,6 +167,179 @@
             </div>
         </div>
 
+        <!-- ROLE SELECTION VIEW (para OAuth o cuentas sin confirmar) -->
+        <div id="role-select-view" class="hidden max-w-lg mx-auto">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center" aria-hidden="true">
+                        <svg class="w-4 h-4 text-brand" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <span id="role-select-email" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
+                </div>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+                <div class="w-14 h-14 rounded-2xl bg-brand/10 text-brand flex items-center justify-center mx-auto mb-4" aria-hidden="true">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-extrabold text-center text-gray-900 mb-2">¿Cómo vas a usar Netto?</h2>
+                <p class="text-sm text-gray-500 text-center mb-6 leading-relaxed">
+                    Elige tu perfil para configurar un entorno limpio y adaptado desde el primer segundo.
+                </p>
+
+                <div class="space-y-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?">
+                    <button type="button" role="radio" aria-checked="false" data-onboarding-role="autonomo"
+                            class="onboarding-role-card w-full text-left p-4 rounded-2xl border border-gray-200 bg-white hover:border-brand transition-all focus:outline-none focus:ring-2 focus:ring-brand">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <div class="font-extrabold text-base text-gray-900">Autónomo o Empresa</div>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Incluye 14 días de prueba Pro
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed">
+                            Emite facturas VeriFactu, calcula tus modelos 130/303 y gestiona la jornada laboral de tu equipo.
+                        </p>
+                    </button>
+
+                    <button type="button" role="radio" aria-checked="false" data-onboarding-role="empleado"
+                            class="onboarding-role-card w-full text-left p-4 rounded-2xl border border-gray-200 bg-white hover:border-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <div class="font-extrabold text-base text-gray-900">Empleado / Trabajador</div>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                    Solo control horario · Gratis
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed">
+                            Registra tus jornadas, pausas y tareas entrando con el código NET que te enviará tu responsable.
+                        </p>
+                    </button>
+                </div>
+
+                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">
+                    Si trabajas contratado en una empresa y te han pedido descargar Netto para fichar, selecciona Empleado.
+                </p>
+
+                <div id="role-select-error" class="hidden mt-4 bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium" role="alert" aria-live="polite"></div>
+
+                <button type="button" id="confirm-role-btn"
+                        class="mt-6 w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl transition-colors flex justify-center items-center shadow-md">
+                    Continuar
+                </button>
+            </div>
+        </div>
+
+        <!-- EMPLOYEE VIEW (sin pasarela de pagos) -->
+        <div id="employee-view" class="hidden max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center" aria-hidden="true">
+                        <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <span id="employee-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
+                </div>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl border border-blue-100 p-8 text-center">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4" aria-hidden="true">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+
+                <span id="employee-status-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
+                    Cuenta de Empleado · Gratis
+                </span>
+
+                <h2 id="employee-title" class="text-2xl font-black text-gray-900 mb-2">No necesitas suscripción</h2>
+                <p id="employee-desc" class="text-sm text-gray-600 leading-relaxed mb-6">
+                    Tu cuenta está configurada exclusivamente para control horario. El acceso lo gestiona tu empresa sin coste para ti.
+                </p>
+
+                <!-- Estado vinculado a empresa -->
+                <div id="employee-linked-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-left mb-6">
+                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Empresa vinculada</div>
+                    <div id="employee-company-name" class="text-lg font-extrabold text-gray-900"></div>
+                    <div id="employee-role-badge" class="text-xs font-semibold text-emerald-700 mt-1"></div>
+                    <p class="text-xs text-gray-600 mt-3 leading-relaxed">
+                        Abre la aplicación móvil de Netto en tu teléfono para registrar tus entradas, pausas, salidas y tareas asignadas.
+                    </p>
+                </div>
+
+                <!-- Estado pendiente de vinculación -->
+                <div id="employee-unlinked-box" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-5 text-left space-y-4 mb-6">
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">1. Comparte tu correo con tu empresa</div>
+                        <div class="flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5">
+                            <span id="employee-share-email" class="text-sm font-bold text-gray-900 truncate"></span>
+                            <button type="button" id="copy-employee-email-btn"
+                                    class="flex-shrink-0 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors">
+                                Copiar
+                            </button>
+                        </div>
+                        <p id="copy-employee-email-feedback" class="hidden text-xs text-emerald-600 font-semibold mt-1"></p>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">2. Introduce tu código NET en la app</div>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Cuando tu responsable te envíe el código NET, abre la app móvil de Netto, inicia sesión con este correo y pega el código para vincular tu jornada.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="employee-view-error" class="hidden mb-4 bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium text-left" role="alert" aria-live="polite"></div>
+
+                <!-- Cambio seguro a Autónomo (solo si no está vinculado a ninguna empresa) -->
+                <div id="switch-autonomo-wrap" class="hidden pt-4 border-t border-gray-100">
+                    <button type="button" id="switch-autonomo-btn"
+                            class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                        ¿Elegiste Empleado por error? Cambiar a cuenta de Autónomo
+                    </button>
+
+                    <div id="switch-autonomo-confirm-box" class="hidden mt-4 bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left">
+                        <div class="text-sm font-bold text-gray-900 mb-1">¿Cambiar a cuenta Autónomo?</div>
+                        <p class="text-xs text-gray-600 leading-relaxed mb-3">
+                            Tu cuenta pasará al entorno de Autónomo / Empresa con facturación y gestión fiscal. Solo es posible si aún no tienes equipo ni fichajes.
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="confirm-switch-autonomo-btn"
+                                    class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-colors">
+                                Sí, cambiar a Autónomo
+                            </button>
+                            <button type="button" id="cancel-switch-autonomo-btn"
+                                    class="px-3 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-gray-200 bg-white transition-colors">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WORKSPACE ERROR VIEW (fail-closed si falla la consulta de rol) -->
+        <div id="workspace-error-view" class="hidden max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <span id="error-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl border border-red-100 p-8 text-center">
+                <div class="text-red-500 text-3xl mb-3" aria-hidden="true">⚠️</div>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">No se pudo verificar tu cuenta</h2>
+                <p id="workspace-error-text" class="text-sm text-gray-600 mb-6"></p>
+                <button type="button" id="retry-workspace-btn"
+                        class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                    Reintentar
+                </button>
+            </div>
+        </div>
+
         <!-- PLANS VIEW -->
         <div id="plans-view" class="hidden">
             <div class="flex justify-between items-center mb-8 px-2">
@@ -149,7 +349,7 @@
                     </div>
                     <span id="user-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[200px]">usuario@email.com</span>
                 </div>
-                <button id="logout-btn" class="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+                <button id="logout-btn" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
             </div>
 
             <!-- Active Subscription Banner -->
@@ -385,6 +585,9 @@
         // ==========================================
         let supabaseClient = null;
         let currentUser = null;
+        let currentWorkspace = null;
+        let selectedSignupRole = null;
+        let selectedOnboardingRole = null;
 
         function initSupabase() {
             if (!window.supabase) {
@@ -399,16 +602,34 @@
 
         function showCriticalError(msg) {
             const lv = document.getElementById('loading-view');
-            if (lv) lv.innerHTML = `<div class="text-center p-8"><div class="text-red-500 text-4xl mb-4">⚠️</div><p class="font-bold text-red-700 text-lg">Error de Conexión</p><p class="text-gray-600 mt-2 max-w-sm">${msg}</p></div>`;
+            if (lv) {
+                lv.replaceChildren();
+                const wrap = document.createElement('div');
+                wrap.className = 'text-center p-8';
+                const icon = document.createElement('div');
+                icon.className = 'text-red-500 text-4xl mb-4';
+                icon.textContent = '⚠️';
+                const title = document.createElement('p');
+                title.className = 'font-bold text-red-700 text-lg';
+                title.textContent = 'Error de Conexión';
+                const body = document.createElement('p');
+                body.className = 'text-gray-600 mt-2 max-w-sm';
+                body.textContent = msg;
+                wrap.appendChild(icon);
+                wrap.appendChild(title);
+                wrap.appendChild(body);
+                lv.appendChild(wrap);
+            }
         }
 
         // ==========================================
         // VISTA / UI
         // ==========================================
         const views = {};
+        const ALL_VIEWS = ['loading', 'auth', 'role-select', 'employee', 'workspace-error', 'plans'];
 
         function showView(viewName) {
-            ['loading', 'auth', 'plans'].forEach(v => {
+            ALL_VIEWS.forEach(v => {
                 const el = views[v] || document.getElementById(v + '-view');
                 if (!views[v]) views[v] = el;
                 if (el) {
@@ -420,6 +641,79 @@
             if (target) {
                 target.classList.remove('hidden');
                 target.style.display = viewName === 'loading' ? 'flex' : 'block';
+            }
+        }
+
+        function updateUserEmailDisplays(email) {
+            const safeEmail = email || '';
+            ['user-email-display', 'role-select-email', 'employee-email-display', 'error-email-display', 'employee-share-email'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = safeEmail;
+            });
+        }
+
+        function showWorkspaceError(msg) {
+            const errEl = document.getElementById('workspace-error-text');
+            if (errEl) errEl.textContent = msg;
+            showView('workspace-error');
+        }
+
+        function resetRoleSelectionView() {
+            setOnboardingRole(null);
+            const errEl = document.getElementById('role-select-error');
+            if (errEl) {
+                errEl.textContent = '';
+                errEl.classList.add('hidden');
+            }
+            const btn = document.getElementById('confirm-role-btn');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Continuar';
+            }
+        }
+
+        function renderEmployeeView(ws) {
+            const badge = document.getElementById('employee-status-badge');
+            const title = document.getElementById('employee-title');
+            const desc = document.getElementById('employee-desc');
+            const linkedBox = document.getElementById('employee-linked-box');
+            const unlinkedBox = document.getElementById('employee-unlinked-box');
+            const companyNameEl = document.getElementById('employee-company-name');
+            const roleBadgeEl = document.getElementById('employee-role-badge');
+            const switchWrap = document.getElementById('switch-autonomo-wrap');
+            const switchConfirmBox = document.getElementById('switch-autonomo-confirm-box');
+            const errEl = document.getElementById('employee-view-error');
+            const copyFeedback = document.getElementById('copy-employee-email-feedback');
+
+            if (errEl) {
+                errEl.textContent = '';
+                errEl.classList.add('hidden');
+            }
+            if (switchConfirmBox) switchConfirmBox.classList.add('hidden');
+            if (copyFeedback) {
+                copyFeedback.textContent = '';
+                copyFeedback.classList.add('hidden');
+            }
+
+            const isLinked = ws && ws.status === 'activo' && Boolean(ws.admin_id);
+            const roleLabel = ws && ws.role === 'supervisor' ? 'Supervisor' : 'Empleado';
+
+            if (isLinked) {
+                if (badge) badge.textContent = `${roleLabel} vinculado · Sin suscripción`;
+                if (title) title.textContent = 'Tu acceso ya está activo';
+                if (desc) desc.textContent = 'El acceso de tu equipo lo gestiona tu empresa. No necesitas contratar ningún plan de pago en la web.';
+                if (companyNameEl) companyNameEl.textContent = ws.admin_name || 'Tu empresa';
+                if (roleBadgeEl) roleBadgeEl.textContent = `Rol asignado: ${roleLabel}`;
+                if (linkedBox) linkedBox.classList.remove('hidden');
+                if (unlinkedBox) unlinkedBox.classList.add('hidden');
+                if (switchWrap) switchWrap.classList.add('hidden');
+            } else {
+                if (badge) badge.textContent = 'Cuenta de Empleado · Gratis';
+                if (title) title.textContent = 'No necesitas suscripción';
+                if (desc) desc.textContent = 'Tu cuenta está configurada exclusivamente para control horario. Vincula tu empresa desde la app móvil con tu código NET.';
+                if (linkedBox) linkedBox.classList.add('hidden');
+                if (unlinkedBox) unlinkedBox.classList.remove('hidden');
+                if (switchWrap) switchWrap.classList.remove('hidden');
             }
         }
 
@@ -456,19 +750,68 @@
             try {
                 const { data: { session }, error } = await supabaseClient.auth.getSession();
                 if (error) throw error;
-                if (session) {
-                    currentUser = session.user;
-                    document.getElementById('user-email-display').textContent = currentUser.email || '';
-                    await Promise.all([checkActiveSubscription(), loadVipCounter()]);
-                    showView('plans');
-                    checkUrlIntent();
-                } else {
+                if (!session) {
+                    currentUser = null;
+                    currentWorkspace = null;
                     showView('auth');
+                    return;
                 }
+
+                currentUser = session.user;
+                updateUserEmailDisplays(currentUser.email || '');
+
+                // Fuente única de verdad (BD): distinguir pendiente de selección, Empleado o Autónomo
+                let { data: wsData, error: wsError } = await supabaseClient.rpc('rpc_get_user_workspace_context');
+                if (wsError) throw wsError;
+
+                if (!wsData) {
+                    const ensureRes = await supabaseClient.rpc('ensure_my_perfil');
+                    if (ensureRes.error) throw ensureRes.error;
+                    const retryRes = await supabaseClient.rpc('rpc_get_user_workspace_context');
+                    if (retryRes.error) throw retryRes.error;
+                    wsData = retryRes.data;
+                }
+
+                if (!wsData || typeof wsData !== 'object') {
+                    throw new Error('Contexto de cuenta inválido');
+                }
+
+                currentWorkspace = wsData;
+                if (wsData.user_email) {
+                    updateUserEmailDisplays(wsData.user_email);
+                }
+
+                if (wsData.needs_role_selection === true) {
+                    resetRoleSelectionView();
+                    showView('role-select');
+                    return;
+                }
+
+                if (wsData.is_employee === true || wsData.role === 'empleado') {
+                    renderEmployeeView(wsData);
+                    showView('employee');
+                    return;
+                }
+
+                await Promise.all([checkActiveSubscription(), loadVipCounter()]);
+                showView('plans');
+                checkUrlIntent();
             } catch (e) {
                 console.error('[init] Error:', e);
-                // Si falla, mostramos el login en lugar de un spinner infinito
-                showView('auth');
+                if (typeof Sentry !== 'undefined') {
+                    Sentry.captureException(e);
+                }
+                // Si la sesión ya expiró o no existe, mostrar login; si hay sesión, fallar cerrado (sin mostrar planes)
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) {
+                        currentUser = null;
+                        currentWorkspace = null;
+                        showView('auth');
+                        return;
+                    }
+                } catch {}
+                showWorkspaceError('No pudimos verificar el tipo de tu cuenta. Comprueba tu conexión e inténtalo de nuevo.');
             }
         }
 
@@ -512,6 +855,11 @@
         }
 
         async function checkActiveSubscription() {
+            const banner = document.getElementById('active-sub-banner');
+            const planLabel = document.getElementById('active-plan-label');
+            const renewalLabel = document.getElementById('active-renewal-label');
+            if (banner) banner.classList.add('hidden');
+            if (renewalLabel) renewalLabel.textContent = '';
             if (!currentUser) return;
             try {
                 const { data } = await supabaseClient
@@ -520,16 +868,14 @@
                     .eq('user_id', currentUser.id)
                     .maybeSingle();
                 if (data && (data.estado === 'activa' || data.estado === 'trial')) {
-                    document.getElementById('active-sub-banner').classList.remove('hidden');
+                    if (banner) banner.classList.remove('hidden');
                     // Mostrar nombre del plan
                     const planNames = { basico: 'Plan Esencial', pro: 'Plan Autónomo Pro', vip: 'Plan VIP Embajadores' };
-                    const planLabel = document.getElementById('active-plan-label');
                     if (planLabel) planLabel.textContent = (planNames[data.plan] || data.plan || 'Plan activo') + (data.estado === 'trial' ? ' (Prueba 14 Días)' : '');
                     // Mostrar fecha de renovación si existe
-                    if (data.fecha_renovacion) {
-                        const renewalLabel = document.getElementById('active-renewal-label');
+                    if (data.fecha_renovacion && renewalLabel) {
                         const date = new Date(data.fecha_renovacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-                        if (renewalLabel) renewalLabel.textContent = `Próxima renovación: ${date}`;
+                        renewalLabel.textContent = `Próxima renovación: ${date}`;
                     }
 
                     // Lógica del Welcome Trial Modal
@@ -597,6 +943,9 @@
         // URL INTENT (whitelist de planes válidos)
         // ==========================================
         function checkUrlIntent() {
+            if (!currentWorkspace || currentWorkspace.needs_role_selection || currentWorkspace.is_employee || currentWorkspace.role === 'empleado') {
+                return;
+            }
             const urlParams = new URLSearchParams(window.location.search);
             const intentPlan = urlParams.get('plan');
             // Solo ejecutamos checkout si el plan está en la lista blanca estricta
@@ -677,21 +1026,106 @@
         });
 
         // ==========================================
-        // TOGGLE MODO LOGIN / REGISTRO Y PASSWORD
+        // TOGGLE MODO LOGIN / REGISTRO Y SELECTORES DE ROL
         // ==========================================
         let isSignUpMode = false;
         let authCooldown = false; // Rate limiting básico
 
+        function setSignupRole(role) {
+            selectedSignupRole = role === 'autonomo' || role === 'empleado' ? role : null;
+            document.querySelectorAll('.signup-role-card').forEach(card => {
+                const cardRole = card.getAttribute('data-signup-role');
+                const active = cardRole === selectedSignupRole;
+                card.setAttribute('aria-checked', String(active));
+                card.classList.remove(
+                    'border-brand', 'border-blue-500', 'border-2', 'bg-emerald-50', 'bg-blue-50',
+                    'border-gray-200', 'bg-gray-50', 'border'
+                );
+                if (active && cardRole === 'autonomo') {
+                    card.classList.add('border-2', 'border-brand', 'bg-emerald-50');
+                } else if (active && cardRole === 'empleado') {
+                    card.classList.add('border-2', 'border-blue-500', 'bg-blue-50');
+                } else {
+                    card.classList.add('border', 'border-gray-200', 'bg-gray-50');
+                }
+            });
+
+            const noteEl = document.getElementById('signup-role-note');
+            if (!noteEl) return;
+            noteEl.classList.remove(
+                'hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800',
+                'bg-blue-50', 'border-blue-200', 'text-blue-800'
+            );
+            if (selectedSignupRole === 'autonomo') {
+                noteEl.textContent = 'Acceso completo al entorno fiscal, facturación e impuestos con 14 días de prueba Pro.';
+                noteEl.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800');
+            } else if (selectedSignupRole === 'empleado') {
+                noteEl.textContent = 'Sin suscripción. Al finalizar el registro podrás abrir la app de Netto e introducir el código NET que te enviará tu responsable.';
+                noteEl.classList.add('bg-blue-50', 'border-blue-200', 'text-blue-800');
+            } else {
+                noteEl.textContent = '';
+                noteEl.classList.add('hidden');
+            }
+        }
+
+        function setOnboardingRole(role) {
+            selectedOnboardingRole = role === 'autonomo' || role === 'empleado' ? role : null;
+            document.querySelectorAll('.onboarding-role-card').forEach(card => {
+                const cardRole = card.getAttribute('data-onboarding-role');
+                const active = cardRole === selectedOnboardingRole;
+                card.setAttribute('aria-checked', String(active));
+                card.classList.remove(
+                    'border-brand', 'border-blue-500', 'border-2', 'bg-emerald-50/70', 'bg-blue-50/70',
+                    'border-gray-200', 'bg-white', 'border'
+                );
+                if (active && cardRole === 'autonomo') {
+                    card.classList.add('border-2', 'border-brand', 'bg-emerald-50/70');
+                } else if (active && cardRole === 'empleado') {
+                    card.classList.add('border-2', 'border-blue-500', 'bg-blue-50/70');
+                } else {
+                    card.classList.add('border', 'border-gray-200', 'bg-white');
+                }
+            });
+        }
+
+        document.querySelectorAll('.signup-role-card').forEach(card => {
+            card.addEventListener('click', () => {
+                clearAuthMessages();
+                setSignupRole(card.getAttribute('data-signup-role'));
+            });
+        });
+
+        document.querySelectorAll('.onboarding-role-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const errEl = document.getElementById('role-select-error');
+                if (errEl) {
+                    errEl.textContent = '';
+                    errEl.classList.add('hidden');
+                }
+                setOnboardingRole(card.getAttribute('data-onboarding-role'));
+            });
+        });
+
         document.getElementById('toggle-auth-mode').addEventListener('click', () => {
             isSignUpMode = !isSignUpMode;
             clearAuthMessages();
+            setSignupRole(null);
+            const fullNameInput = document.getElementById('full-name');
+            if (fullNameInput && !isSignUpMode) fullNameInput.value = '';
+
             document.getElementById('auth-title').textContent = isSignUpMode ? 'Crear Cuenta' : 'Inicia Sesión';
             document.getElementById('auth-switch-text').textContent = isSignUpMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
             document.getElementById('toggle-auth-mode').textContent = isSignUpMode ? 'Inicia Sesión' : 'Regístrate';
-            
+
+            const signupFields = document.getElementById('signup-only-fields');
+            const passwordInput = document.getElementById('password');
             if (isSignUpMode) {
+                if (signupFields) signupFields.classList.remove('hidden');
+                if (passwordInput) passwordInput.setAttribute('autocomplete', 'new-password');
                 document.getElementById('forgot-password-container').classList.add('hidden');
             } else {
+                if (signupFields) signupFields.classList.add('hidden');
+                if (passwordInput) passwordInput.setAttribute('autocomplete', 'current-password');
                 document.getElementById('forgot-password-container').classList.remove('hidden');
             }
         });
@@ -748,8 +1182,30 @@
                 return;
             }
 
-            const email = document.getElementById('email').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
+            const fullNameInput = document.getElementById('full-name');
+            const fullName = fullNameInput ? fullNameInput.value.trim() : '';
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showAuthError('Por favor, introduce un correo electrónico válido.');
+                return;
+            }
+
+            if (isSignUpMode && selectedSignupRole !== 'autonomo' && selectedSignupRole !== 'empleado') {
+                showAuthError('Por favor, elige si utilizarás Netto como Autónomo / Empresa o como Empleado antes de continuar.');
+                return;
+            }
+
+            if (isSignUpMode && !fullName) {
+                showAuthError('Por favor, introduce tu nombre completo para crear tu cuenta.');
+                return;
+            }
+
+            if (!isSignUpMode && !password) {
+                showAuthError('Por favor, introduce tu contraseña.');
+                return;
+            }
 
             // Validación de contraseña en registro
             if (isSignUpMode && password.length < 8) {
@@ -773,10 +1229,16 @@
                         deviceId = crypto.randomUUID();
                         localStorage.setItem('netto_device_id', deviceId);
                     }
-                    result = await supabaseClient.auth.signUp({ 
-                        email, 
+                    result = await supabaseClient.auth.signUp({
+                        email,
                         password,
-                        options: { data: { device_id: deviceId } }
+                        options: {
+                            data: {
+                                full_name: fullName,
+                                device_id: deviceId,
+                                account_mode: selectedSignupRole
+                            }
+                        }
                     });
                 } else {
                     result = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -794,10 +1256,15 @@
                     btn.textContent = 'Continuar';
                 } else if (isSignUpMode && !data.session) {
                     // Email de confirmación enviado
-                    showAuthSuccess('✅ ¡Cuenta creada! Revisa tu correo para confirmar tu email y luego vuelve aquí para iniciar sesión.');
+                    const successMsg = selectedSignupRole === 'empleado'
+                        ? '✅ ¡Cuenta de Empleado creada! Revisa tu correo para confirmar tu email. Después abre la app móvil de Netto e introduce el código NET de tu empresa (no necesitas suscripción).'
+                        : '✅ ¡Cuenta creada! Revisa tu correo para confirmar tu email y luego vuelve aquí para iniciar sesión.';
+                    showAuthSuccess(successMsg);
                     btn.disabled = false;
                     btn.textContent = 'Continuar';
                 } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Continuar';
                     await init();
                 }
             } catch (err) {
@@ -888,12 +1355,116 @@
         document.getElementById('toggle-annual').addEventListener('click', () => setToggle(true));
 
         // ==========================================
-        // AUTH: Logout
+        // CONFIRMACIÓN DE ROL, VISTA EMPLEADO Y LOGOUT
         // ==========================================
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            await supabaseClient.auth.signOut();
+        async function handleSignOut() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (e) {
+                console.warn('[signOut] Error:', e?.message || e);
+            }
             currentUser = null;
-            window.location.reload();
+            currentWorkspace = null;
+            window.location.href = window.location.href.split('#')[0].split('?')[0];
+        }
+
+        document.querySelectorAll('.js-logout-btn').forEach(btn => {
+            btn.addEventListener('click', handleSignOut);
+        });
+
+        document.getElementById('retry-workspace-btn').addEventListener('click', () => {
+            init();
+        });
+
+        document.getElementById('confirm-role-btn').addEventListener('click', async () => {
+            const errEl = document.getElementById('role-select-error');
+            const btn = document.getElementById('confirm-role-btn');
+            if (selectedOnboardingRole !== 'autonomo' && selectedOnboardingRole !== 'empleado') {
+                if (errEl) {
+                    errEl.textContent = 'Por favor, elige si utilizarás Netto como Autónomo / Empresa o como Empleado antes de continuar.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (errEl) {
+                errEl.textContent = '';
+                errEl.classList.add('hidden');
+            }
+            btn.disabled = true;
+            btn.textContent = 'Guardando...';
+
+            try {
+                const { error } = await supabaseClient.rpc('rpc_set_initial_account_mode', {
+                    p_mode: selectedOnboardingRole
+                });
+                if (error) throw error;
+                await init();
+            } catch (err) {
+                if (errEl) {
+                    errEl.textContent = err?.message || 'No se pudo guardar el modo de cuenta seleccionado. Inténtalo de nuevo.';
+                    errEl.classList.remove('hidden');
+                }
+                btn.disabled = false;
+                btn.textContent = 'Continuar';
+            }
+        });
+
+        document.getElementById('copy-employee-email-btn').addEventListener('click', async () => {
+            const emailEl = document.getElementById('employee-share-email');
+            const feedbackEl = document.getElementById('copy-employee-email-feedback');
+            const text = emailEl ? emailEl.textContent.trim() : '';
+            if (!text) return;
+            try {
+                await navigator.clipboard.writeText(text);
+                if (feedbackEl) {
+                    feedbackEl.textContent = '✅ Correo copiado al portapapeles.';
+                    feedbackEl.classList.remove('hidden');
+                }
+            } catch {
+                if (feedbackEl) {
+                    feedbackEl.textContent = 'Copia manualmente tu correo mostrado arriba.';
+                    feedbackEl.classList.remove('hidden');
+                }
+            }
+        });
+
+        document.getElementById('switch-autonomo-btn').addEventListener('click', () => {
+            const box = document.getElementById('switch-autonomo-confirm-box');
+            if (box) box.classList.toggle('hidden');
+        });
+
+        document.getElementById('cancel-switch-autonomo-btn').addEventListener('click', () => {
+            const box = document.getElementById('switch-autonomo-confirm-box');
+            if (box) box.classList.add('hidden');
+        });
+
+        document.getElementById('confirm-switch-autonomo-btn').addEventListener('click', async () => {
+            const confirmBtn = document.getElementById('confirm-switch-autonomo-btn');
+            const errEl = document.getElementById('employee-view-error');
+            if (errEl) {
+                errEl.textContent = '';
+                errEl.classList.add('hidden');
+            }
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Cambiando...';
+
+            try {
+                const { error } = await supabaseClient.rpc('rpc_set_initial_account_mode', {
+                    p_mode: 'autonomo'
+                });
+                if (error) throw error;
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Sí, cambiar a Autónomo';
+                await init();
+            } catch (err) {
+                if (errEl) {
+                    errEl.textContent = err?.message || 'No se pudo cambiar el tipo de cuenta.';
+                    errEl.classList.remove('hidden');
+                }
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Sí, cambiar a Autónomo';
+            }
         });
 
         // ==========================================
@@ -907,6 +1478,16 @@
             }
             if (!currentUser) {
                 showView('auth');
+                return;
+            }
+            if (!currentWorkspace || currentWorkspace.needs_role_selection) {
+                resetRoleSelectionView();
+                showView('role-select');
+                return;
+            }
+            if (currentWorkspace.is_employee || currentWorkspace.role === 'empleado') {
+                renderEmployeeView(currentWorkspace);
+                showView('employee');
                 return;
             }
 
@@ -947,17 +1528,19 @@
                     body: JSON.stringify({
                         plan: planId,
                         priceId,
-                        userId: currentUser.id,
-                        userEmail: currentUser.email,
                         successUrl,
                         cancelUrl
                     })
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
 
                 if (response.ok && data.url) {
                     window.location.href = data.url;
+                } else if (response.status === 403 && (data.error === 'account_mode_employee_blocked' || data.error === 'account_mode_not_confirmed')) {
+                    alert(data.message || 'Debes configurar tu cuenta como Autónomo antes de contratar un plan.');
+                    resetButtons();
+                    await init();
                 } else {
                     alert('Error al conectar con la pasarela de pago. Inténtalo de nuevo o contacta a info@nettoapp.eu');
                     resetButtons();
