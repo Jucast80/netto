@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portal de suscripciones de Netto – Gestión inteligente para autónomos.">
+    <meta id="meta-description" name="description" content="Portal de suscripciones de Netto – Gestión inteligente para autónomos.">
     <!-- CSP: bloquea XSS y recursos externos no autorizados -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:; connect-src 'self' https://mjxyncbtlwvnrlbvrpmq.supabase.co https://accounts.google.com; frame-ancestors 'none';">
     <!-- Anti-clickjacking -->
@@ -50,12 +50,20 @@
       posthog.init('phc_pnDcYzCHdGcATJQcio4xBAcDCvXmZAwipZ9j89k6EMYy',{api_host:'https://eu.i.posthog.com', person_profiles: 'identified_only'})
     </script>
 </head>
-<body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col items-center py-10 px-4">
+<body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col items-center py-8 px-4">
+
+    <!-- Top Language Switcher -->
+    <div class="w-full max-w-5xl flex justify-end mb-2">
+        <div class="inline-flex items-center bg-white border border-gray-200 rounded-full p-1 shadow-sm" role="group" aria-label="Language" data-i18n-aria="common.language_label">
+            <button type="button" id="lang-btn-es" data-lang-btn="es" class="px-3 py-1 rounded-full text-xs font-extrabold transition-colors bg-gray-900 text-white">ES</button>
+            <button type="button" id="lang-btn-en" data-lang-btn="en" class="px-3 py-1 rounded-full text-xs font-extrabold transition-colors text-gray-500 hover:text-gray-900">EN</button>
+        </div>
+    </div>
 
     <!-- Header Logo -->
     <div class="mb-10 text-center">
         <h1 class="text-4xl font-black tracking-tight text-gray-900">NETTO</h1>
-        <p class="text-gray-500 mt-2 font-medium">Portal de Suscripciones</p>
+        <p class="text-gray-500 mt-2 font-medium" data-i18n="header.subtitle">Portal de Suscripciones</p>
     </div>
 
     <!-- MAIN CONTAINER -->
@@ -66,56 +74,56 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="text-gray-500 font-medium">Cargando...</p>
+            <p class="text-gray-500 font-medium" data-i18n="common.loading">Cargando...</p>
         </div>
 
         <!-- AUTH VIEW (Login / Registro) -->
         <div id="auth-view" class="hidden max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div class="p-8">
-                <h2 id="auth-title" class="text-2xl font-bold text-center mb-6">Inicia Sesión</h2>
+                <h2 id="auth-title" class="text-2xl font-bold text-center mb-6" data-i18n="auth.login_title">Inicia Sesión</h2>
                 
                 <!-- ÚNICO FORM: solo el botón submit está dentro del form -->
                 <form id="login-form" class="space-y-4" novalidate>
                     <!-- Campos exclusivos de Registro (paridad con la app móvil) -->
                     <div id="signup-only-fields" class="hidden space-y-4">
                         <div>
-                            <span class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo vas a usar Netto?</span>
-                            <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?">
+                            <span class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="role.question">¿Cómo vas a usar Netto?</span>
+                            <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?" data-i18n-aria="role.question">
                                 <button type="button" role="radio" aria-checked="false" data-signup-role="autonomo"
                                         class="signup-role-card text-left p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-brand transition-all focus:outline-none focus:ring-2 focus:ring-brand">
-                                    <div class="text-sm font-extrabold text-gray-900">Autónomo / Empresa</div>
-                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug">Facturación AEAT, gastos y equipo</div>
+                                    <div class="text-sm font-extrabold text-gray-900" data-i18n="role.autonomo_short">Autónomo / Empresa</div>
+                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug" data-i18n="role.autonomo_sub">Facturación AEAT, gastos y equipo</div>
                                 </button>
                                 <button type="button" role="radio" aria-checked="false" data-signup-role="empleado"
                                         class="signup-role-card text-left p-3 rounded-xl border border-gray-200 bg-gray-50 hover:border-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <div class="text-sm font-extrabold text-gray-900">Empleado</div>
-                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug">Control horario y código NET</div>
+                                    <div class="text-sm font-extrabold text-gray-900" data-i18n="role.employee_short">Empleado</div>
+                                    <div class="text-xs text-gray-500 mt-0.5 leading-snug" data-i18n="role.employee_sub">Control horario y código NET</div>
                                 </button>
                             </div>
                             <div id="signup-role-note" class="hidden mt-2.5 p-3 rounded-xl border text-xs font-semibold leading-relaxed"></div>
                         </div>
 
                         <div>
-                            <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1">Nombre completo</label>
+                            <label for="full-name" class="block text-sm font-semibold text-gray-700 mb-1" data-i18n="auth.full_name_label">Nombre completo</label>
                             <input type="text" id="full-name" name="fullName" autocomplete="name"
                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
-                                   placeholder="Ej. Laura García" maxlength="120">
+                                   placeholder="Ej. Laura García" data-i18n-placeholder="auth.full_name_placeholder" maxlength="120">
                         </div>
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1" data-i18n="auth.email_label">Correo electrónico</label>
                         <input type="email" id="email" name="email" required autocomplete="email"
                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all"
-                               placeholder="tu@email.com" maxlength="254">
+                               placeholder="tu@email.com" data-i18n-placeholder="auth.email_placeholder" maxlength="254">
                     </div>
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-1" data-i18n="auth.password_label">Contraseña</label>
                         <div class="relative">
                             <input type="password" id="password" name="password" required autocomplete="current-password"
                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all pr-12"
                                    placeholder="••••••••" maxlength="128">
-                            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Mostrar/Ocultar contraseña">
+                            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Mostrar/Ocultar contraseña" data-i18n-aria="auth.toggle_password_aria">
                                 <svg id="eye-icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -126,7 +134,7 @@
                             </button>
                         </div>
                         <div id="forgot-password-container" class="mt-2 text-right">
-                            <button type="button" id="forgot-password-btn" class="text-sm font-semibold text-brand hover:text-brand-dark transition-colors">¿Olvidaste tu contraseña?</button>
+                            <button type="button" id="forgot-password-btn" class="text-sm font-semibold text-brand hover:text-brand-dark transition-colors" data-i18n="auth.forgot_password">¿Olvidaste tu contraseña?</button>
                         </div>
                     </div>
                     
@@ -136,11 +144,11 @@
                     <div class="flex items-start space-x-2 mt-4 mb-2">
                         <input type="checkbox" id="terms-checkbox" class="w-4 h-4 mt-0.5 text-brand rounded focus:ring-brand border-gray-300 cursor-pointer">
                         <label for="terms-checkbox" class="text-xs text-gray-600 cursor-pointer leading-tight">
-                            He leído y acepto los <a href="#" id="link-terms" class="text-brand underline font-semibold">Términos del Servicio</a> y la <a href="#" id="link-privacy" class="text-brand underline font-semibold">Política de Privacidad</a>.
+                            <span data-i18n="auth.terms_prefix">He leído y acepto los </span><a href="#" id="link-terms" class="text-brand underline font-semibold" data-i18n="auth.terms_link">Términos del Servicio</a><span data-i18n="auth.terms_middle"> y la </span><a href="#" id="link-privacy" class="text-brand underline font-semibold" data-i18n="auth.privacy_link">Política de Privacidad</a><span data-i18n="auth.terms_suffix">.</span>
                         </label>
                     </div>
 
-                    <button type="submit" id="login-btn" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center">
+                    <button type="submit" id="login-btn" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center" data-i18n="common.continue">
                         Continuar
                     </button>
                 </form>
@@ -153,15 +161,15 @@
                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                     </svg>
-                    Continuar con Google
+                    <span id="google-login-text" data-i18n="auth.continue_google">Continuar con Google</span>
                 </button>
 
                 <div class="mt-6 text-center text-sm">
-                    <span id="auth-switch-text" class="text-gray-600">¿No tienes cuenta?</span>
-                    <button type="button" id="toggle-auth-mode" class="text-brand font-bold hover:underline ml-1">Regístrate</button>
+                    <span id="auth-switch-text" class="text-gray-600" data-i18n="auth.no_account">¿No tienes cuenta?</span>
+                    <button type="button" id="toggle-auth-mode" class="text-brand font-bold hover:underline ml-1" data-i18n="auth.sign_up_action">Regístrate</button>
                 </div>
 
-                <p class="text-center text-xs text-gray-400 mt-4 px-2">
+                <p class="text-center text-xs text-gray-400 mt-4 px-2" data-i18n="auth.same_account_hint">
                     Usa la misma cuenta si ya estás registrado en la app móvil de Netto.
                 </p>
             </div>
@@ -176,7 +184,7 @@
                     </div>
                     <span id="role-select-email" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
                 </div>
-                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors" data-i18n="common.logout">Cerrar Sesión</button>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
@@ -185,23 +193,23 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-extrabold text-center text-gray-900 mb-2">¿Cómo vas a usar Netto?</h2>
-                <p class="text-sm text-gray-500 text-center mb-6 leading-relaxed">
+                <h2 class="text-2xl font-extrabold text-center text-gray-900 mb-2" data-i18n="role.question">¿Cómo vas a usar Netto?</h2>
+                <p class="text-sm text-gray-500 text-center mb-6 leading-relaxed" data-i18n="role.onboarding_subtitle">
                     Elige tu perfil para configurar un entorno limpio y adaptado desde el primer segundo.
                 </p>
 
-                <div class="space-y-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?">
+                <div class="space-y-3" role="radiogroup" aria-label="¿Cómo vas a usar Netto?" data-i18n-aria="role.question">
                     <button type="button" role="radio" aria-checked="false" data-onboarding-role="autonomo"
                             class="onboarding-role-card w-full text-left p-4 rounded-2xl border border-gray-200 bg-white hover:border-brand transition-all focus:outline-none focus:ring-2 focus:ring-brand">
                         <div class="flex items-start justify-between gap-3">
                             <div>
-                                <div class="font-extrabold text-base text-gray-900">Autónomo o Empresa</div>
-                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <div class="font-extrabold text-base text-gray-900" data-i18n="role.autonomo_long">Autónomo o Empresa</div>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" data-i18n="role.autonomo_trial_badge">
                                     Incluye 14 días de prueba Pro
                                 </span>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed">
+                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed" data-i18n="role.autonomo_long_desc">
                             Emite facturas legales (Ley 11/2021), calcula tus modelos 130/303 y gestiona la jornada laboral de tu equipo.
                         </p>
                     </button>
@@ -210,26 +218,26 @@
                             class="onboarding-role-card w-full text-left p-4 rounded-2xl border border-gray-200 bg-white hover:border-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <div class="flex items-start justify-between gap-3">
                             <div>
-                                <div class="font-extrabold text-base text-gray-900">Empleado / Trabajador</div>
-                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                <div class="font-extrabold text-base text-gray-900" data-i18n="role.employee_long">Empleado / Trabajador</div>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200" data-i18n="role.employee_free_badge">
                                     Solo control horario · Gratis
                                 </span>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed">
+                        <p class="text-xs text-gray-600 mt-2.5 leading-relaxed" data-i18n="role.employee_long_desc">
                             Registra tus jornadas, pausas y tareas entrando con el código NET que te enviará tu responsable.
                         </p>
                     </button>
                 </div>
 
-                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">
+                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed" data-i18n="role.employee_tip">
                     Si trabajas contratado en una empresa y te han pedido descargar Netto para fichar, selecciona Empleado.
                 </p>
 
                 <div id="role-select-error" class="hidden mt-4 bg-red-50 text-red-600 text-sm p-3 rounded-lg font-medium" role="alert" aria-live="polite"></div>
 
                 <button type="button" id="confirm-role-btn"
-                        class="mt-6 w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl transition-colors flex justify-center items-center shadow-md">
+                        class="mt-6 w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl transition-colors flex justify-center items-center shadow-md" data-i18n="common.continue">
                     Continuar
                 </button>
             </div>
@@ -244,7 +252,7 @@
                     </div>
                     <span id="employee-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
                 </div>
-                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors" data-i18n="common.logout">Cerrar Sesión</button>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border border-blue-100 p-8 text-center">
@@ -254,21 +262,21 @@
                     </svg>
                 </div>
 
-                <span id="employee-status-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
+                <span id="employee-status-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-3" data-i18n="employee.badge_default">
                     Cuenta de Empleado
                 </span>
 
-                <h2 id="employee-title" class="text-2xl font-black text-gray-900 mb-2">No necesitas suscripción</h2>
-                <p id="employee-desc" class="text-sm text-gray-600 leading-relaxed mb-6">
+                <h2 id="employee-title" class="text-2xl font-black text-gray-900 mb-2" data-i18n="employee.title_default">No necesitas suscripción</h2>
+                <p id="employee-desc" class="text-sm text-gray-600 leading-relaxed mb-6" data-i18n="employee.desc_default">
                     Tu cuenta está configurada exclusivamente para control horario. El acceso lo gestiona tu empresa sin coste para ti.
                 </p>
 
                 <!-- Estado vinculado a empresa -->
                 <div id="employee-linked-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-left mb-6">
-                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Empresa vinculada</div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1" data-i18n="employee.linked_company_label">Empresa vinculada</div>
                     <div id="employee-company-name" class="text-lg font-extrabold text-gray-900"></div>
                     <div id="employee-role-badge" class="text-xs font-semibold text-emerald-700 mt-1"></div>
-                    <p class="text-xs text-gray-600 mt-3 leading-relaxed">
+                    <p class="text-xs text-gray-600 mt-3 leading-relaxed" data-i18n="employee.linked_instruction">
                         Abre la aplicación móvil de Netto en tu teléfono para registrar tus entradas, pausas, salidas y tareas asignadas.
                     </p>
                 </div>
@@ -276,19 +284,19 @@
                 <!-- Estado pendiente de vinculación -->
                 <div id="employee-unlinked-box" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-5 text-left space-y-4 mb-6">
                     <div>
-                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">1. Comparte tu correo con tu empresa</div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1" data-i18n="employee.step1_title">1. Comparte tu correo con tu empresa</div>
                         <div class="flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5">
                             <span id="employee-share-email" class="text-sm font-bold text-gray-900 truncate"></span>
                             <button type="button" id="copy-employee-email-btn"
-                                    class="flex-shrink-0 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors">
+                                    class="flex-shrink-0 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors" data-i18n="common.copy">
                                 Copiar
                             </button>
                         </div>
                         <p id="copy-employee-email-feedback" class="hidden text-xs text-emerald-600 font-semibold mt-1"></p>
                     </div>
                     <div>
-                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">2. Introduce tu código NET en la app</div>
-                        <p class="text-xs text-gray-600 leading-relaxed">
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1" data-i18n="employee.step2_title">2. Introduce tu código NET en la app</div>
+                        <p class="text-xs text-gray-600 leading-relaxed" data-i18n="employee.step2_desc">
                             Cuando tu responsable te envíe el código NET, abre la app móvil de Netto, inicia sesión con este correo y pega el código para vincular tu jornada.
                         </p>
                     </div>
@@ -299,22 +307,22 @@
                 <!-- Cambio seguro a Autónomo (solo si no está vinculado a ninguna empresa) -->
                 <div id="switch-autonomo-wrap" class="hidden pt-4 border-t border-gray-100">
                     <button type="button" id="switch-autonomo-btn"
-                            class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                            class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors" data-i18n="employee.switch_prompt">
                         ¿Elegiste Empleado por error? Cambiar a cuenta de Autónomo
                     </button>
 
                     <div id="switch-autonomo-confirm-box" class="hidden mt-4 bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left">
-                        <div class="text-sm font-bold text-gray-900 mb-1">¿Cambiar a cuenta Autónomo?</div>
-                        <p class="text-xs text-gray-600 leading-relaxed mb-3">
+                        <div class="text-sm font-bold text-gray-900 mb-1" data-i18n="employee.switch_confirm_title">¿Cambiar a cuenta Autónomo?</div>
+                        <p class="text-xs text-gray-600 leading-relaxed mb-3" data-i18n="employee.switch_confirm_desc">
                             Tu cuenta pasará al entorno de Autónomo / Empresa con facturación y gestión fiscal. Solo es posible si aún no tienes equipo ni fichajes.
                         </p>
                         <div class="flex items-center gap-2">
                             <button type="button" id="confirm-switch-autonomo-btn"
-                                    class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-colors">
+                                    class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-colors" data-i18n="employee.switch_confirm_btn">
                                 Sí, cambiar a Autónomo
                             </button>
                             <button type="button" id="cancel-switch-autonomo-btn"
-                                    class="px-3 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-gray-200 bg-white transition-colors">
+                                    class="px-3 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-gray-200 bg-white transition-colors" data-i18n="common.cancel">
                                 Cancelar
                             </button>
                         </div>
@@ -327,14 +335,14 @@
         <div id="workspace-error-view" class="hidden max-w-md mx-auto">
             <div class="flex justify-between items-center mb-6 px-2">
                 <span id="error-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[220px]">usuario@email.com</span>
-                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+                <button type="button" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors" data-i18n="common.logout">Cerrar Sesión</button>
             </div>
             <div class="bg-white rounded-3xl shadow-xl border border-red-100 p-8 text-center">
                 <div class="text-red-500 text-3xl mb-3" aria-hidden="true">⚠️</div>
-                <h2 class="text-xl font-bold text-gray-900 mb-2">No se pudo verificar tu cuenta</h2>
+                <h2 class="text-xl font-bold text-gray-900 mb-2" data-i18n="workspace_error.title">No se pudo verificar tu cuenta</h2>
                 <p id="workspace-error-text" class="text-sm text-gray-600 mb-6"></p>
                 <button type="button" id="retry-workspace-btn"
-                        class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                        class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl transition-colors" data-i18n="common.retry">
                     Reintentar
                 </button>
             </div>
@@ -349,7 +357,7 @@
                     </div>
                     <span id="user-email-display" class="font-medium text-gray-700 text-sm truncate max-w-[200px]">usuario@email.com</span>
                 </div>
-                <button id="logout-btn" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cerrar Sesión</button>
+                <button id="logout-btn" class="js-logout-btn text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors" data-i18n="common.logout">Cerrar Sesión</button>
             </div>
 
             <!-- Active / Free Subscription Banner -->
@@ -364,8 +372,8 @@
                                 </svg>
                             </div>
                             <div class="text-left">
-                                <div id="active-sub-title" class="text-green-800 font-bold text-lg leading-tight">Suscripción Activa ✅</div>
-                                <div id="active-plan-label" class="text-green-700 text-sm font-medium mt-0.5">Plan activo</div>
+                                <div id="active-sub-title" class="text-green-800 font-bold text-lg leading-tight" data-i18n="sub.active_title">Suscripción Activa ✅</div>
+                                <div id="active-plan-label" class="text-green-700 text-sm font-medium mt-0.5" data-i18n="sub.active_plan_fallback">Plan activo</div>
                                 <div id="active-renewal-label" class="text-green-600 text-xs mt-0.5"></div>
                             </div>
                         </div>
@@ -378,99 +386,99 @@
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                             </svg>
-                            Gestionar Facturación
+                            <span id="manage-billing-text" data-i18n="sub.manage_billing">Gestionar Facturación</span>
                         </button>
                     </div>
-                    <p id="active-sub-note" class="text-green-700 text-sm mt-4 text-center">Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.</p>
+                    <p id="active-sub-note" class="text-green-700 text-sm mt-4 text-center" data-i18n="sub.manage_note">Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.</p>
                 </div>
             </div>
 
 
             <!-- Toggle Anual/Mensual -->
             <div class="flex justify-center mb-10">
-                <div class="bg-white border border-gray-200 p-1.5 rounded-full inline-flex items-center shadow-sm" role="group" aria-label="Seleccionar período de facturación">
-                    <button id="toggle-monthly" class="px-6 py-2.5 rounded-full text-sm font-bold bg-brand text-white shadow-md transition-all" aria-pressed="true">Mensual</button>
-                    <button id="toggle-annual" class="px-6 py-2.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 transition-all" aria-pressed="false">Anual (-2 Meses)</button>
+                <div class="bg-white border border-gray-200 p-1.5 rounded-full inline-flex items-center shadow-sm" role="group" aria-label="Seleccionar período de facturación" data-i18n-aria="plans.billing_period_aria">
+                    <button id="toggle-monthly" class="px-6 py-2.5 rounded-full text-sm font-bold bg-brand text-white shadow-md transition-all" aria-pressed="true" data-i18n="plans.monthly">Mensual</button>
+                    <button id="toggle-annual" class="px-6 py-2.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 transition-all" aria-pressed="false" data-i18n="plans.annual">Anual (-2 Meses)</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Plan Básico -->
                 <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm flex flex-col relative">
-                    <h3 class="text-gray-500 font-bold text-sm tracking-widest uppercase">Plan Básico</h3>
+                    <h3 class="text-gray-500 font-bold text-sm tracking-widest uppercase" data-i18n="plans.basico.name">Plan Básico</h3>
                     <div class="mt-4 flex items-baseline text-gray-900">
                         <span id="price-basico" class="text-5xl font-extrabold tracking-tight">9.99</span>
                         <span class="text-3xl font-extrabold">€</span>
                         <span id="period-basico" class="ml-1 text-xl font-medium text-gray-500">/mes</span>
                     </div>
-                    <p class="mt-2 text-sm text-gray-500">Autónomo Básico</p>
+                    <p class="mt-2 text-sm text-gray-500" data-i18n="plans.basico.sub">Autónomo Básico</p>
                     <ul class="mt-6 space-y-3 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Facturas y presupuestos ilimitados</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Escáner IA: 50 facturas/mes</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Asesor IA: 5 consultas/día</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Previsión IVA e IRPF (303 y 130)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Conciliación PDF (Manual)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Sincronización Drive (Manual)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Soporte y Ayuda</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f1">Facturas y presupuestos ilimitados</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f2">Escáner IA: 50 facturas/mes</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f3">Asesor IA: 5 consultas/día</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f4">Previsión IVA e IRPF (303 y 130)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f5">Conciliación PDF (Manual)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f6">Sincronización Drive (Manual)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f7">Soporte y Ayuda</span></li>
                     </ul>
-                    <button onclick="checkout('basico')" class="plan-btn mt-8 block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors">Elegir Plan Básico</button>
+                    <button onclick="checkout('basico')" class="plan-btn mt-8 block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors" data-i18n="plans.basico.cta">Elegir Plan Básico</button>
                 </div>
 
                 <!-- Pro -->
                 <div class="bg-gray-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col relative transform scale-105 z-10 border-2 border-brand">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest" data-i18n="plans.pro.badge">
                         MÁS POPULAR
                     </div>
-                    <h3 class="text-gray-400 font-bold text-sm tracking-widest uppercase">Plan Autónomo Pro</h3>
+                    <h3 class="text-gray-400 font-bold text-sm tracking-widest uppercase" data-i18n="plans.pro.name">Plan Autónomo Pro</h3>
                     <div class="mt-4 flex items-baseline">
                         <span id="price-pro" class="text-5xl font-extrabold tracking-tight">19.99</span>
                         <span class="text-3xl font-extrabold">€</span>
                         <span id="period-pro" class="ml-1 text-xl font-medium text-gray-400">/mes</span>
                     </div>
-                    <p class="mt-2 text-sm text-gray-400">IA fiscal avanzada y control horario</p>
+                    <p class="mt-2 text-sm text-gray-400" data-i18n="plans.pro.sub">IA fiscal avanzada y control horario</p>
                     <ul class="mt-6 space-y-3 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Todo lo de Básico + Escáner IA (500/mes)*</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Asesor IA (100/día*) + consultas en línea BOE y AEAT (15/mes)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Auditoría IA de borradores trimestrales (7 modelos AEAT)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Auto-conciliación IA y subida de extractos bancarios (3 cuenta y 3 tarjeta)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Radar fiscal, Bienes de Inversión y auto-completado de datos de proveedores</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Alertas IA proactivas y Google Drive automático</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug">Control horario equipo (1 plaza gratis) y horas a factura</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f1">Todo lo de Básico + Escáner IA (500/mes)*</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f2">Asesor IA (100/día*) + consultas en línea BOE y AEAT (15/mes)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f3">Auditoría IA de borradores trimestrales (7 modelos AEAT)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f4">Auto-conciliación IA y subida de extractos bancarios (3 cuenta y 3 tarjeta)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f5">Radar fiscal, Bienes de Inversión y auto-completado de datos de proveedores</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f6">Alertas IA proactivas y Google Drive automático</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.pro.f7">Control horario equipo (1 plaza gratis) y horas a factura</span></li>
                     </ul>
-                    <button id="pro-plan-btn" onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30">Comenzar Prueba Gratis</button>
+                    <button id="pro-plan-btn" onclick="checkout('pro')" class="plan-btn mt-8 block w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-brand/30" data-i18n="plans.pro.cta_trial">Comenzar Prueba Gratis</button>
                 </div>
 
                 <!-- VIP -->
                 <div class="bg-amber-50 rounded-3xl p-8 border-2 border-amber-200 shadow-sm flex flex-col relative">
                     <div class="flex items-center space-x-2 mb-2">
                         <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <h3 class="text-amber-700 font-bold text-sm tracking-widest uppercase">Programa Embajadores VIP</h3>
+                        <h3 class="text-amber-700 font-bold text-sm tracking-widest uppercase" data-i18n="plans.vip.name">Programa Embajadores VIP</h3>
                     </div>
 
                     <div class="inline-block bg-amber-100/50 border border-amber-400 px-3 py-1.5 rounded-lg mb-4 mt-2">
-                        <span id="vip-counter" class="text-amber-600 font-bold text-xs">Cargando plazas...</span>
+                        <span id="vip-counter" class="text-amber-600 font-bold text-xs" data-i18n="plans.vip.loading_spots">Cargando plazas...</span>
                     </div>
 
                     <div class="mt-2 flex items-baseline text-gray-900">
                         <span class="text-5xl font-extrabold tracking-tight text-amber-600">11.11€</span>
-                        <span class="ml-1 text-xl font-semibold text-gray-500">/mes</span>
+                        <span id="period-vip" class="ml-1 text-xl font-semibold text-gray-500">/mes</span>
                     </div>
-                    <p class="mt-2 text-sm text-amber-700 font-medium">Tarifa Vitalicia (Plazas Limitadas)</p>
+                    <p class="mt-2 text-sm text-amber-700 font-medium" data-i18n="plans.vip.sub">Tarifa Vitalicia (Plazas Limitadas)</p>
                     <ul class="mt-8 space-y-4 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo el poder del Plan Pro incluido al instante.</li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>*Precio blindado para siempre (mientras no canceles).</li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="plans.vip.f1">Todo el poder del Plan Pro incluido al instante.</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-amber-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span data-i18n="plans.vip.f2">*Precio blindado para siempre (mientras no canceles).</span></li>
                     </ul>
-                    <button id="vip-btn" onclick="checkout('vip')" class="plan-btn mt-8 block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">Asegurar mi plaza VIP</button>
+                    <button id="vip-btn" onclick="checkout('vip')" class="plan-btn mt-8 block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md" data-i18n="plans.vip.cta">Asegurar mi plaza VIP</button>
                 </div>
             </div>
 
             <div class="mt-8 max-w-3xl mx-auto bg-gray-100 border border-gray-200 rounded-2xl p-4 text-center">
-                <p class="text-xs font-medium text-gray-700 leading-relaxed">
+                <p class="text-xs font-medium text-gray-700 leading-relaxed" data-i18n="plans.compliance_note">
                     Las facturas emitidas por Netto App cumplen al 100% con la Ley Antifraude (Ley 11/2021 y RD 1007/2023), garantizando su inalterabilidad, trazabilidad y encadenamiento seguro ante la AEAT.
                 </p>
             </div>
 
-            <p class="text-center text-xs text-gray-400 mt-4 max-w-3xl mx-auto px-4 pb-12">
+            <p class="text-center text-xs text-gray-400 mt-4 max-w-3xl mx-auto px-4 pb-12" data-i18n="plans.fair_use">
                 *Servicio sujeto a Política de Uso Justo: las funcionalidades automatizadas de Inteligencia Artificial (500 escaneos/mes, 100 consultas diarias al Asesor IA, 15 consultas en línea BOE y AEAT/mes) y la lectura de extractos bancarios (3 de cuenta y 3 de tarjeta al mes) están sujetas a límites técnicos de seguridad operativa y disponibilidad del servicio, para evitar usos automatizados o abusivos. Las respuestas de IA tienen carácter meramente orientativo y no sustituyen el dictamen de un asesor fiscal colegiado. El Plan Pro incluye 1 plaza de trabajador gratuita para Control Horario; las plazas adicionales tienen un coste de 2,99 €/mes (+ IVA). Pagos procesados de forma 100% segura por Stripe. Cancela en cualquier momento.
             </p>
         </div>
@@ -481,8 +489,8 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeLegalModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 md:top-10 md:bottom-10 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-2xl bg-white rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transition-transform duration-300 transform translate-y-full" id="legal-modal-content">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                <h2 id="legal-modal-title" class="text-xl font-bold text-gray-900">Términos</h2>
-                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Cerrar">
+                <h2 id="legal-modal-title" class="text-xl font-bold text-gray-900" data-i18n="legal.modal_title">Términos</h2>
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Cerrar" data-i18n-aria="common.close">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -490,7 +498,7 @@
                 <!-- Content injected via JS (contenido estático fijo, sin XSS) -->
             </div>
             <div class="p-6 border-t border-gray-100 bg-white">
-                <button onclick="closeLegalModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md">
+                <button onclick="closeLegalModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-md" data-i18n="common.understood">
                     Entendido
                 </button>
             </div>
@@ -506,33 +514,33 @@
                     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand to-emerald-400 mx-auto mb-4 flex items-center justify-center shadow-lg shadow-brand/30">
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight">¡Bienvenido a Netto PRO!<br>Tienes 14 días gratis.</h2>
-                    <p class="text-gray-500 text-sm">Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso al Plan Autónomo Pro*.</p>
+                    <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight"><span data-i18n="welcome.title_l1">¡Bienvenido a Netto PRO!</span><br><span data-i18n="welcome.title_l2">Tienes 14 días gratis.</span></h2>
+                    <p class="text-gray-500 text-sm" data-i18n="welcome.subtitle">Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso al Plan Autónomo Pro*.</p>
                 </div>
 
                 <div class="mb-6">
-                    <h3 class="font-bold text-gray-900 mb-3">Tu acceso actual incluye:</h3>
+                    <h3 class="font-bold text-gray-900 mb-3" data-i18n="welcome.includes_title">Tu acceso actual incluye:</h3>
                     <ul class="space-y-2">
-                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Escáner IA (500 facturas/mes)*</li>
-                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Asesor IA (100/día*) y Auditoría de borradores AEAT</li>
-                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Auto-conciliación bancaria IA (3 cuenta y 3 tarjeta)</li>
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-i18n="welcome.inc1">Escáner IA (500 facturas/mes)*</span></li>
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-i18n="welcome.inc2">Asesor IA (100/día*) y Auditoría de borradores AEAT</span></li>
+                        <li class="flex items-center text-sm font-medium"><svg class="w-5 h-5 text-brand mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-i18n="welcome.inc3">Auto-conciliación bancaria IA (3 cuenta y 3 tarjeta)</span></li>
                     </ul>
                 </div>
 
                 <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                    <h3 class="font-bold text-gray-900 text-sm mb-2">Transparencia Total:</h3>
-                    <p class="text-xs text-gray-600 mb-3">Una vez finalicen tus 14 días, <strong>NO se te cobrará nada</strong>. Si decides no activar una suscripción, tu cuenta pasará automáticamente a nuestro <strong>Plan Gratis (Freemium)</strong>. ¿Qué incluye el plan gratuito?</p>
+                    <h3 class="font-bold text-gray-900 text-sm mb-2" data-i18n="welcome.transparency_title">Transparencia Total:</h3>
+                    <p class="text-xs text-gray-600 mb-3" data-i18n="welcome.transparency_desc">Una vez finalicen tus 14 días, NO se te cobrará nada. Si decides no activar una suscripción, tu cuenta pasará automáticamente a nuestro Plan Gratis (Freemium). ¿Qué incluye el plan gratuito?</p>
                     <ul class="space-y-2 text-xs text-gray-500">
-                        <li class="flex items-start">📸 <span class="ml-1">Escáner IA limitado (3 facturas/mes).</span></li>
-                        <li class="flex items-start">💬 <span class="ml-1">Asesor IA restringido (1 consulta/mes).</span></li>
-                        <li class="flex items-start">✋ <span class="ml-1">Conciliación bancaria manual.</span></li>
-                        <li class="flex items-start">❌ <span class="ml-1">Sin Alertas Proactivas.</span></li>
-                        <li class="flex items-start">✅ <span class="ml-1">Presupuestos y facturas ilimitadas manualmente.</span></li>
+                        <li class="flex items-start">📸 <span class="ml-1" data-i18n="welcome.free1">Escáner IA limitado (3 facturas/mes).</span></li>
+                        <li class="flex items-start">💬 <span class="ml-1" data-i18n="welcome.free2">Asesor IA restringido (1 consulta/mes).</span></li>
+                        <li class="flex items-start">✋ <span class="ml-1" data-i18n="welcome.free3">Conciliación bancaria manual.</span></li>
+                        <li class="flex items-start">❌ <span class="ml-1" data-i18n="welcome.free4">Sin Alertas Proactivas.</span></li>
+                        <li class="flex items-start">✅ <span class="ml-1" data-i18n="welcome.free5">Presupuestos y facturas ilimitadas manualmente.</span></li>
                     </ul>
                 </div>
             </div>
             <div class="p-4 md:p-6 bg-white border-t border-gray-100 mt-auto">
-                <button onclick="closeWelcomeTrialModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl text-center shadow-lg transition-transform active:scale-95">
+                <button onclick="closeWelcomeTrialModal()" class="w-full bg-brand hover:bg-brandHover text-white font-bold py-3.5 px-4 rounded-xl text-center shadow-lg transition-transform active:scale-95" data-i18n="welcome.cta">
                     ¡Entendido, vamos a exprimirlo!
                 </button>
             </div>
@@ -559,48 +567,544 @@
         };
 
         // ==========================================
-        // TEXTOS LEGALES (estáticos, sin HTML externo)
+        // BILINGÜISMO ESTRICTO (ES / EN)
         // ==========================================
-        const LEGAL_SECTIONS = {
-            terms: [
-                { title: '1. Naturaleza del Servicio', text: 'Netto es una herramienta tecnológica de asistencia para la gestión administrativa y contable. Netto NO es una asesoría fiscal, contable o legal humana certificada. Toda la información, previsiones de impuestos (IVA, IRPF) y sugerencias proporcionadas por el "Asesor IA" o los algoritmos de la aplicación son meramente orientativas. El usuario es el único y exclusivo responsable de la veracidad de los datos introducidos y de la presentación final de sus obligaciones tributarias ante la Agencia Tributaria.' },
-                { title: '2. Limitación de Responsabilidad', text: 'Netto no se hace responsable de posibles sanciones, recargos, errores de cálculo o problemas legales derivados de la presentación de impuestos basados en la información de la aplicación. Recomendamos siempre revisar los datos con un profesional cualificado. El uso del sistema de escáner OCR mediante IA puede contener errores de interpretación; es absoluta responsabilidad del usuario verificar manualmente los montos, fechas y NIFs escaneados antes de guardarlos.' },
-                { title: '3. Política de Uso Razonable (Fair Use Policy)', text: 'El uso de las funciones "Escáner IA Ilimitado" y "Asesor IA Ilimitado" en el Plan Pro está sujeto a límites de seguridad técnica (500 escaneos por mes y 100 consultas diarias, respectivamente) para prevenir fraudes, minería de datos, uso automatizado mediante bots o el uso de una cuenta individual por parte de agencias o gestorías con múltiples clientes.' },
-                { title: '4. Suscripciones y Renuncia Expresa al Desistimiento (B2C)', text: 'Al tratarse de un servicio digital con acceso inmediato a su contenido y herramientas, el usuario consiente de forma expresa que la ejecución del contrato comience en el momento de la suscripción. Por consiguiente, de conformidad con la normativa europea de protección al consumidor (Directiva 93/13/CEE), el usuario reconoce y acepta explícitamente que PIERDE SU DERECHO DE DESISTIMIENTO de 14 días en el instante en que accede al servicio. Todos los planes son de pago recurrente y no tienen permanencia. La cancelación detiene el cobro del siguiente ciclo sin reembolsos prorrateados.' },
-                { title: '5. Carga de Documentos Bancarios', text: 'La conciliación bancaria se realiza mediante la subida manual de extractos bancarios en PDF por parte del usuario. Netto no se conecta automáticamente a las cuentas bancarias del usuario, garantizando así que no tenemos acceso a credenciales bancarias.' },
-                { title: '6. Disponibilidad del Servicio', text: 'Netto no garantiza una disponibilidad del 100% del servicio y se exime de responsabilidad por pérdidas de datos derivadas de fallos en servicios de terceros.' },
-                { title: '7. Resolución de Litigios (UE) y Reportes (DSA)', text: 'Conforme al Art. 14.1 del Reglamento (UE) 524/2013, la Comisión Europea facilita una plataforma de resolución de litigios en línea: http://ec.europa.eu/consumers/odr/. Netto no está obligada a participar en un procedimiento de resolución de litigios ante una junta arbitral de consumo.' },
-                { title: '8. Sincronización con Google Drive', text: 'Al habilitar la Sincronización Automática con Google Drive, usted autoriza a Netto App a subir y gestionar los documentos de facturación en su cuenta de Google. Netto App realizará los mejores esfuerzos para asegurar que sus documentos se sincronicen correctamente; sin embargo, no se hace responsable de fallos de sincronización por causas externas.' },
-                { title: '9. Facturación Electrónica y Reglamento SIF (Veri*Factu)', text: 'Netto genera facturas aplicando el encadenamiento criptográfico (Huellas SIF) cumpliendo con los requisitos del Real Decreto 1007/2023. No obstante, Netto opera bajo la modalidad «Sistema Informático No Veri*Factu». La aplicación NO transmite facturas automáticamente a la AEAT. Es responsabilidad del usuario descargar y presentar sus libros de facturación ante la AEAT.' },
-                { title: '10. Inteligencia Artificial y Conocimiento Colectivo (RAG)', text: 'Netto integra modelos avanzados de Inteligencia Artificial que utilizan un sistema de Conocimiento Colectivo. La IA aprende de patrones genéricos, consultas y resoluciones contables de toda la comunidad para mejorar sus respuestas. Garantizamos que todos los datos sensibles de los usuarios se procesan con estricta confidencialidad y NUNCA se utilizan para entrenar modelos de IA exponiendo su identidad o datos privados. Las funciones de "Análisis Financiero Profundo" (donde la IA consulta su facturación y clientes en tiempo real para coaching proactivo) son una funcionalidad premium reservada exclusivamente para suscriptores del Plan Pro.' },
-                { title: '11. Control Horario y Registro de Jornada (RD-ley 8/2019)', text: 'Netto App facilita a los autónomos y empresas la infraestructura tecnológica para registrar diariamente la jornada laboral de sus trabajadores conforme al Real Decreto-ley 8/2019 y al artículo 34.9 del Estatuto de los Trabajadores. El empleador es el único responsable legal del cumplimiento de las obligaciones laborales y de la custodia de los registros durante los cuatro (4) años legalmente preceptivos. Netto App garantiza la inmutabilidad técnica y trazabilidad de los fichajes registrados.' },
-                { title: '12. Gestión de Equipos y Asientos Adicionales (B2B)', text: 'El Plan Pro incluye la gestión de equipo y un (1) asiento de empleado sin coste adicional de por vida. La incorporación de empleados adicionales (a partir del segundo miembro, activo o invitado) conlleva una tarifa de 2,99 €/mes (+ IVA aplicable) por asiento, facturada y prorrateada a través de Stripe en la suscripción periódica del empleador. El administrador puede dar de baja asientos en cualquier momento desde la app, cesando el cobro en el siguiente ciclo conforme a la facturación de Stripe.' },
-                { title: '13. Canal de Soporte e Incidencias Técnicas', text: 'El canal de soporte técnico e incidencias de la app permite a los usuarios comunicar dudas, errores o peticiones operativas. Todas las comunicaciones y adjuntos se transmiten de forma cifrada y confidencial con el único propósito de proveer asistencia técnica.' }
-            ],
-            privacy: [
-                { title: '1. Responsable del Tratamiento', text: 'Identidad: Juan C. Sierra T.\nContacto Legal y DPO: info@nettoapp.eu\nRegistro de Actividades de Tratamiento (RAT): Mantenemos un registro interno conforme al Art. 30 del RGPD.' },
-                { title: '2. Finalidad y Base Legitimadora (Arts. 13 y 14 RGPD)', text: 'Recopilamos información básica (email, nombre) y financiera (facturas, NIF, clientes).\n- Base 1 (Ejecución de contrato): Para proveer el servicio de digitalización y cálculo de impuestos.\n- Base 2 (Obligación Legal): Mantenimiento de registros fiscales (RD 1007/2023) y laborales (RD-ley 8/2019).\n- Base 3 (Consentimiento): Sincronización voluntaria con Google Drive y permisos puntuales de geolocalización.' },
-                { title: '3. Integración con Inteligencia Artificial (AI Act)', text: 'Para ofrecer lectura de facturas (OCR) y asistencia financiera avanzada, Netto procesa información a través de proveedores de IA líderes (ej. OpenAI). La IA tiene acceso bajo demanda a los registros financieros del usuario (facturas, gastos, clientes) estrictamente para proporcionar análisis personalizados y proactivos (ej. detectar facturas impagadas). Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos públicos. Los datos quedan aislados por usuario y las interacciones están explícitamente etiquetadas para evitar confusión.' },
-                { title: '4. Plazos de Conservación', text: 'Los datos financieros y fiscales se retendrán durante 4 años desde el final del ejercicio fiscal correspondiente, para cumplir con la Ley General Tributaria de España. Asimismo, los registros del control horario laboral (fichajes, pausas y geolocalizaciones puntuales) se conservarán obligatoriamente durante el plazo legal de cuatro (4) años exigido por el art. 34.9 del Estatuto de los Trabajadores, permaneciendo a disposición de las personas trabajadoras, sus representantes legales y la Inspección de Trabajo y Seguridad Social. Tras este periodo, o en caso de eliminación de cuenta, los datos serán destruidos o anonimizados irreversiblemente.' },
-                { title: '5. Derechos del Usuario (ARCO+)', text: 'El usuario tiene derecho de Acceso, Rectificación, Cancelación, Oposición y Portabilidad. Puede ejercer estos derechos eliminando su cuenta desde los Ajustes de la app, o escribiendo a info@nettoapp.eu.' },
-                { title: '6. Geolocalización en Fichajes (GPS Puntual - Sin Rastreo en Segundo Plano)', text: 'En estricto cumplimiento del RGPD y del art. 90 de la Ley Orgánica 3/2018 (LOPDGDD), la geolocalización del dispositivo se captura de forma estática, cifrada y puntual única y exclusivamente en el instante exacto en que la persona trabajadora pulsa para registrar la entrada o salida de su jornada. Netto App NO realiza seguimiento continuo ni geolocalización en segundo plano (background tracking), protegiendo la intimidad y el derecho a la desconexión digital de los trabajadores.' },
-                { title: '7. Relación Laboral: Responsable vs. Encargado del Tratamiento (Art. 28 RGPD)', text: 'Respecto a los datos de los empleados tratados en el Entorno Tiempo (fichajes, horas, correos, incidencias), el autónomo o empresa empleadora actúa como Responsable del Tratamiento y Netto App actúa como Encargado del Tratamiento, procesando la información exclusivamente bajo las directrices del empleador para dar cumplimiento a sus obligaciones laborales.' },
-                { title: '8. Pasarela de Pagos Segura (Stripe)', text: 'Todos los pagos de suscripciones y asientos de empleados se procesan a través de Stripe Payments Europe, Ltd., bajo los más altos estándares de seguridad bancaria (certificación PCI-DSS Nivel 1). Netto App nunca recopila ni almacena números de tarjeta bancaria.' }
-            ]
+        const I18N_WEB = {
+            es: {
+                page_title: 'Suscripciones | Netto',
+                meta_desc: 'Portal de suscripciones de Netto – Gestión inteligente para autónomos.',
+                'common.language_label': 'Idioma',
+                'common.loading': 'Cargando...',
+                'common.continue': 'Continuar',
+                'common.logout': 'Cerrar Sesión',
+                'common.copy': 'Copiar',
+                'common.cancel': 'Cancelar',
+                'common.retry': 'Reintentar',
+                'common.close': 'Cerrar',
+                'common.understood': 'Entendido',
+                'header.subtitle': 'Portal de Suscripciones',
+                'auth.login_title': 'Inicia Sesión',
+                'auth.signup_title': 'Crear Cuenta',
+                'auth.full_name_label': 'Nombre completo',
+                'auth.full_name_placeholder': 'Ej. Laura García',
+                'auth.email_label': 'Correo electrónico',
+                'auth.email_placeholder': 'tu@email.com',
+                'auth.password_label': 'Contraseña',
+                'auth.toggle_password_aria': 'Mostrar/Ocultar contraseña',
+                'auth.forgot_password': '¿Olvidaste tu contraseña?',
+                'auth.terms_prefix': 'He leído y acepto los ',
+                'auth.terms_link': 'Términos del Servicio',
+                'auth.terms_middle': ' y la ',
+                'auth.privacy_link': 'Política de Privacidad',
+                'auth.terms_suffix': '.',
+                'auth.continue_google': 'Continuar con Google',
+                'auth.no_account': '¿No tienes cuenta?',
+                'auth.has_account': '¿Ya tienes cuenta?',
+                'auth.sign_up_action': 'Regístrate',
+                'auth.sign_in_action': 'Inicia Sesión',
+                'auth.same_account_hint': 'Usa la misma cuenta si ya estás registrado en la app móvil de Netto.',
+                'auth.err_enter_email_reset': 'Por favor, ingresa tu correo electrónico arriba para restablecer tu contraseña.',
+                'auth.reset_sent': 'Te hemos enviado un enlace para restablecer tu contraseña.',
+                'auth.reset_failed': 'No se pudo enviar el correo. Verifica que tu email sea correcto.',
+                'auth.err_wait': 'Espera un momento antes de intentarlo de nuevo.',
+                'auth.err_accept_terms': 'Debes aceptar los términos y condiciones para continuar.',
+                'auth.err_valid_email': 'Por favor, introduce un correo electrónico válido.',
+                'auth.err_choose_role': 'Por favor, elige si utilizarás Netto como Autónomo / Empresa o como Empleado antes de continuar.',
+                'auth.err_full_name': 'Por favor, introduce tu nombre completo para crear tu cuenta.',
+                'auth.err_enter_password': 'Por favor, introduce tu contraseña.',
+                'auth.err_password_min': 'La contraseña debe tener al menos 8 caracteres.',
+                'auth.err_already_registered': 'Este correo ya está registrado.',
+                'auth.err_rate_limit': 'Demasiados intentos. Espera unos minutos.',
+                'auth.err_bad_credentials': 'Credenciales incorrectas. Verifica tu email y contraseña.',
+                'auth.signup_success_employee': '✅ ¡Cuenta de Empleado creada! Revisa tu correo para confirmar tu email. Después abre la app móvil de Netto e introduce el código NET de tu empresa (no necesitas suscripción).',
+                'auth.signup_success_autonomo': '✅ ¡Cuenta creada! Revisa tu correo para confirmar tu email y luego vuelve aquí para iniciar sesión.',
+                'auth.err_connection': 'Error de conexión. Por favor, inténtalo de nuevo.',
+                'auth.err_google': 'Error al iniciar sesión con Google. Comprueba tu conexión o inténtalo de nuevo.',
+                'role.question': '¿Cómo vas a usar Netto?',
+                'role.autonomo_short': 'Autónomo / Empresa',
+                'role.autonomo_sub': 'Facturación AEAT, gastos y equipo',
+                'role.employee_short': 'Empleado',
+                'role.employee_sub': 'Control horario y código NET',
+                'role.autonomo_note': 'Acceso completo al entorno fiscal, facturación e impuestos con 14 días de prueba Pro.',
+                'role.employee_note': 'Sin suscripción. Al finalizar el registro podrás abrir la app de Netto e introducir el código NET que te enviará tu responsable.',
+                'role.onboarding_subtitle': 'Elige tu perfil para configurar un entorno limpio y adaptado desde el primer segundo.',
+                'role.autonomo_long': 'Autónomo o Empresa',
+                'role.autonomo_trial_badge': 'Incluye 14 días de prueba Pro',
+                'role.autonomo_long_desc': 'Emite facturas legales (Ley 11/2021), calcula tus modelos 130/303 y gestiona la jornada laboral de tu equipo.',
+                'role.employee_long': 'Empleado / Trabajador',
+                'role.employee_free_badge': 'Solo control horario · Gratis',
+                'role.employee_long_desc': 'Registra tus jornadas, pausas y tareas entrando con el código NET que te enviará tu responsable.',
+                'role.employee_tip': 'Si trabajas contratado en una empresa y te han pedido descargar Netto para fichar, selecciona Empleado.',
+                'role.saving': 'Guardando...',
+                'role.save_error': 'No se pudo guardar el modo de cuenta seleccionado. Inténtalo de nuevo.',
+                'employee.badge_default': 'Cuenta de Empleado',
+                'employee.title_default': 'No necesitas suscripción',
+                'employee.desc_default': 'Tu cuenta está configurada exclusivamente para control horario. El acceso lo gestiona tu empresa sin coste para ti.',
+                'employee.desc_unlinked': 'Tu cuenta está configurada exclusivamente para control horario. Vincula tu empresa desde la app móvil con tu código NET.',
+                'employee.role_supervisor': 'Supervisor',
+                'employee.role_employee': 'Empleado',
+                'employee.linked_badge': '{role} vinculado · Sin suscripción',
+                'employee.linked_title': 'Tu acceso ya está activo',
+                'employee.linked_desc': 'El acceso de tu equipo lo gestiona tu empresa. No necesitas contratar ningún plan de pago en la web.',
+                'employee.linked_company_label': 'Empresa vinculada',
+                'employee.company_fallback': 'Tu empresa',
+                'employee.assigned_role': 'Rol asignado: {role}',
+                'employee.linked_instruction': 'Abre la aplicación móvil de Netto en tu teléfono para registrar tus entradas, pausas, salidas y tareas asignadas.',
+                'employee.step1_title': '1. Comparte tu correo con tu empresa',
+                'employee.step2_title': '2. Introduce tu código NET en la app',
+                'employee.step2_desc': 'Cuando tu responsable te envíe el código NET, abre la app móvil de Netto, inicia sesión con este correo y pega el código para vincular tu jornada.',
+                'employee.email_copied': '✅ Correo copiado al portapapeles.',
+                'employee.email_copy_manual': 'Copia manualmente tu correo mostrado arriba.',
+                'employee.switch_prompt': '¿Elegiste Empleado por error? Cambiar a cuenta de Autónomo',
+                'employee.switch_confirm_title': '¿Cambiar a cuenta Autónomo?',
+                'employee.switch_confirm_desc': 'Tu cuenta pasará al entorno de Autónomo / Empresa con facturación y gestión fiscal. Solo es posible si aún no tienes equipo ni fichajes.',
+                'employee.switch_confirm_btn': 'Sí, cambiar a Autónomo',
+                'employee.switching': 'Cambiando...',
+                'employee.switch_error': 'No se pudo cambiar el tipo de cuenta.',
+                'workspace_error.title': 'No se pudo verificar tu cuenta',
+                'workspace_error.verify_failed': 'No pudimos verificar el tipo de tu cuenta. Comprueba tu conexión e inténtalo de nuevo.',
+                'workspace_error.critical_title': 'Error de Conexión',
+                'workspace_error.critical_blocked': 'Tu navegador o red está bloqueando la conexión necesaria. Desactiva escudos de privacidad/DNS o prueba otra red.',
+                'sub.active_title': 'Suscripción Activa ✅',
+                'sub.trial_title': 'Prueba de 14 Días Activa ✨',
+                'sub.active_plan_fallback': 'Plan activo',
+                'sub.plan_basico': 'Plan Básico',
+                'sub.plan_pro': 'Plan Autónomo Pro',
+                'sub.plan_vip': 'Plan VIP Embajadores',
+                'sub.trial_suffix': ' (Prueba 14 Días en curso)',
+                'sub.trial_end': 'Fin del periodo de prueba: {date}',
+                'sub.next_renewal': 'Próxima renovación: {date}',
+                'sub.manage_billing': 'Gestionar Facturación',
+                'sub.manage_note': 'Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.',
+                'sub.trial_note': 'Estás disfrutando de tu prueba gratuita. Al terminar los 14 días no se te cobrará nada salvo que elijas un plan.',
+                'sub.free_expired_title': 'Cuenta Gratuita · Prueba Finalizada',
+                'sub.free_title': 'Cuenta Gratuita (Free)',
+                'sub.free_limits': 'Límites Free activos: {scans} escaneos/mes · {chats} consulta IA/mes · Facturación ilimitada',
+                'sub.free_expired_sub': 'Tu prueba gratuita de 14 días ya ha terminado. Selecciona Plan Básico o Pro para ampliar tus límites.',
+                'sub.free_sub': 'Sin suscripción activa. Puedes ampliar límites cuando quieras eligiendo un plan.',
+                'sub.free_note_portal': 'Puedes consultar tus facturas anteriores en el portal de Stripe o reactivar un plan abajo.',
+                'sub.free_note_no_charge': 'No tienes ningún cobro programado. Elige un plan abajo cuando necesites mayor capacidad de IA.',
+                'sub.session_expired': 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.',
+                'sub.portal_open_error': 'No se pudo abrir el portal de facturación. Inténtalo de nuevo.',
+                'sub.portal_network_error': 'Error de red al conectar con facturación. Inténtalo de nuevo.',
+                'plans.billing_period_aria': 'Seleccionar período de facturación',
+                'plans.monthly': 'Mensual',
+                'plans.annual': 'Anual (-2 Meses)',
+                'plans.period_month': '/mes',
+                'plans.period_year': '/año',
+                'plans.basico.name': 'Plan Básico',
+                'plans.basico.sub': 'Autónomo Básico',
+                'plans.basico.f1': 'Facturas y presupuestos ilimitados',
+                'plans.basico.f2': 'Escáner IA: 50 facturas/mes',
+                'plans.basico.f3': 'Asesor IA: 5 consultas/día',
+                'plans.basico.f4': 'Previsión IVA e IRPF (303 y 130)',
+                'plans.basico.f5': 'Conciliación PDF (Manual)',
+                'plans.basico.f6': 'Sincronización Drive (Manual)',
+                'plans.basico.f7': 'Soporte y Ayuda',
+                'plans.basico.cta': 'Elegir Plan Básico',
+                'plans.pro.badge': 'MÁS POPULAR',
+                'plans.pro.name': 'Plan Autónomo Pro',
+                'plans.pro.sub': 'IA fiscal avanzada y control horario',
+                'plans.pro.f1': 'Todo lo de Básico + Escáner IA (500/mes)*',
+                'plans.pro.f2': 'Asesor IA (100/día*) + consultas en línea BOE y AEAT (15/mes)',
+                'plans.pro.f3': 'Auditoría IA de borradores trimestrales (7 modelos AEAT)',
+                'plans.pro.f4': 'Auto-conciliación IA y subida de extractos bancarios (3 cuenta y 3 tarjeta)',
+                'plans.pro.f5': 'Radar fiscal, Bienes de Inversión y auto-completado de datos de proveedores',
+                'plans.pro.f6': 'Alertas IA proactivas y Google Drive automático',
+                'plans.pro.f7': 'Control horario equipo (1 plaza gratis) y horas a factura',
+                'plans.pro.cta_trial': 'Comenzar Prueba Gratis',
+                'plans.pro.cta_choose': 'Elegir Plan Pro',
+                'plans.vip.name': 'Programa Embajadores VIP',
+                'plans.vip.loading_spots': 'Cargando plazas...',
+                'plans.vip.spots_left': '🔥 Quedan {count} de 111 plazas',
+                'plans.vip.spots_available': '🔥 Plazas disponibles',
+                'plans.vip.sold_out_counter': '🔥 SOLD OUT - Cupo Lleno',
+                'plans.vip.sold_out_btn': '🔥 SOLD OUT',
+                'plans.vip.sub': 'Tarifa Vitalicia (Plazas Limitadas)',
+                'plans.vip.f1': 'Todo el poder del Plan Pro incluido al instante.',
+                'plans.vip.f2': '*Precio blindado para siempre (mientras no canceles).',
+                'plans.vip.cta': 'Asegurar mi plaza VIP',
+                'plans.compliance_note': 'Las facturas emitidas por Netto App cumplen al 100% con la Ley Antifraude (Ley 11/2021 y RD 1007/2023), garantizando su inalterabilidad, trazabilidad y encadenamiento seguro ante la AEAT.',
+                'plans.fair_use': '*Servicio sujeto a Política de Uso Justo: las funcionalidades automatizadas de Inteligencia Artificial (500 escaneos/mes, 100 consultas diarias al Asesor IA, 15 consultas en línea BOE y AEAT/mes) y la lectura de extractos bancarios (3 de cuenta y 3 de tarjeta al mes) están sujetas a límites técnicos de seguridad operativa y disponibilidad del servicio, para evitar usos automatizados o abusivos. Las respuestas de IA tienen carácter meramente orientativo y no sustituyen el dictamen de un asesor fiscal colegiado. El Plan Pro incluye 1 plaza de trabajador gratuita para Control Horario; las plazas adicionales tienen un coste de 2,99 €/mes (+ IVA). Pagos procesados de forma 100% segura por Stripe. Cancela en cualquier momento.',
+                'checkout.price_not_configured': '⚠️ Precio no configurado. Contacta con soporte: info@nettoapp.eu',
+                'checkout.already_subscribed': 'Ya tienes una suscripción activa. Te redirigimos al portal oficial para gestionar o cambiar tu plan.',
+                'checkout.must_configure_autonomo': 'Debes configurar tu cuenta como Autónomo antes de contratar un plan.',
+                'checkout.gateway_error': 'Error al conectar con la pasarela de pago. Inténtalo de nuevo o contacta a info@nettoapp.eu',
+                'checkout.network_error': 'Error de red. Comprueba tu conexión e inténtalo de nuevo.',
+                'legal.modal_title': 'Términos',
+                'legal.terms_title': 'Términos de Servicio',
+                'legal.privacy_title': 'Política de Privacidad',
+                'welcome.title_l1': '¡Bienvenido a Netto PRO!',
+                'welcome.title_l2': 'Tienes 14 días gratis.',
+                'welcome.subtitle': 'Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso al Plan Autónomo Pro*.',
+                'welcome.includes_title': 'Tu acceso actual incluye:',
+                'welcome.inc1': 'Escáner IA (500 facturas/mes)*',
+                'welcome.inc2': 'Asesor IA (100/día*) y Auditoría de borradores AEAT',
+                'welcome.inc3': 'Auto-conciliación bancaria IA (3 cuenta y 3 tarjeta)',
+                'welcome.transparency_title': 'Transparencia Total:',
+                'welcome.transparency_desc': 'Una vez finalicen tus 14 días, NO se te cobrará nada. Si decides no activar una suscripción, tu cuenta pasará automáticamente a nuestro Plan Gratis (Freemium). ¿Qué incluye el plan gratuito?',
+                'welcome.free1': 'Escáner IA limitado (3 facturas/mes).',
+                'welcome.free2': 'Asesor IA restringido (1 consulta/mes).',
+                'welcome.free3': 'Conciliación bancaria manual.',
+                'welcome.free4': 'Sin Alertas Proactivas.',
+                'welcome.free5': 'Presupuestos y facturas ilimitadas manualmente.',
+                'welcome.cta': '¡Entendido, vamos a exprimirlo!'
+            },
+            en: {
+                page_title: 'Subscriptions | Netto',
+                meta_desc: 'Netto Subscription Portal – Smart accounting and tax management for freelancers.',
+                'common.language_label': 'Language',
+                'common.loading': 'Loading...',
+                'common.continue': 'Continue',
+                'common.logout': 'Sign Out',
+                'common.copy': 'Copy',
+                'common.cancel': 'Cancel',
+                'common.retry': 'Retry',
+                'common.close': 'Close',
+                'common.understood': 'Got it',
+                'header.subtitle': 'Subscription Portal',
+                'auth.login_title': 'Sign In',
+                'auth.signup_title': 'Create Account',
+                'auth.full_name_label': 'Full name',
+                'auth.full_name_placeholder': 'E.g. Laura Garcia',
+                'auth.email_label': 'Email address',
+                'auth.email_placeholder': 'you@email.com',
+                'auth.password_label': 'Password',
+                'auth.toggle_password_aria': 'Show/Hide password',
+                'auth.forgot_password': 'Forgot your password?',
+                'auth.terms_prefix': 'I have read and accept the ',
+                'auth.terms_link': 'Terms of Service',
+                'auth.terms_middle': ' and the ',
+                'auth.privacy_link': 'Privacy Policy',
+                'auth.terms_suffix': '.',
+                'auth.continue_google': 'Continue with Google',
+                'auth.no_account': 'Don\'t have an account?',
+                'auth.has_account': 'Already have an account?',
+                'auth.sign_up_action': 'Sign Up',
+                'auth.sign_in_action': 'Sign In',
+                'auth.same_account_hint': 'Use the same account if you are already registered in the Netto mobile app.',
+                'auth.err_enter_email_reset': 'Please enter your email address above to reset your password.',
+                'auth.reset_sent': 'We have sent you a link to reset your password.',
+                'auth.reset_failed': 'Could not send the email. Please check that your address is valid.',
+                'auth.err_wait': 'Please wait a moment before trying again.',
+                'auth.err_accept_terms': 'You must accept the terms and conditions to continue.',
+                'auth.err_valid_email': 'Please enter a valid email address.',
+                'auth.err_choose_role': 'Please choose whether you will use Netto as a Freelancer / Company or as an Employee before continuing.',
+                'auth.err_full_name': 'Please enter your full name to create your account.',
+                'auth.err_enter_password': 'Please enter your password.',
+                'auth.err_password_min': 'Password must be at least 8 characters long.',
+                'auth.err_already_registered': 'This email is already registered.',
+                'auth.err_rate_limit': 'Too many attempts. Please wait a few minutes.',
+                'auth.err_bad_credentials': 'Invalid credentials. Check your email and password.',
+                'auth.signup_success_employee': '✅ Employee account created! Check your inbox to confirm your email. Then open the Netto mobile app and enter your company\'s NET code (no subscription needed).',
+                'auth.signup_success_autonomo': '✅ Account created! Check your inbox to confirm your email and then return here to sign in.',
+                'auth.err_connection': 'Connection error. Please try again.',
+                'auth.err_google': 'Error signing in with Google. Check your connection or try again.',
+                'role.question': 'How will you use Netto?',
+                'role.autonomo_short': 'Freelancer / Company',
+                'role.autonomo_sub': 'AEAT invoicing, expenses & team',
+                'role.employee_short': 'Employee',
+                'role.employee_sub': 'Time tracking & NET code',
+                'role.autonomo_note': 'Full access to tax, invoicing and accounting tools with a 14-day Pro trial.',
+                'role.employee_note': 'No subscription required. After registering, open the Netto app and enter the NET code sent by your manager.',
+                'role.onboarding_subtitle': 'Choose your profile to configure a clean, tailored workspace from the very first second.',
+                'role.autonomo_long': 'Freelancer or Company',
+                'role.autonomo_trial_badge': 'Includes 14-day Pro trial',
+                'role.autonomo_long_desc': 'Issue compliant invoices (Law 11/2021), calculate your Modelos 130/303 and manage team time tracking.',
+                'role.employee_long': 'Employee / Worker',
+                'role.employee_free_badge': 'Time tracking only · Free',
+                'role.employee_long_desc': 'Clock in your shifts, breaks and tasks using the NET code sent by your manager.',
+                'role.employee_tip': 'If you work for a company and were asked to download Netto to clock in, select Employee.',
+                'role.saving': 'Saving...',
+                'role.save_error': 'Could not save the selected account mode. Please try again.',
+                'employee.badge_default': 'Employee Account',
+                'employee.title_default': 'No subscription needed',
+                'employee.desc_default': 'Your account is set up exclusively for time tracking. Access is managed by your company at no cost to you.',
+                'employee.desc_unlinked': 'Your account is set up exclusively for time tracking. Link your company from the mobile app using your NET code.',
+                'employee.role_supervisor': 'Supervisor',
+                'employee.role_employee': 'Employee',
+                'employee.linked_badge': 'Linked {role} · No subscription',
+                'employee.linked_title': 'Your access is active',
+                'employee.linked_desc': 'Your team access is managed by your company. You do not need to purchase a paid plan on the web.',
+                'employee.linked_company_label': 'Linked company',
+                'employee.company_fallback': 'Your company',
+                'employee.assigned_role': 'Assigned role: {role}',
+                'employee.linked_instruction': 'Open the Netto mobile app on your phone to log clock-ins, breaks, clock-outs and assigned tasks.',
+                'employee.step1_title': '1. Share your email with your company',
+                'employee.step2_title': '2. Enter your NET code in the app',
+                'employee.step2_desc': 'Once your manager sends you the NET code, open the Netto mobile app, sign in with this email and paste the code to link your shifts.',
+                'employee.email_copied': '✅ Email copied to clipboard.',
+                'employee.email_copy_manual': 'Manually copy your email address shown above.',
+                'employee.switch_prompt': 'Chose Employee by mistake? Switch to Freelancer account',
+                'employee.switch_confirm_title': 'Switch to Freelancer account?',
+                'employee.switch_confirm_desc': 'Your account will switch to the Freelancer / Company environment with invoicing and tax management. Only possible if you have no team or time logs yet.',
+                'employee.switch_confirm_btn': 'Yes, switch to Freelancer',
+                'employee.switching': 'Switching...',
+                'employee.switch_error': 'Could not change account type.',
+                'workspace_error.title': 'Could not verify your account',
+                'workspace_error.verify_failed': 'We could not verify your account type. Check your connection and try again.',
+                'workspace_error.critical_title': 'Connection Error',
+                'workspace_error.critical_blocked': 'Your browser or network is blocking the required connection. Disable privacy/DNS shields or try another network.',
+                'sub.active_title': 'Active Subscription ✅',
+                'sub.trial_title': '14-Day Trial Active ✨',
+                'sub.active_plan_fallback': 'Active plan',
+                'sub.plan_basico': 'Basic Plan',
+                'sub.plan_pro': 'Autónomo Pro Plan',
+                'sub.plan_vip': 'VIP Ambassadors Plan',
+                'sub.trial_suffix': ' (14-Day Trial active)',
+                'sub.trial_end': 'Trial ends on: {date}',
+                'sub.next_renewal': 'Next renewal: {date}',
+                'sub.manage_billing': 'Manage Billing',
+                'sub.manage_note': 'Download your invoices, update your payment method or change your plan securely via Stripe.',
+                'sub.trial_note': 'You are enjoying your free trial. After 14 days you will not be charged anything unless you choose a plan.',
+                'sub.free_expired_title': 'Free Account · Trial Ended',
+                'sub.free_title': 'Free Account',
+                'sub.free_limits': 'Active Free limits: {scans} scans/mo · {chats} AI query/mo · Unlimited invoicing',
+                'sub.free_expired_sub': 'Your 14-day free trial has ended. Select Basic or Pro Plan to expand your limits.',
+                'sub.free_sub': 'No active subscription. You can upgrade anytime by choosing a plan below.',
+                'sub.free_note_portal': 'You can view previous invoices in the Stripe portal or reactivate a plan below.',
+                'sub.free_note_no_charge': 'You have no scheduled charges. Choose a plan below whenever you need higher AI capacity.',
+                'sub.session_expired': 'Your session has expired. Please sign in again.',
+                'sub.portal_open_error': 'Could not open the billing portal. Please try again.',
+                'sub.portal_network_error': 'Network error connecting to billing. Please try again.',
+                'plans.billing_period_aria': 'Select billing period',
+                'plans.monthly': 'Monthly',
+                'plans.annual': 'Annual (-2 Months)',
+                'plans.period_month': '/mo',
+                'plans.period_year': '/yr',
+                'plans.basico.name': 'Basic Plan',
+                'plans.basico.sub': 'Essential Freelancer',
+                'plans.basico.f1': 'Unlimited invoices and quotes',
+                'plans.basico.f2': 'AI Scanner: 50 invoices/month',
+                'plans.basico.f3': 'AI Advisor: 5 queries/day',
+                'plans.basico.f4': 'VAT & Income Tax forecast (303 & 130)',
+                'plans.basico.f5': 'PDF Reconciliation (Manual)',
+                'plans.basico.f6': 'Google Drive Sync (Manual)',
+                'plans.basico.f7': 'Support & Help',
+                'plans.basico.cta': 'Choose Basic Plan',
+                'plans.pro.badge': 'MOST POPULAR',
+                'plans.pro.name': 'Freelancer Pro Plan',
+                'plans.pro.sub': 'Advanced tax AI & time tracking',
+                'plans.pro.f1': 'Everything in Basic + AI Scanner (500/mo)*',
+                'plans.pro.f2': 'AI Advisor (100/day*) + online BOE & AEAT lookups (15/mo)',
+                'plans.pro.f3': 'AI Audit of quarterly tax drafts (7 AEAT forms)',
+                'plans.pro.f4': 'AI Auto-reconciliation & bank statement uploads (3 bank & 3 card)',
+                'plans.pro.f5': 'Tax radar, Investment Assets & supplier data auto-fill',
+                'plans.pro.f6': 'Proactive AI alerts & automatic Google Drive',
+                'plans.pro.f7': 'Team time tracking (1 free seat) & hours-to-invoice',
+                'plans.pro.cta_trial': 'Start Free Trial',
+                'plans.pro.cta_choose': 'Choose Pro Plan',
+                'plans.vip.name': 'VIP Ambassadors Program',
+                'plans.vip.loading_spots': 'Loading spots...',
+                'plans.vip.spots_left': '🔥 {count} of 111 spots left',
+                'plans.vip.spots_available': '🔥 Spots available',
+                'plans.vip.sold_out_counter': '🔥 SOLD OUT - Limit Reached',
+                'plans.vip.sold_out_btn': '🔥 SOLD OUT',
+                'plans.vip.sub': 'Lifetime Rate (Limited Spots)',
+                'plans.vip.f1': 'All the power of the Pro Plan included instantly.',
+                'plans.vip.f2': '*Rate locked forever (as long as you don\'t cancel).',
+                'plans.vip.cta': 'Claim my VIP spot',
+                'plans.compliance_note': 'Invoices issued by Netto App comply 100% with the Spanish Anti-Fraud Law (Law 11/2021 and RD 1007/2023), ensuring immutability, traceability and secure cryptographic chaining before the AEAT.',
+                'plans.fair_use': '*Service subject to Fair Use Policy: automated Artificial Intelligence features (500 scans/month, 100 daily AI Advisor queries, 15 online BOE & AEAT lookups/month) and bank statement parsing (3 bank and 3 card statements/month) are subject to technical operational security limits and service availability to prevent automated or abusive usage. AI responses are purely informational and do not replace the opinion of a certified tax advisor. The Pro Plan includes 1 free employee seat for Time Tracking; additional seats cost €2.99/month (+ VAT). Payments processed 100% securely by Stripe. Cancel anytime.',
+                'checkout.price_not_configured': '⚠️ Price not configured. Contact support: info@nettoapp.eu',
+                'checkout.already_subscribed': 'You already have an active subscription. Redirecting you to the official portal to manage or change your plan.',
+                'checkout.must_configure_autonomo': 'You must set up your account as a Freelancer before subscribing to a plan.',
+                'checkout.gateway_error': 'Error connecting to the payment gateway. Please try again or contact info@nettoapp.eu',
+                'checkout.network_error': 'Network error. Please check your connection and try again.',
+                'legal.modal_title': 'Terms',
+                'legal.terms_title': 'Terms of Service',
+                'legal.privacy_title': 'Privacy Policy',
+                'welcome.title_l1': 'Welcome to Netto PRO!',
+                'welcome.title_l2': 'You have 14 free days.',
+                'welcome.subtitle': 'We want you to discover the true power of automating your accounting. For the next 14 days, you have access to the Freelancer Pro Plan*.',
+                'welcome.includes_title': 'Your current access includes:',
+                'welcome.inc1': 'AI Scanner (500 invoices/month)*',
+                'welcome.inc2': 'AI Advisor (100/day*) & AEAT tax draft audit',
+                'welcome.inc3': 'AI bank auto-reconciliation (3 bank & 3 card)',
+                'welcome.transparency_title': 'Total Transparency:',
+                'welcome.transparency_desc': 'Once your 14 days end, you will NOT be charged anything. If you choose not to activate a subscription, your account will automatically switch to our Free Plan (Freemium). What does the free plan include?',
+                'welcome.free1': 'Limited AI Scanner (3 invoices/month).',
+                'welcome.free2': 'Restricted AI Advisor (1 query/month).',
+                'welcome.free3': 'Manual bank reconciliation.',
+                'welcome.free4': 'No Proactive Alerts.',
+                'welcome.free5': 'Unlimited manual quotes and invoices.',
+                'welcome.cta': 'Got it, let\'s get started!'
+            }
         };
 
         // ==========================================
-        // SUPABASE INIT
+        // TEXTOS LEGALES (estáticos, sin HTML externo)
+        // ==========================================
+        const LEGAL_SECTIONS = {
+            es: {
+                terms: [
+                    { title: '1. Naturaleza del Servicio', text: 'Netto es una herramienta tecnológica de asistencia para la gestión administrativa y contable. Netto NO es una asesoría fiscal, contable o legal humana certificada. Toda la información, previsiones de impuestos (IVA, IRPF) y sugerencias proporcionadas por el "Asesor IA" o los algoritmos de la aplicación son meramente orientativas. El usuario es el único y exclusivo responsable de la veracidad de los datos introducidos y de la presentación final de sus obligaciones tributarias ante la Agencia Tributaria.' },
+                    { title: '2. Limitación de Responsabilidad', text: 'Netto no se hace responsable de posibles sanciones, recargos, errores de cálculo o problemas legales derivados de la presentación de impuestos basados en la información de la aplicación. Recomendamos siempre revisar los datos con un profesional cualificado. El uso del sistema de escáner OCR mediante IA puede contener errores de interpretación; es absoluta responsabilidad del usuario verificar manualmente los montos, fechas y NIFs escaneados antes de guardarlos.' },
+                    { title: '3. Política de Uso Razonable (Fair Use Policy)', text: 'El uso de las funciones "Escáner IA Ilimitado" y "Asesor IA Ilimitado" en el Plan Pro está sujeto a límites de seguridad técnica (500 escaneos por mes y 100 consultas diarias, respectivamente) para prevenir fraudes, minería de datos, uso automatizado mediante bots o el uso de una cuenta individual por parte de agencias o gestorías con múltiples clientes.' },
+                    { title: '4. Suscripciones y Renuncia Expresa al Desistimiento (B2C)', text: 'Al tratarse de un servicio digital con acceso inmediato a su contenido y herramientas, el usuario consiente de forma expresa que la ejecución del contrato comience en el momento de la suscripción. Por consiguiente, de conformidad con la normativa europea de protección al consumidor (Directiva 93/13/CEE), el usuario reconoce y acepta explícitamente que PIERDE SU DERECHO DE DESISTIMIENTO de 14 días en el instante en que accede al servicio. Todos los planes son de pago recurrente y no tienen permanencia. La cancelación detiene el cobro del siguiente ciclo sin reembolsos prorrateados.' },
+                    { title: '5. Carga de Documentos Bancarios', text: 'La conciliación bancaria se realiza mediante la subida manual de extractos bancarios en PDF por parte del usuario. Netto no se conecta automáticamente a las cuentas bancarias del usuario, garantizando así que no tenemos acceso a credenciales bancarias.' },
+                    { title: '6. Disponibilidad del Servicio', text: 'Netto no garantiza una disponibilidad del 100% del servicio y se exime de responsabilidad por pérdidas de datos derivadas de fallos en servicios de terceros.' },
+                    { title: '7. Resolución de Litigios (UE) y Reportes (DSA)', text: 'Conforme al Art. 14.1 del Reglamento (UE) 524/2013, la Comisión Europea facilita una plataforma de resolución de litigios en línea: http://ec.europa.eu/consumers/odr/. Netto no está obligada a participar en un procedimiento de resolución de litigios ante una junta arbitral de consumo.' },
+                    { title: '8. Sincronización con Google Drive', text: 'Al habilitar la Sincronización Automática con Google Drive, usted autoriza a Netto App a subir y gestionar los documentos de facturación en su cuenta de Google. Netto App realizará los mejores esfuerzos para asegurar que sus documentos se sincronicen correctamente; sin embargo, no se hace responsable de fallos de sincronización por causas externas.' },
+                    { title: '9. Facturación Electrónica y Reglamento SIF (Veri*Factu)', text: 'Netto genera facturas aplicando el encadenamiento criptográfico (Huellas SIF) cumpliendo con los requisitos del Real Decreto 1007/2023. No obstante, Netto opera bajo la modalidad «Sistema Informático No Veri*Factu». La aplicación NO transmite facturas automáticamente a la AEAT. Es responsabilidad del usuario descargar y presentar sus libros de facturación ante la AEAT.' },
+                    { title: '10. Inteligencia Artificial y Conocimiento Colectivo (RAG)', text: 'Netto integra modelos avanzados de Inteligencia Artificial que utilizan un sistema de Conocimiento Colectivo. La IA aprende de patrones genéricos, consultas y resoluciones contables de toda la comunidad para mejorar sus respuestas. Garantizamos que todos los datos sensibles de los usuarios se procesan con estricta confidencialidad y NUNCA se utilizan para entrenar modelos de IA exponiendo su identidad o datos privados. Las funciones de "Análisis Financiero Profundo" (donde la IA consulta su facturación y clientes en tiempo real para coaching proactivo) son una funcionalidad premium reservada exclusivamente para suscriptores del Plan Pro.' },
+                    { title: '11. Control Horario y Registro de Jornada (RD-ley 8/2019)', text: 'Netto App facilita a los autónomos y empresas la infraestructura tecnológica para registrar diariamente la jornada laboral de sus trabajadores conforme al Real Decreto-ley 8/2019 y al artículo 34.9 del Estatuto de los Trabajadores. El empleador es el único responsable legal del cumplimiento de las obligaciones laborales y de la custodia de los registros durante los cuatro (4) años legalmente preceptivos. Netto App garantiza la inmutabilidad técnica y trazabilidad de los fichajes registrados.' },
+                    { title: '12. Gestión de Equipos y Asientos Adicionales (B2B)', text: 'El Plan Pro incluye la gestión de equipo y un (1) asiento de empleado sin coste adicional de por vida. La incorporación de empleados adicionales (a partir del segundo miembro, activo o invitado) conlleva una tarifa de 2,99 €/mes (+ IVA aplicable) por asiento, facturada y prorrateada a través de Stripe en la suscripción periódica del empleador. El administrador puede dar de baja asientos en cualquier momento desde la app, cesando el cobro en el siguiente ciclo conforme a la facturación de Stripe.' },
+                    { title: '13. Canal de Soporte e Incidencias Técnicas', text: 'El canal de soporte técnico e incidencias de la app permite a los usuarios comunicar dudas, errores o peticiones operativas. Todas las comunicaciones y adjuntos se transmiten de forma cifrada y confidencial con el único propósito de proveer asistencia técnica.' }
+                ],
+                privacy: [
+                    { title: '1. Responsable del Tratamiento', text: 'Identidad: Juan C. Sierra T.\nContacto Legal y DPO: info@nettoapp.eu\nRegistro de Actividades de Tratamiento (RAT): Mantenemos un registro interno conforme al Art. 30 del RGPD.' },
+                    { title: '2. Finalidad y Base Legitimadora (Arts. 13 y 14 RGPD)', text: 'Recopilamos información básica (email, nombre) y financiera (facturas, NIF, clientes).\n- Base 1 (Ejecución de contrato): Para proveer el servicio de digitalización y cálculo de impuestos.\n- Base 2 (Obligación Legal): Mantenimiento de registros fiscales (RD 1007/2023) y laborales (RD-ley 8/2019).\n- Base 3 (Consentimiento): Sincronización voluntaria con Google Drive y permisos puntuales de geolocalización.' },
+                    { title: '3. Integración con Inteligencia Artificial (AI Act)', text: 'Para ofrecer lectura de facturas (OCR) y asistencia financiera avanzada, Netto procesa información a través de proveedores de IA líderes (ej. OpenAI). La IA tiene acceso bajo demanda a los registros financieros del usuario (facturas, gastos, clientes) estrictamente para proporcionar análisis personalizados y proactivos (ej. detectar facturas impagadas). Los datos se envían cifrados de forma transitoria. Según nuestros SLA, estos proveedores NO utilizan los datos para entrenar modelos públicos. Los datos quedan aislados por usuario y las interacciones están explícitamente etiquetadas para evitar confusión.' },
+                    { title: '4. Plazos de Conservación', text: 'Los datos financieros y fiscales se retendrán durante 4 años desde el final del ejercicio fiscal correspondiente, para cumplir con la Ley General Tributaria de España. Asimismo, los registros del control horario laboral (fichajes, pausas y geolocalizaciones puntuales) se conservarán obligatoriamente durante el plazo legal de cuatro (4) años exigido por el art. 34.9 del Estatuto de los Trabajadores, permaneciendo a disposición de las personas trabajadoras, sus representantes legales y la Inspección de Trabajo y Seguridad Social. Tras este periodo, o en caso de eliminación de cuenta, los datos serán destruidos o anonimizados irreversiblemente.' },
+                    { title: '5. Derechos del Usuario (ARCO+)', text: 'El usuario tiene derecho de Acceso, Rectificación, Cancelación, Oposición y Portabilidad. Puede ejercer estos derechos eliminando su cuenta desde los Ajustes de la app, o escribiendo a info@nettoapp.eu.' },
+                    { title: '6. Geolocalización en Fichajes (GPS Puntual - Sin Rastreo en Segundo Plano)', text: 'En estricto cumplimiento del RGPD y del art. 90 de la Ley Orgánica 3/2018 (LOPDGDD), la geolocalización del dispositivo se captura de forma estática, cifrada y puntual única y exclusivamente en el instante exacto en que la persona trabajadora pulsa para registrar la entrada o salida de su jornada. Netto App NO realiza seguimiento continuo ni geolocalización en segundo plano (background tracking), protegiendo la intimidad y el derecho a la desconexión digital de los trabajadores.' },
+                    { title: '7. Relación Laboral: Responsable vs. Encargado del Tratamiento (Art. 28 RGPD)', text: 'Respecto a los datos de los empleados tratados en el Entorno Tiempo (fichajes, horas, correos, incidencias), el autónomo o empresa empleadora actúa como Responsable del Tratamiento y Netto App actúa como Encargado del Tratamiento, procesando la información exclusivamente bajo las directrices del empleador para dar cumplimiento a sus obligaciones laborales.' },
+                    { title: '8. Pasarela de Pagos Segura (Stripe)', text: 'Todos los pagos de suscripciones y asientos de empleados se procesan a través de Stripe Payments Europe, Ltd., bajo los más altos estándares de seguridad bancaria (certificación PCI-DSS Nivel 1). Netto App nunca recopila ni almacena números de tarjeta bancaria.' }
+                ]
+            },
+            en: {
+                terms: [
+                    { title: '1. Nature of the Service', text: 'Netto is a technological assistance tool for administrative and accounting management. Netto is NOT a certified human tax, accounting or legal advisory firm. All information, tax forecasts (VAT, Income Tax) and suggestions provided by the "AI Advisor" or application algorithms are purely informational. The user is solely and exclusively responsible for the accuracy of the data entered and the final filing of tax obligations before the Spanish Tax Agency (AEAT).' },
+                    { title: '2. Limitation of Liability', text: 'Netto is not liable for possible penalties, surcharges, calculation errors or legal issues arising from tax filings based on information from the application. We always recommend reviewing data with a qualified professional. AI-based OCR scanning may contain interpretation errors; it is the user\'s absolute responsibility to manually verify scanned amounts, dates and Tax IDs before saving them.' },
+                    { title: '3. Fair Use Policy', text: 'Use of the AI Scanner and AI Advisor features on the Pro Plan is subject to technical security limits (500 scans per month and 100 daily queries, respectively) to prevent fraud, data mining, automated bot usage or single-account usage by agencies or accounting firms serving multiple clients.' },
+                    { title: '4. Subscriptions & Express Waiver of Withdrawal (B2C)', text: 'As this is a digital service with immediate access to its content and tools, the user expressly consents to contract performance beginning at the time of subscription. Consequently, in accordance with EU consumer protection rules (Directive 93/13/EEC), the user explicitly acknowledges and accepts that they WAIVE THEIR 14-DAY RIGHT OF WITHDRAWAL the moment they access the service. All plans are recurring with no lock-in period. Cancellation stops the next billing cycle without prorated refunds.' },
+                    { title: '5. Bank Statement Uploads', text: 'Bank reconciliation is performed through manual PDF bank statement uploads by the user. Netto does not automatically connect to user bank accounts, guaranteeing we never access banking credentials.' },
+                    { title: '6. Service Availability', text: 'Netto does not guarantee 100% uninterrupted service availability and disclaims liability for data loss arising from third-party service outages.' },
+                    { title: '7. EU Dispute Resolution & DSA Reporting', text: 'Pursuant to Art. 14.1 of Regulation (EU) 524/2013, the European Commission provides an online dispute resolution platform: http://ec.europa.eu/consumers/odr/. Netto is not obliged to participate in consumer arbitration proceedings.' },
+                    { title: '8. Google Drive Synchronization', text: 'By enabling Automatic Google Drive Sync, you authorize Netto App to upload and organize invoicing documents in your Google account. Netto App makes best efforts to ensure reliable syncing; however, it is not liable for sync failures caused by external factors.' },
+                    { title: '9. Electronic Invoicing & SIF Regulation (Veri*Factu)', text: 'Netto generates invoices using cryptographic chaining (SIF fingerprints) complying with Spanish Royal Decree 1007/2023. However, Netto operates as a «Non-Veri*Factu Computer System». The app does NOT automatically transmit invoices to the AEAT. The user remains responsible for downloading and filing invoice ledgers with the AEAT.' },
+                    { title: '10. Artificial Intelligence & Collective Knowledge (RAG)', text: 'Netto integrates advanced AI models using a Collective Knowledge system. We guarantee all sensitive user data is processed with strict confidentiality and NEVER used to train public AI models exposing your identity or private data. Deep Financial Analysis features (where AI queries your real-time invoicing and clients for proactive coaching) are reserved exclusively for Pro Plan subscribers.' },
+                    { title: '11. Time Tracking & Shift Logging (RD-ley 8/2019)', text: 'Netto App provides freelancers and companies with the technological infrastructure to log employees\' daily working hours in accordance with Spanish Royal Decree-Law 8/2019 and Article 34.9 of the Workers\' Statute. The employer is solely legally responsible for labor compliance and retaining records for the mandatory four (4) years. Netto App guarantees technical immutability and traceability of logged entries.' },
+                    { title: '12. Team Management & Additional Seats (B2B)', text: 'The Pro Plan includes team management and one (1) lifetime employee seat at no extra cost. Adding additional employees (from the second active or invited member onward) carries a fee of €2.99/month (+ applicable VAT) per seat, billed and prorated via Stripe on the employer\'s recurring subscription. Admins may remove seats anytime from the app.' },
+                    { title: '13. Support & Technical Incidents Channel', text: 'The in-app technical support and incident channel allows users to report questions, bugs or operational requests. All messages and attachments are transmitted confidentially for technical assistance purposes only.' }
+                ],
+                privacy: [
+                    { title: '1. Data Controller', text: 'Identity: Juan C. Sierra T.\nLegal & DPO Contact: info@nettoapp.eu\nRecord of Processing Activities (ROPA): Maintained internally pursuant to Art. 30 GDPR.' },
+                    { title: '2. Purpose & Legal Basis (Arts. 13 & 14 GDPR)', text: 'We collect basic account data (email, name) and financial data (invoices, Tax IDs, clients).\n- Basis 1 (Contract Performance): To provide digitization and tax calculation services.\n- Basis 2 (Legal Obligation): Maintaining fiscal (RD 1007/2023) and labor (RD-ley 8/2019) records.\n- Basis 3 (Consent): Voluntary Google Drive sync and point-in-time clock-in geolocation.' },
+                    { title: '3. Artificial Intelligence Integration (AI Act)', text: 'To deliver OCR invoice reading and financial assistance, Netto processes information through leading AI providers (e.g., OpenAI). Data is transmitted encrypted transiently. Under our SLAs, these providers do NOT use your data to train public models. Data remains isolated per user.' },
+                    { title: '4. Retention Periods', text: 'Financial and fiscal records are retained for 4 years from the end of the corresponding tax year to comply with Spanish tax law. Labor time-tracking logs (clock-ins, breaks and point-in-time locations) are retained for the mandatory four (4) years required under Art. 34.9 of the Workers\' Statute. After this period, or upon account deletion, data is irreversibly deleted or anonymized.' },
+                    { title: '5. User Rights (GDPR)', text: 'You have rights of Access, Rectification, Erasure, Objection and Data Portability. You may exercise these rights by deleting your account in App Settings or writing to info@nettoapp.eu.' },
+                    { title: '6. Clock-In Geolocation (Point-in-Time Only - No Background Tracking)', text: 'In strict compliance with GDPR and Art. 90 of Spanish Law 3/2018 (LOPDGDD), device geolocation is captured statically and exclusively at the exact moment the worker taps to clock in or clock out. Netto App NEVER performs continuous or background tracking.' },
+                    { title: '7. Employment Relationship: Controller vs. Processor (Art. 28 GDPR)', text: 'Regarding employee data processed in the Time workspace (clock-ins, hours, emails, incidents), the employer acts as Data Controller and Netto App acts as Data Processor under the employer\'s instructions.' },
+                    { title: '8. Secure Payment Gateway (Stripe)', text: 'All subscription and seat payments are processed via Stripe Payments Europe, Ltd. under PCI-DSS Level 1 security standards. Netto App never collects or stores credit card numbers.' }
+                ]
+            }
+        };
+
+        function detectInitialLang() {
+            const urlLang = new URLSearchParams(window.location.search).get('lang');
+            if (urlLang === 'es' || urlLang === 'en') return urlLang;
+            try {
+                const saved = localStorage.getItem('netto_web_lang');
+                if (saved === 'es' || saved === 'en') return saved;
+            } catch {}
+            return (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+        }
+
+        let currentLang = detectInitialLang();
+
+        function tr(key, vars) {
+            const dict = I18N_WEB[currentLang] || I18N_WEB.es;
+            let text = dict[key] !== undefined ? dict[key] : (I18N_WEB.es[key] !== undefined ? I18N_WEB.es[key] : key);
+            if (vars && typeof vars === 'object') {
+                Object.keys(vars).forEach(k => {
+                    text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(vars[k]));
+                });
+            }
+            return text;
+        }
+
+        // ==========================================
+        // SUPABASE INIT Y ESTADO GLOBAL
         // ==========================================
         let supabaseClient = null;
         let currentUser = null;
         let currentWorkspace = null;
         let selectedSignupRole = null;
         let selectedOnboardingRole = null;
+        let isAnnual = false;
+        let isSignUpMode = false;
+        let authCooldown = false;
+        let lastVipRemaining = null;
+        let lastVipError = false;
+        let lastSubData = null;
+
+        function setPortalButtonLoading(btn, loading) {
+            if (!btn) return;
+            const textEl = document.getElementById('manage-billing-text');
+            if (loading) {
+                btn.disabled = true;
+                if (textEl) textEl.textContent = tr('common.loading');
+            } else {
+                btn.disabled = false;
+                if (textEl) textEl.textContent = tr('sub.manage_billing');
+            }
+        }
+
+        function setLanguage(lang, rerenderDynamic = true) {
+            currentLang = lang === 'en' ? 'en' : 'es';
+            try {
+                localStorage.setItem('netto_web_lang', currentLang);
+            } catch {}
+
+            document.documentElement.lang = currentLang;
+            document.title = tr('page_title');
+            const metaDesc = document.getElementById('meta-description');
+            if (metaDesc) metaDesc.setAttribute('content', tr('meta_desc'));
+
+            const btnEs = document.getElementById('lang-btn-es');
+            const btnEn = document.getElementById('lang-btn-en');
+            if (btnEs) {
+                btnEs.className = 'px-3 py-1 rounded-full text-xs font-extrabold transition-colors ' +
+                    (currentLang === 'es' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:text-gray-900');
+            }
+            if (btnEn) {
+                btnEn.className = 'px-3 py-1 rounded-full text-xs font-extrabold transition-colors ' +
+                    (currentLang === 'en' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:text-gray-900');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key) el.textContent = tr(key);
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (key) el.setAttribute('placeholder', tr(key));
+            });
+            document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+                const key = el.getAttribute('data-i18n-aria');
+                if (key) el.setAttribute('aria-label', tr(key));
+            });
+
+            if (rerenderDynamic) {
+                updateAuthModeLabels();
+                setSignupRole(selectedSignupRole);
+                setToggle(isAnnual);
+                if (currentWorkspace && (currentWorkspace.is_employee === true || currentWorkspace.role === 'empleado')) {
+                    renderEmployeeView(currentWorkspace);
+                }
+                if (lastVipRemaining !== null || lastVipError) {
+                    renderVipCounterState();
+                }
+                if (lastSubData) {
+                    renderSubscriptionBanner(lastSubData.state, lastSubData.subRow);
+                }
+            }
+        }
+
+        function updateAuthModeLabels() {
+            const titleEl = document.getElementById('auth-title');
+            const switchTextEl = document.getElementById('auth-switch-text');
+            const toggleBtnEl = document.getElementById('toggle-auth-mode');
+            if (titleEl) titleEl.textContent = isSignUpMode ? tr('auth.signup_title') : tr('auth.login_title');
+            if (switchTextEl) switchTextEl.textContent = isSignUpMode ? tr('auth.has_account') : tr('auth.no_account');
+            if (toggleBtnEl) toggleBtnEl.textContent = isSignUpMode ? tr('auth.sign_in_action') : tr('auth.sign_up_action');
+        }
 
         function initSupabase() {
             if (!window.supabase) {
-                showCriticalError('Tu navegador o red está bloqueando la conexión necesaria. Desactiva escudos de privacidad/DNS o prueba otra red.');
+                showCriticalError(tr('workspace_error.critical_blocked'));
                 return false;
             }
             supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, {
@@ -620,7 +1124,7 @@
                 icon.textContent = '⚠️';
                 const title = document.createElement('p');
                 title.className = 'font-bold text-red-700 text-lg';
-                title.textContent = 'Error de Conexión';
+                title.textContent = tr('workspace_error.critical_title');
                 const body = document.createElement('p');
                 body.className = 'text-gray-600 mt-2 max-w-sm';
                 body.textContent = msg;
@@ -677,7 +1181,7 @@
             const btn = document.getElementById('confirm-role-btn');
             if (btn) {
                 btn.disabled = false;
-                btn.textContent = 'Continuar';
+                btn.textContent = tr('common.continue');
             }
         }
 
@@ -705,21 +1209,21 @@
             }
 
             const isLinked = ws && ws.status === 'activo' && Boolean(ws.admin_id);
-            const roleLabel = ws && ws.role === 'supervisor' ? 'Supervisor' : 'Empleado';
+            const roleLabel = ws && ws.role === 'supervisor' ? tr('employee.role_supervisor') : tr('employee.role_employee');
 
             if (isLinked) {
-                if (badge) badge.textContent = `${roleLabel} vinculado · Sin suscripción`;
-                if (title) title.textContent = 'Tu acceso ya está activo';
-                if (desc) desc.textContent = 'El acceso de tu equipo lo gestiona tu empresa. No necesitas contratar ningún plan de pago en la web.';
-                if (companyNameEl) companyNameEl.textContent = ws.admin_name || 'Tu empresa';
-                if (roleBadgeEl) roleBadgeEl.textContent = `Rol asignado: ${roleLabel}`;
+                if (badge) badge.textContent = tr('employee.linked_badge', { role: roleLabel });
+                if (title) title.textContent = tr('employee.linked_title');
+                if (desc) desc.textContent = tr('employee.linked_desc');
+                if (companyNameEl) companyNameEl.textContent = ws.admin_name || tr('employee.company_fallback');
+                if (roleBadgeEl) roleBadgeEl.textContent = tr('employee.assigned_role', { role: roleLabel });
                 if (linkedBox) linkedBox.classList.remove('hidden');
                 if (unlinkedBox) unlinkedBox.classList.add('hidden');
                 if (switchWrap) switchWrap.classList.add('hidden');
             } else {
-                if (badge) badge.textContent = 'Cuenta de Empleado';
-                if (title) title.textContent = 'No necesitas suscripción';
-                if (desc) desc.textContent = 'Tu cuenta está configurada exclusivamente para control horario. Vincula tu empresa desde la app móvil con tu código NET.';
+                if (badge) badge.textContent = tr('employee.badge_default');
+                if (title) title.textContent = tr('employee.title_default');
+                if (desc) desc.textContent = tr('employee.desc_unlinked');
                 if (linkedBox) linkedBox.classList.add('hidden');
                 if (unlinkedBox) unlinkedBox.classList.remove('hidden');
                 if (switchWrap) switchWrap.classList.remove('hidden');
@@ -820,36 +1324,51 @@
                         return;
                     }
                 } catch {}
-                showWorkspaceError('No pudimos verificar el tipo de tu cuenta. Comprueba tu conexión e inténtalo de nuevo.');
+                showWorkspaceError(tr('workspace_error.verify_failed'));
             }
         }
 
         // ==========================================
         // CONTADOR VIP
         // ==========================================
+        function renderVipCounterState() {
+            const counterEl = document.getElementById('vip-counter');
+            const vipBtn = document.getElementById('vip-btn');
+            if (lastVipError) {
+                if (counterEl) counterEl.textContent = tr('plans.vip.spots_available');
+                return;
+            }
+            if (lastVipRemaining === null) return;
+            if (lastVipRemaining <= 0) {
+                if (counterEl) counterEl.textContent = tr('plans.vip.sold_out_counter');
+                if (vipBtn) {
+                    vipBtn.textContent = tr('plans.vip.sold_out_btn');
+                    vipBtn.disabled = true;
+                    vipBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                if (counterEl) counterEl.textContent = tr('plans.vip.spots_left', { count: lastVipRemaining });
+                if (vipBtn) {
+                    vipBtn.textContent = tr('plans.vip.cta');
+                    vipBtn.disabled = false;
+                    vipBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
         async function loadVipCounter() {
             try {
                 const { data, error } = await supabaseClient.rpc('get_founder_count');
                 if (error) throw error;
                 // La RPC devuelve el número directamente
                 const count = Number(data) || 0;
-                const remaining = Math.max(0, 111 - count);
-                const counterEl = document.getElementById('vip-counter');
-                const vipBtn = document.getElementById('vip-btn');
-                if (remaining <= 0) {
-                    if (counterEl) counterEl.textContent = '🔥 SOLD OUT - Cupo Lleno';
-                    if (vipBtn) {
-                        vipBtn.textContent = '🔥 SOLD OUT';
-                        vipBtn.disabled = true;
-                        vipBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
-                } else {
-                    if (counterEl) counterEl.textContent = `🔥 Quedan ${remaining} de 111 plazas`;
-                }
+                lastVipRemaining = Math.max(0, 111 - count);
+                lastVipError = false;
+                renderVipCounterState();
             } catch (e) {
                 console.warn('[VIP Counter] No se pudo cargar:', e.message);
-                const counterEl = document.getElementById('vip-counter');
-                if (counterEl) counterEl.textContent = '🔥 Plazas disponibles';
+                lastVipError = true;
+                renderVipCounterState();
             }
         }
 
@@ -863,7 +1382,7 @@
             }
         }
 
-        async function checkActiveSubscription() {
+        function renderSubscriptionBanner(state, subRow) {
             const banner = document.getElementById('active-sub-banner');
             const card = document.getElementById('active-sub-card');
             const iconBg = document.getElementById('active-sub-icon-bg');
@@ -873,6 +1392,91 @@
             const manageBtn = document.getElementById('manage-billing-btn');
             const noteEl = document.getElementById('active-sub-note');
             const proBtn = document.getElementById('pro-plan-btn');
+
+            if (renewalLabel) renewalLabel.textContent = '';
+
+            const estado = String(state.estado || 'inactiva').toLowerCase();
+            const plan = String(state.plan || 'basico').toLowerCase();
+            const isTrialExpired = Boolean(state.is_trial_expired);
+            const isValidTrial = estado === 'trial' && !isTrialExpired;
+            const isActivePaid = estado === 'activa';
+
+            if (proBtn) {
+                proBtn.textContent = (subRow || isTrialExpired || estado === 'freemium')
+                    ? tr('plans.pro.cta_choose')
+                    : tr('plans.pro.cta_trial');
+            }
+
+            if (isActivePaid || isValidTrial) {
+                if (banner) banner.classList.remove('hidden');
+                if (card) card.className = 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4';
+                if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0';
+                if (titleEl) {
+                    titleEl.className = 'text-green-800 font-bold text-lg leading-tight';
+                    titleEl.textContent = isValidTrial ? tr('sub.trial_title') : tr('sub.active_title');
+                }
+                if (planLabel) planLabel.className = 'text-green-700 text-sm font-medium mt-0.5';
+                if (renewalLabel) renewalLabel.className = 'text-green-600 text-xs mt-0.5';
+
+                const planNames = {
+                    basico: tr('sub.plan_basico'),
+                    pro: tr('sub.plan_pro'),
+                    vip: tr('sub.plan_vip'),
+                    elite: tr('sub.plan_pro')
+                };
+                if (planLabel) {
+                    planLabel.textContent = (planNames[plan] || plan || tr('sub.active_plan_fallback')) + (isValidTrial ? tr('sub.trial_suffix') : '');
+                }
+
+                if (subRow?.fecha_renovacion && renewalLabel) {
+                    const date = new Date(subRow.fecha_renovacion).toLocaleDateString(
+                        currentLang === 'en' ? 'en-US' : 'es-ES',
+                        { day: 'numeric', month: 'long', year: 'numeric' }
+                    );
+                    renewalLabel.textContent = isValidTrial
+                        ? tr('sub.trial_end', { date })
+                        : tr('sub.next_renewal', { date });
+                }
+
+                const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
+                if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal && !isActivePaid);
+                if (noteEl) {
+                    noteEl.className = 'text-green-700 text-sm mt-4 text-center';
+                    noteEl.textContent = hasStripePortal || isActivePaid
+                        ? tr('sub.manage_note')
+                        : tr('sub.trial_note');
+                }
+            } else {
+                // Cuenta Gratuita / Prueba Finalizada (SSOT)
+                if (banner) banner.classList.remove('hidden');
+                if (card) card.className = 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 mb-4';
+                if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0';
+                if (titleEl) {
+                    titleEl.className = 'text-amber-900 font-bold text-lg leading-tight';
+                    titleEl.textContent = isTrialExpired ? tr('sub.free_expired_title') : tr('sub.free_title');
+                }
+                if (planLabel) {
+                    planLabel.className = 'text-amber-800 text-sm font-medium mt-0.5';
+                    const scanLimit = Number(state.scan_limit) || 3;
+                    const chatLimit = Number(state.chat_limit) || 1;
+                    planLabel.textContent = tr('sub.free_limits', { scans: scanLimit, chats: chatLimit });
+                }
+                if (renewalLabel) {
+                    renewalLabel.className = 'text-amber-700 text-xs mt-0.5';
+                    renewalLabel.textContent = isTrialExpired ? tr('sub.free_expired_sub') : tr('sub.free_sub');
+                }
+                const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
+                if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal);
+                if (noteEl) {
+                    noteEl.className = 'text-amber-800 text-xs mt-4 text-center';
+                    noteEl.textContent = hasStripePortal ? tr('sub.free_note_portal') : tr('sub.free_note_no_charge');
+                }
+            }
+        }
+
+        async function checkActiveSubscription() {
+            const banner = document.getElementById('active-sub-banner');
+            const renewalLabel = document.getElementById('active-renewal-label');
 
             if (banner) banner.classList.add('hidden');
             if (renewalLabel) renewalLabel.textContent = '';
@@ -891,83 +1495,19 @@
 
                 const state = stateRes.data;
                 const subRow = subRes.data || null;
+                lastSubData = { state, subRow };
+                renderSubscriptionBanner(state, subRow);
+
                 const estado = String(state.estado || 'inactiva').toLowerCase();
-                const plan = String(state.plan || 'basico').toLowerCase();
-                const isTrialExpired = Boolean(state.is_trial_expired);
-                const isValidTrial = estado === 'trial' && !isTrialExpired;
-                const isActivePaid = estado === 'activa';
+                const isValidTrial = estado === 'trial' && !Boolean(state.is_trial_expired);
 
-                if (proBtn) {
-                    proBtn.textContent = (subRow || isTrialExpired || estado === 'freemium') ? 'Elegir Plan Pro' : 'Comenzar Prueba Gratis';
-                }
-
-                if (isActivePaid || isValidTrial) {
-                    if (banner) banner.classList.remove('hidden');
-                    if (card) card.className = 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4';
-                    if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0';
-                    if (titleEl) {
-                        titleEl.className = 'text-green-800 font-bold text-lg leading-tight';
-                        titleEl.textContent = isValidTrial ? 'Prueba de 14 Días Activa ✨' : 'Suscripción Activa ✅';
-                    }
-                    if (planLabel) planLabel.className = 'text-green-700 text-sm font-medium mt-0.5';
-                    if (renewalLabel) renewalLabel.className = 'text-green-600 text-xs mt-0.5';
-
-                    const planNames = { basico: 'Plan Básico', pro: 'Plan Autónomo Pro', vip: 'Plan VIP Embajadores', elite: 'Plan Autónomo Pro' };
-                    if (planLabel) {
-                        planLabel.textContent = (planNames[plan] || plan || 'Plan activo') + (isValidTrial ? ' (Prueba 14 Días en curso)' : '');
-                    }
-
-                    if (subRow?.fecha_renovacion && renewalLabel) {
-                        const date = new Date(subRow.fecha_renovacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-                        renewalLabel.textContent = isValidTrial ? `Fin del periodo de prueba: ${date}` : `Próxima renovación: ${date}`;
-                    }
-
-                    const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
-                    if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal && !isActivePaid);
-                    if (noteEl) {
-                        noteEl.className = 'text-green-700 text-sm mt-4 text-center';
-                        noteEl.textContent = hasStripePortal || isActivePaid
-                            ? 'Descarga tus facturas, cambia tu método de pago o modifica tu plan de forma segura en Stripe.'
-                            : 'Estás disfrutando de tu prueba gratuita. Al terminar los 14 días no se te cobrará nada salvo que elijas un plan.';
-                    }
-
-                    // Modal de bienvenida SOLO si la prueba sigue vigente (nunca si ya caducó)
-                    if (isValidTrial && Boolean(state.is_pro)) {
-                        const hasSeen = localStorage.getItem(`netto_seen_welcome_trial_${currentUser.id}`);
-                        if (!hasSeen) {
-                            setTimeout(() => {
-                                document.getElementById('welcome-trial-modal').classList.remove('hidden');
-                            }, 500);
-                        }
-                    }
-                } else {
-                    // Cuenta Gratuita / Prueba Finalizada (SSOT)
-                    if (banner) banner.classList.remove('hidden');
-                    if (card) card.className = 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 mb-4';
-                    if (iconBg) iconBg.className = 'w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0';
-                    if (titleEl) {
-                        titleEl.className = 'text-amber-900 font-bold text-lg leading-tight';
-                        titleEl.textContent = isTrialExpired ? 'Cuenta Gratuita · Prueba Finalizada' : 'Cuenta Gratuita (Free)';
-                    }
-                    if (planLabel) {
-                        planLabel.className = 'text-amber-800 text-sm font-medium mt-0.5';
-                        const scanLimit = Number(state.scan_limit) || 3;
-                        const chatLimit = Number(state.chat_limit) || 1;
-                        planLabel.textContent = `Límites Free activos: ${scanLimit} escaneos/mes · ${chatLimit} consulta IA/mes · Facturación ilimitada`;
-                    }
-                    if (renewalLabel) {
-                        renewalLabel.className = 'text-amber-700 text-xs mt-0.5';
-                        renewalLabel.textContent = isTrialExpired
-                            ? 'Tu prueba gratuita de 14 días ya ha terminado. Selecciona Plan Básico o Pro para ampliar tus límites.'
-                            : 'Sin suscripción activa. Puedes ampliar límites cuando quieras eligiendo un plan.';
-                    }
-                    const hasStripePortal = Boolean(subRow?.stripe_subscription_id);
-                    if (manageBtn) manageBtn.classList.toggle('hidden', !hasStripePortal);
-                    if (noteEl) {
-                        noteEl.className = 'text-amber-800 text-xs mt-4 text-center';
-                        noteEl.textContent = hasStripePortal
-                            ? 'Puedes consultar tus facturas anteriores en el portal de Stripe o reactivar un plan abajo.'
-                            : 'No tienes ningún cobro programado. Elige un plan abajo cuando necesites mayor capacidad de IA.';
+                // Modal de bienvenida SOLO si la prueba sigue vigente (nunca si ya caducó)
+                if (isValidTrial && Boolean(state.is_pro)) {
+                    const hasSeen = localStorage.getItem(`netto_seen_welcome_trial_${currentUser.id}`);
+                    if (!hasSeen) {
+                        setTimeout(() => {
+                            document.getElementById('welcome-trial-modal').classList.remove('hidden');
+                        }, 500);
                     }
                 }
             } catch (e) {
@@ -979,19 +1519,16 @@
         // PORTAL DE FACTURACIÓN STRIPE (BLINDADO)
         // ==========================================
         // SEGURIDAD: El cliente NUNCA envía el stripe_customer_id.
-        // Solo envía el JWT de sesión. El servidor lo resuelve internamente.
+        // Solo envía el JWT de sesión (y locale de preferencia UI). El servidor resuelve lo demás.
         window.openBillingPortal = async function() {
             const btn = document.getElementById('manage-billing-btn');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Cargando...';
+            setPortalButtonLoading(btn, true);
 
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (!session?.access_token) {
-                    alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+                    alert(tr('sub.session_expired'));
+                    setPortalButtonLoading(btn, false);
                     return;
                 }
 
@@ -1001,7 +1538,8 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}`
                         // No enviamos stripe_customer_id ni ningún ID — el servidor lo resuelve solo
-                    }
+                    },
+                    body: JSON.stringify({ locale: currentLang })
                 });
 
                 const result = await response.json();
@@ -1009,15 +1547,13 @@
                 if (response.ok && result.url) {
                     window.location.href = result.url;
                 } else {
-                    alert(result.error || 'No se pudo abrir el portal de facturación. Inténtalo de nuevo.');
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+                    alert(result.error || tr('sub.portal_open_error'));
+                    setPortalButtonLoading(btn, false);
                 }
             } catch (err) {
                 console.error('[openBillingPortal] Error:', err.message);
-                alert('Error de red al conectar con facturación. Inténtalo de nuevo.');
-                btn.disabled = false;
-                btn.innerHTML = originalText;
+                alert(tr('sub.portal_network_error'));
+                setPortalButtonLoading(btn, false);
             }
         };
 
@@ -1066,7 +1602,8 @@
         // MODALES LEGALES (sin innerHTML de datos externos)
         // ==========================================
         function showLegalModal(type) {
-            const sections = LEGAL_SECTIONS[type];
+            const langLegal = LEGAL_SECTIONS[currentLang] || LEGAL_SECTIONS.es;
+            const sections = langLegal[type];
             if (!sections) return;
 
             const modal = document.getElementById('legal-modal');
@@ -1074,10 +1611,10 @@
             const body = document.getElementById('legal-modal-body');
             const titleEl = document.getElementById('legal-modal-title');
 
-            titleEl.textContent = type === 'terms' ? 'Términos de Servicio' : 'Política de Privacidad';
+            titleEl.textContent = type === 'terms' ? tr('legal.terms_title') : tr('legal.privacy_title');
 
             // Construimos el DOM de forma segura (sin innerHTML de datos externos)
-            body.innerHTML = '';
+            body.replaceChildren();
             sections.forEach(section => {
                 const h3 = document.createElement('h3');
                 h3.className = 'font-bold text-base mb-2 text-gray-900 mt-4';
@@ -1110,9 +1647,6 @@
         // ==========================================
         // TOGGLE MODO LOGIN / REGISTRO Y SELECTORES DE ROL
         // ==========================================
-        let isSignUpMode = false;
-        let authCooldown = false; // Rate limiting básico
-
         function setSignupRole(role) {
             selectedSignupRole = role === 'autonomo' || role === 'empleado' ? role : null;
             document.querySelectorAll('.signup-role-card').forEach(card => {
@@ -1139,10 +1673,10 @@
                 'bg-blue-50', 'border-blue-200', 'text-blue-800'
             );
             if (selectedSignupRole === 'autonomo') {
-                noteEl.textContent = 'Acceso completo al entorno fiscal, facturación e impuestos con 14 días de prueba Pro.';
+                noteEl.textContent = tr('role.autonomo_note');
                 noteEl.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800');
             } else if (selectedSignupRole === 'empleado') {
-                noteEl.textContent = 'Sin suscripción. Al finalizar el registro podrás abrir la app de Netto e introducir el código NET que te enviará tu responsable.';
+                noteEl.textContent = tr('role.employee_note');
                 noteEl.classList.add('bg-blue-50', 'border-blue-200', 'text-blue-800');
             } else {
                 noteEl.textContent = '';
@@ -1195,9 +1729,7 @@
             const fullNameInput = document.getElementById('full-name');
             if (fullNameInput && !isSignUpMode) fullNameInput.value = '';
 
-            document.getElementById('auth-title').textContent = isSignUpMode ? 'Crear Cuenta' : 'Inicia Sesión';
-            document.getElementById('auth-switch-text').textContent = isSignUpMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
-            document.getElementById('toggle-auth-mode').textContent = isSignUpMode ? 'Inicia Sesión' : 'Regístrate';
+            updateAuthModeLabels();
 
             const signupFields = document.getElementById('signup-only-fields');
             const passwordInput = document.getElementById('password');
@@ -1215,7 +1747,7 @@
         document.getElementById('forgot-password-btn').addEventListener('click', async () => {
             const email = document.getElementById('email').value.trim();
             if (!email) {
-                showAuthError('Por favor, ingresa tu correo electrónico arriba para restablecer tu contraseña.');
+                showAuthError(tr('auth.err_enter_email_reset'));
                 return;
             }
             clearAuthMessages();
@@ -1223,9 +1755,9 @@
             try {
                 const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
                 if (error) throw error;
-                showAuthSuccess('Te hemos enviado un enlace para restablecer tu contraseña.');
+                showAuthSuccess(tr('auth.reset_sent'));
             } catch (error) {
-                showAuthError('No se pudo enviar el correo. Verifica que tu email sea correcto.');
+                showAuthError(tr('auth.reset_failed'));
             } finally {
                 document.getElementById('login-btn').disabled = false;
             }
@@ -1255,12 +1787,12 @@
             const btn = document.getElementById('login-btn');
 
             if (authCooldown) {
-                showAuthError('Espera un momento antes de intentarlo de nuevo.');
+                showAuthError(tr('auth.err_wait'));
                 return;
             }
 
             if (!document.getElementById('terms-checkbox').checked) {
-                showAuthError('Debes aceptar los términos y condiciones para continuar.');
+                showAuthError(tr('auth.err_accept_terms'));
                 return;
             }
 
@@ -1270,28 +1802,28 @@
             const fullName = fullNameInput ? fullNameInput.value.trim() : '';
 
             if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showAuthError('Por favor, introduce un correo electrónico válido.');
+                showAuthError(tr('auth.err_valid_email'));
                 return;
             }
 
             if (isSignUpMode && selectedSignupRole !== 'autonomo' && selectedSignupRole !== 'empleado') {
-                showAuthError('Por favor, elige si utilizarás Netto como Autónomo / Empresa o como Empleado antes de continuar.');
+                showAuthError(tr('auth.err_choose_role'));
                 return;
             }
 
             if (isSignUpMode && !fullName) {
-                showAuthError('Por favor, introduce tu nombre completo para crear tu cuenta.');
+                showAuthError(tr('auth.err_full_name'));
                 return;
             }
 
             if (!isSignUpMode && !password) {
-                showAuthError('Por favor, introduce tu contraseña.');
+                showAuthError(tr('auth.err_enter_password'));
                 return;
             }
 
             // Validación de contraseña en registro
             if (isSignUpMode && password.length < 8) {
-                showAuthError('La contraseña debe tener al menos 8 caracteres.');
+                showAuthError(tr('auth.err_password_min'));
                 return;
             }
 
@@ -1300,7 +1832,7 @@
             setTimeout(() => { authCooldown = false; }, 3000);
 
             btn.disabled = true;
-            btn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            btn.textContent = tr('common.loading');
             clearAuthMessages();
 
             try {
@@ -1330,29 +1862,29 @@
 
                 if (error) {
                     let errMsg = error.message;
-                    if (errMsg.includes('already registered')) errMsg = 'Este correo ya está registrado.';
-                    if (errMsg.includes('rate limit')) errMsg = 'Demasiados intentos. Espera unos minutos.';
+                    if (errMsg.includes('already registered')) errMsg = tr('auth.err_already_registered');
+                    if (errMsg.includes('rate limit')) errMsg = tr('auth.err_rate_limit');
                     
-                    showAuthError(isSignUpMode ? errMsg : 'Credenciales incorrectas. Verifica tu email y contraseña.');
+                    showAuthError(isSignUpMode ? errMsg : tr('auth.err_bad_credentials'));
                     btn.disabled = false;
-                    btn.textContent = 'Continuar';
+                    btn.textContent = tr('common.continue');
                 } else if (isSignUpMode && !data.session) {
                     // Email de confirmación enviado
                     const successMsg = selectedSignupRole === 'empleado'
-                        ? '✅ ¡Cuenta de Empleado creada! Revisa tu correo para confirmar tu email. Después abre la app móvil de Netto e introduce el código NET de tu empresa (no necesitas suscripción).'
-                        : '✅ ¡Cuenta creada! Revisa tu correo para confirmar tu email y luego vuelve aquí para iniciar sesión.';
+                        ? tr('auth.signup_success_employee')
+                        : tr('auth.signup_success_autonomo');
                     showAuthSuccess(successMsg);
                     btn.disabled = false;
-                    btn.textContent = 'Continuar';
+                    btn.textContent = tr('common.continue');
                 } else {
                     btn.disabled = false;
-                    btn.textContent = 'Continuar';
+                    btn.textContent = tr('common.continue');
                     await init();
                 }
             } catch (err) {
-                showAuthError('Error de conexión. Por favor, inténtalo de nuevo.');
+                showAuthError(tr('auth.err_connection'));
                 btn.disabled = false;
-                btn.textContent = 'Continuar';
+                btn.textContent = tr('common.continue');
             }
         });
 
@@ -1361,13 +1893,14 @@
         // ==========================================
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             if (!document.getElementById('terms-checkbox').checked) {
-                showAuthError('Debes aceptar los términos y condiciones para continuar.');
+                showAuthError(tr('auth.err_accept_terms'));
                 return;
             }
 
             const btn = document.getElementById('google-login-btn');
+            const labelSpan = document.getElementById('google-login-text');
             btn.disabled = true;
-            btn.textContent = 'Cargando...';
+            if (labelSpan) labelSpan.textContent = tr('common.loading');
             clearAuthMessages();
 
             try {
@@ -1390,9 +1923,9 @@
                 if (error) throw error;
             } catch (err) {
                 console.error('Google OAuth Error:', err);
-                showAuthError('Error al iniciar sesión con Google. Comprueba tu conexión o inténtalo de nuevo.');
+                showAuthError(tr('auth.err_google'));
                 btn.disabled = false;
-                btn.innerHTML = `<svg class="w-5 h-5 mr-3" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar con Google`;
+                if (labelSpan) labelSpan.textContent = tr('auth.continue_google');
             }
         });
 
@@ -1411,8 +1944,6 @@
         // ==========================================
         // TOGGLE ANUAL / MENSUAL
         // ==========================================
-        let isAnnual = false;
-
         function setToggle(annual) {
             isAnnual = annual;
             const btnM = document.getElementById('toggle-monthly');
@@ -1428,9 +1959,11 @@
             btnA.setAttribute('aria-pressed', String(annual));
 
             document.getElementById('price-basico').textContent = annual ? '99' : '9.99';
-            document.getElementById('period-basico').textContent = annual ? '/año' : '/mes';
+            document.getElementById('period-basico').textContent = annual ? tr('plans.period_year') : tr('plans.period_month');
             document.getElementById('price-pro').textContent = annual ? '199' : '19.99';
-            document.getElementById('period-pro').textContent = annual ? '/año' : '/mes';
+            document.getElementById('period-pro').textContent = annual ? tr('plans.period_year') : tr('plans.period_month');
+            const vipPeriod = document.getElementById('period-vip');
+            if (vipPeriod) vipPeriod.textContent = tr('plans.period_month');
         }
 
         document.getElementById('toggle-monthly').addEventListener('click', () => setToggle(false));
@@ -1447,7 +1980,8 @@
             }
             currentUser = null;
             currentWorkspace = null;
-            window.location.href = window.location.href.split('#')[0].split('?')[0];
+            const cleanUrl = window.location.href.split('#')[0].split('?')[0];
+            window.location.href = currentLang === 'en' ? `${cleanUrl}?lang=en` : cleanUrl;
         }
 
         document.querySelectorAll('.js-logout-btn').forEach(btn => {
@@ -1463,7 +1997,7 @@
             const btn = document.getElementById('confirm-role-btn');
             if (selectedOnboardingRole !== 'autonomo' && selectedOnboardingRole !== 'empleado') {
                 if (errEl) {
-                    errEl.textContent = 'Por favor, elige si utilizarás Netto como Autónomo / Empresa o como Empleado antes de continuar.';
+                    errEl.textContent = tr('auth.err_choose_role');
                     errEl.classList.remove('hidden');
                 }
                 return;
@@ -1474,7 +2008,7 @@
                 errEl.classList.add('hidden');
             }
             btn.disabled = true;
-            btn.textContent = 'Guardando...';
+            btn.textContent = tr('role.saving');
 
             try {
                 const { error } = await supabaseClient.rpc('rpc_set_initial_account_mode', {
@@ -1484,11 +2018,11 @@
                 await init();
             } catch (err) {
                 if (errEl) {
-                    errEl.textContent = err?.message || 'No se pudo guardar el modo de cuenta seleccionado. Inténtalo de nuevo.';
+                    errEl.textContent = err?.message || tr('role.save_error');
                     errEl.classList.remove('hidden');
                 }
                 btn.disabled = false;
-                btn.textContent = 'Continuar';
+                btn.textContent = tr('common.continue');
             }
         });
 
@@ -1500,12 +2034,12 @@
             try {
                 await navigator.clipboard.writeText(text);
                 if (feedbackEl) {
-                    feedbackEl.textContent = '✅ Correo copiado al portapapeles.';
+                    feedbackEl.textContent = tr('employee.email_copied');
                     feedbackEl.classList.remove('hidden');
                 }
             } catch {
                 if (feedbackEl) {
-                    feedbackEl.textContent = 'Copia manualmente tu correo mostrado arriba.';
+                    feedbackEl.textContent = tr('employee.email_copy_manual');
                     feedbackEl.classList.remove('hidden');
                 }
             }
@@ -1529,7 +2063,7 @@
                 errEl.classList.add('hidden');
             }
             confirmBtn.disabled = true;
-            confirmBtn.textContent = 'Cambiando...';
+            confirmBtn.textContent = tr('employee.switching');
 
             try {
                 const { error } = await supabaseClient.rpc('rpc_set_initial_account_mode', {
@@ -1537,20 +2071,20 @@
                 });
                 if (error) throw error;
                 confirmBtn.disabled = false;
-                confirmBtn.textContent = 'Sí, cambiar a Autónomo';
+                confirmBtn.textContent = tr('employee.switch_confirm_btn');
                 await init();
             } catch (err) {
                 if (errEl) {
-                    errEl.textContent = err?.message || 'No se pudo cambiar el tipo de cuenta.';
+                    errEl.textContent = err?.message || tr('employee.switch_error');
                     errEl.classList.remove('hidden');
                 }
                 confirmBtn.disabled = false;
-                confirmBtn.textContent = 'Sí, cambiar a Autónomo';
+                confirmBtn.textContent = tr('employee.switch_confirm_btn');
             }
         });
 
         // ==========================================
-        // CHECKOUT
+        // CHECKOUT (PROPAGA LOCALE A STRIPE)
         // ==========================================
         window.checkout = async function(planId) {
             // Validar que el plan esté en la lista blanca
@@ -1579,7 +2113,7 @@
             else if (planId === 'pro') priceId = isAnnual ? CONFIG.prices.pro_anual : CONFIG.prices.pro_mensual;
 
             if (!priceId) {
-                alert('⚠️ Precio no configurado. Contacta con soporte: info@nettoapp.eu');
+                alert(tr('checkout.price_not_configured'));
                 return;
             }
 
@@ -1588,10 +2122,10 @@
                 b.classList.add('opacity-50');
             });
 
-            // Preparar URLs de retorno dinámicas (sirve para local y github pages)
+            // Preparar URLs de retorno dinámicas preservando el idioma seleccionado
             const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace(/\/$/, '');
-            const successUrl = `${baseUrl}/success/`;
-            const cancelUrl = `${baseUrl}`;
+            const successUrl = `${baseUrl}/success/?lang=${currentLang}`;
+            const cancelUrl = `${baseUrl}/?lang=${currentLang}`;
 
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
@@ -1611,7 +2145,8 @@
                         plan: planId,
                         priceId,
                         successUrl,
-                        cancelUrl
+                        cancelUrl,
+                        locale: currentLang
                     })
                 });
 
@@ -1620,22 +2155,22 @@
                 if (response.ok && data.url) {
                     window.location.href = data.url;
                 } else if (response.status === 409 && data.error === 'active_subscription_exists') {
-                    alert(data.message || 'Ya tienes una suscripción activa. Te redirigimos al portal oficial para gestionar o cambiar tu plan.');
+                    alert(data.message || tr('checkout.already_subscribed'));
                     if (data.portalUrl) {
                         window.location.href = data.portalUrl;
                     } else {
                         resetButtons();
                     }
                 } else if (response.status === 403 && (data.error === 'account_mode_employee_blocked' || data.error === 'account_mode_not_confirmed')) {
-                    alert(data.message || 'Debes configurar tu cuenta como Autónomo antes de contratar un plan.');
+                    alert(data.message || tr('checkout.must_configure_autonomo'));
                     resetButtons();
                     await init();
                 } else {
-                    alert('Error al conectar con la pasarela de pago. Inténtalo de nuevo o contacta a info@nettoapp.eu');
+                    alert(tr('checkout.gateway_error'));
                     resetButtons();
                 }
             } catch (err) {
-                alert('Error de red. Comprueba tu conexión e inténtalo de nuevo.');
+                alert(tr('checkout.network_error'));
                 resetButtons();
             }
         };
@@ -1650,7 +2185,12 @@
         // ==========================================
         // ARRANQUE
         // ==========================================
+        document.getElementById('lang-btn-es').addEventListener('click', () => setLanguage('es', true));
+        document.getElementById('lang-btn-en').addEventListener('click', () => setLanguage('en', true));
+
         document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang, false);
+            setToggle(isAnnual);
             if (initSupabase()) {
                 init();
             }

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Pago Completado! | Netto</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -21,46 +20,122 @@
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden p-8 text-center">
-        
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden p-8 text-center relative">
+        <div class="flex justify-end mb-4">
+            <div class="inline-flex items-center bg-gray-100 border border-gray-200 rounded-full p-0.5 text-xs font-bold" role="group" aria-label="Language">
+                <button type="button" id="btn-lang-es" class="px-2.5 py-1 rounded-full transition-colors">ES</button>
+                <button type="button" id="btn-lang-en" class="px-2.5 py-1 rounded-full transition-colors">EN</button>
+            </div>
+        </div>
+
         <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
-            <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
             </svg>
         </div>
 
-        <h2 class="text-3xl font-black tracking-tight text-gray-900 mb-2">¡Suscripción Activada!</h2>
-        <p class="text-gray-500 mb-4">Tu pago se ha procesado con éxito. Actualizando tu plan...</p>
+        <h2 id="success-title" class="text-3xl font-black tracking-tight text-gray-900 mb-2">¡Suscripción Activada!</h2>
+        <p id="success-subtitle" class="text-gray-500 mb-4">Tu pago se ha procesado con éxito. Actualizando tu plan...</p>
 
-        <!-- Contador de redirección automática -->
         <div id="countdown-wrap" class="mb-6 text-sm text-gray-400">
-            Volviendo al portal en <span id="countdown" class="font-bold text-gray-600">5</span>s...
+            <span id="countdown-prefix">Volviendo al portal en </span><span id="countdown" class="font-bold text-gray-600">5</span><span id="countdown-suffix">s...</span>
         </div>
 
-        <!-- AUDITORÍA: href="/?refreshed=true" para que el portal detecte vuelta de pago -->
         <a id="return-btn" href="/?refreshed=true" class="block w-full bg-brand hover:bg-brandHover text-white font-bold py-4 px-4 rounded-xl text-center transition-colors shadow-lg">
             Volver al Portal
         </a>
-        
-        <p class="mt-6 text-sm text-gray-400 font-medium">
+
+        <p id="success-close-note" class="mt-6 text-sm text-gray-400 font-medium">
             (Ya puedes cerrar esta ventana y volver a la app de Netto en tu teléfono)
         </p>
-
     </div>
 
     <script>
-        // Redirección automática tras 5s para dar tiempo al webhook de Stripe
-        let secs = 5;
-        const countEl = document.getElementById('countdown');
-        const timer = setInterval(() => {
-            secs--;
-            if (countEl) countEl.textContent = secs;
-            if (secs <= 0) {
-                clearInterval(timer);
-                window.location.href = '/?refreshed=true';
-            }
-        }, 1000);
-    </script>
+        (function () {
+            'use strict';
 
+            var STRINGS = Object.freeze({
+                es: Object.freeze({
+                    pageTitle: '¡Pago Completado! | Netto',
+                    title: '¡Suscripción Activada!',
+                    subtitle: 'Tu pago se ha procesado con éxito. Actualizando tu plan...',
+                    prefix: 'Volviendo al portal en ',
+                    suffix: 's...',
+                    btn: 'Volver al Portal',
+                    closeNote: '(Ya puedes cerrar esta ventana y volver a la app de Netto en tu teléfono)'
+                }),
+                en: Object.freeze({
+                    pageTitle: 'Payment Completed! | Netto',
+                    title: 'Subscription Activated!',
+                    subtitle: 'Your payment has been processed successfully. Updating your plan...',
+                    prefix: 'Returning to the portal in ',
+                    suffix: 's...',
+                    btn: 'Return to Portal',
+                    closeNote: '(You can now close this window and return to the Netto app on your phone)'
+                })
+            });
+
+            function detectLang() {
+                var paramLang = new URLSearchParams(window.location.search).get('lang');
+                if (paramLang === 'es' || paramLang === 'en') return paramLang;
+                try {
+                    var stored = localStorage.getItem('netto_web_lang');
+                    if (stored === 'es' || stored === 'en') return stored;
+                } catch (_) {}
+                return (navigator.language || 'es').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+            }
+
+            var currentLang = detectLang();
+            var secs = 5;
+            var countEl = document.getElementById('countdown');
+            var returnBtn = document.getElementById('return-btn');
+
+            function getReturnUrl() {
+                return currentLang === 'en' ? '/?refreshed=true&lang=en' : '/?refreshed=true&lang=es';
+            }
+
+            function renderLang() {
+                var t = STRINGS[currentLang];
+                document.documentElement.lang = currentLang;
+                document.title = t.pageTitle;
+                document.getElementById('success-title').textContent = t.title;
+                document.getElementById('success-subtitle').textContent = t.subtitle;
+                document.getElementById('countdown-prefix').textContent = t.prefix;
+                document.getElementById('countdown-suffix').textContent = t.suffix;
+                document.getElementById('success-close-note').textContent = t.closeNote;
+                returnBtn.textContent = t.btn;
+                returnBtn.href = getReturnUrl();
+
+                var btnEs = document.getElementById('btn-lang-es');
+                var btnEn = document.getElementById('btn-lang-en');
+                btnEs.className = 'px-2.5 py-1 rounded-full transition-colors ' + (currentLang === 'es' ? 'bg-gray-900 text-white' : 'text-gray-500');
+                btnEn.className = 'px-2.5 py-1 rounded-full transition-colors ' + (currentLang === 'en' ? 'bg-gray-900 text-white' : 'text-gray-500');
+
+                try {
+                    localStorage.setItem('netto_web_lang', currentLang);
+                } catch (_) {}
+            }
+
+            document.getElementById('btn-lang-es').addEventListener('click', function () {
+                currentLang = 'es';
+                renderLang();
+            });
+            document.getElementById('btn-lang-en').addEventListener('click', function () {
+                currentLang = 'en';
+                renderLang();
+            });
+
+            renderLang();
+
+            var timer = setInterval(function () {
+                secs -= 1;
+                if (countEl) countEl.textContent = String(Math.max(0, secs));
+                if (secs <= 0) {
+                    clearInterval(timer);
+                    window.location.href = getReturnUrl();
+                }
+            }, 1000);
+        })();
+    </script>
 </body>
 </html>

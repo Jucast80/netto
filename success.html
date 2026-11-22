@@ -2,10 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/success">
-    <title>Redirigiendo...</title>
+    <title>Netto</title>
+    <script>
+        (function () {
+            var search = window.location.search || '';
+            window.location.replace('/success' + search);
+        })();
+    </script>
 </head>
 <body>
-    <p>Si no eres redirigido, haz clic <a href="/success">aquí</a>.</p>
+    <p id="redirect-msg">Redirigiendo... <a href="/success" id="redirect-link">Continuar</a></p>
+    <script>
+        (function () {
+            var langParam = new URLSearchParams(window.location.search).get('lang');
+            var saved = null;
+            try { saved = localStorage.getItem('netto_web_lang'); } catch (_) {}
+            var lang = langParam === 'en' || langParam === 'es' ? langParam : (saved === 'en' || saved === 'es' ? saved : ((navigator.language || 'es').toLowerCase().indexOf('es') === 0 ? 'es' : 'en'));
+            if (lang === 'en') {
+                document.documentElement.lang = 'en';
+                document.title = 'Redirecting...';
+                var link = document.getElementById('redirect-link');
+                var msg = document.getElementById('redirect-msg');
+                if (msg && link) {
+                    msg.firstChild.nodeValue = 'Redirecting... ';
+                    link.textContent = 'Continue';
+                    link.href = '/success' + (window.location.search || '');
+                }
+            }
+        })();
+    </script>
 </body>
 </html>
