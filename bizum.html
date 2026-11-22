@@ -18,8 +18,6 @@
             --primary: #10b981;
             --primary-dark: #059669;
             --primary-soft: #d1fae5;
-            --bizum: #05c3dd;
-            --bizum-soft: #e0f7fa;
             --danger: #ef4444;
             --danger-soft: #fee2e2;
         }
@@ -130,7 +128,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .data-row {
             display: flex;
@@ -182,15 +180,27 @@
             border-color: var(--primary);
             color: #ffffff;
         }
-        .launcher-section {
-            margin-bottom: 16px;
-        }
-        .launcher-title {
-            font-size: 13px;
+        .primary-cta {
+            appearance: none;
+            width: 100%;
+            border: 0;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 16px;
             font-weight: 800;
-            color: var(--text);
-            margin: 0 0 10px;
-            line-height: 1.4;
+            padding: 15px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+            transition: transform 0.1s ease, background-color 0.15s ease;
+            margin-bottom: 12px;
+        }
+        .primary-cta:active {
+            transform: scale(0.985);
+            background: var(--primary-dark);
+        }
+        .primary-cta.copied {
+            background: var(--primary-dark);
         }
         .status-banner {
             display: none;
@@ -198,58 +208,55 @@
             border: 1px solid #6ee7b7;
             color: #065f46;
             border-radius: 12px;
-            padding: 11px 13px;
-            font-size: 12.5px;
+            padding: 12px 14px;
+            font-size: 13px;
             font-weight: 700;
             line-height: 1.45;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .status-banner.visible {
             display: block;
         }
-        .bank-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
-        }
-        .bank-btn {
-            appearance: none;
-            border: 1px solid var(--border);
+        .steps-box {
             background: #ffffff;
-            color: var(--text);
-            border-radius: 13px;
-            padding: 12px 10px;
-            font-size: 13.5px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+        }
+        .steps-title {
+            font-size: 12px;
             font-weight: 800;
-            cursor: pointer;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin: 0 0 8px;
+        }
+        .step-item {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            align-items: flex-start;
             gap: 8px;
-            text-align: left;
-            transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
-        }
-        .bank-btn:active {
-            transform: scale(0.98);
-            background: var(--surface);
-        }
-        .bank-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            flex-shrink: 0;
-        }
-        .bank-name {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .bank-arrow {
             font-size: 13px;
             color: var(--muted);
+            line-height: 1.45;
+            margin-bottom: 6px;
+        }
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            margin-top: 1px;
         }
         .security-note {
             border-top: 1px solid var(--border);
@@ -339,10 +346,20 @@
                 </div>
             </div>
 
-            <div class="launcher-section">
-                <h2 class="launcher-title" id="launcher-title">1. Toca tu banco (copia el teléfono automáticamente y abre tu app)</h2>
-                <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
-                <div class="bank-grid" id="bank-grid"></div>
+            <button type="button" class="primary-cta" id="primary-copy-btn">Copiar teléfono para Bizum</button>
+
+            <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
+
+            <div class="steps-box">
+                <p class="steps-title" id="steps-title">Cómo pagar en 10 segundos</p>
+                <div class="step-item">
+                    <span class="step-num">1</span>
+                    <span id="step-1">Toca «Copiar teléfono para Bizum» arriba.</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-num">2</span>
+                    <span id="step-2">Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce 0,00 €.</span>
+                </div>
             </div>
 
             <p class="security-note" id="security-note">
@@ -363,20 +380,6 @@
         (function () {
             'use strict';
 
-            var SPANISH_BANKS = Object.freeze([
-                Object.freeze({ id: 'bbva', name: 'BBVA', scheme: 'bbva://', color: '#004481' }),
-                Object.freeze({ id: 'caixabank', name: 'CaixaBank', scheme: 'caixabank://', color: '#007eae' }),
-                Object.freeze({ id: 'imagin', name: 'Imagin', scheme: 'imaginbank://', color: '#05c3dd' }),
-                Object.freeze({ id: 'santander', name: 'Santander', scheme: 'santanderretail://', color: '#ec0000' }),
-                Object.freeze({ id: 'ing', name: 'ING', scheme: 'ingdirect://', color: '#ff6200' }),
-                Object.freeze({ id: 'sabadell', name: 'Sabadell', scheme: 'bancosabadell://', color: '#0075c9' }),
-                Object.freeze({ id: 'bankinter', name: 'Bankinter', scheme: 'bankinter://', color: '#ff7300' }),
-                Object.freeze({ id: 'unicaja', name: 'Unicaja', scheme: 'unicaja://', color: '#1b8a44' }),
-                Object.freeze({ id: 'openbank', name: 'Openbank', scheme: 'openbank://', color: '#e6007e' }),
-                Object.freeze({ id: 'abanca', name: 'Abanca', scheme: 'abanca://', color: '#004990' }),
-                Object.freeze({ id: 'kutxabank', name: 'Kutxabank', scheme: 'kutxabank://', color: '#111827' })
-            ]);
-
             var I18N = Object.freeze({
                 es: Object.freeze({
                     pageTitle: 'Pago por Bizum · Netto',
@@ -388,8 +391,12 @@
                     copyAmount: 'Copiar importe',
                     copyConcept: 'Copiar concepto',
                     copied: '✓ Copiado',
-                    launcherTitle: '1. Toca tu banco (copia el teléfono automáticamente y abre tu app)',
-                    bannerTemplate: '✓ Teléfono Bizum copiado (+34 {phone}). Entra en Bizum en tu banco, pega el teléfono e indica el importe ({amount}).',
+                    primaryCta: 'Copiar teléfono para Bizum',
+                    primaryCtaCopied: '✓ Teléfono Bizum copiado',
+                    bannerTemplate: '✓ Teléfono Bizum copiado ({phone}). Abre la app de tu banco → Bizum → Pega el teléfono e introduce {amount}.',
+                    stepsTitle: 'Cómo pagar en 10 segundos',
+                    step1: 'Toca «Copiar teléfono para Bizum» arriba.',
+                    step2Template: 'Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce {amount}.',
                     securityNote: 'Verifica con el comercio que el destinatario e importe coinciden antes de confirmar el envío.',
                     errorTitle: 'Enlace de pago no válido',
                     errorDesc: 'Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.'
@@ -404,8 +411,12 @@
                     copyAmount: 'Copy amount',
                     copyConcept: 'Copy concept',
                     copied: '✓ Copied',
-                    launcherTitle: '1. Tap your bank (auto-copies phone & opens your banking app)',
-                    bannerTemplate: '✓ Bizum phone copied (+34 {phone}). Go to Bizum in your bank app, paste the phone number and enter the amount ({amount}).',
+                    primaryCta: 'Copy phone for Bizum',
+                    primaryCtaCopied: '✓ Bizum phone copied',
+                    bannerTemplate: '✓ Bizum phone copied ({phone}). Open your banking app → Bizum → Paste the phone number and enter {amount}.',
+                    stepsTitle: 'How to pay in 10 seconds',
+                    step1: 'Tap "Copy phone for Bizum" above.',
+                    step2Template: 'Open your banking app, go to Bizum → Send, paste the phone number and enter {amount}.',
                     securityNote: 'Verify with the merchant that the recipient and amount match before confirming the payment.',
                     errorTitle: 'Invalid payment link',
                     errorDesc: 'The Bizum QR code details are incomplete or invalid. Ask the merchant to generate the QR again.'
@@ -481,6 +492,8 @@
             var btnLangEn = document.getElementById('btn-lang-en');
             var paymentView = document.getElementById('payment-view');
             var errorView = document.getElementById('error-view');
+            var primaryCopyBtn = document.getElementById('primary-copy-btn');
+            var statusBanner = document.getElementById('status-banner');
 
             var formattedPhone = isPhoneValid ? formatPhoneDisplay(phone) : '';
             var amountComma = isAmountValid ? roundedAmount.toFixed(2).replace('.', ',') : '0,00';
@@ -501,14 +514,21 @@
                 document.getElementById('copy-phone-btn').textContent = t.copyPhone;
                 document.getElementById('copy-amount-btn').textContent = t.copyAmount;
                 document.getElementById('copy-concept-btn').textContent = t.copyConcept;
-                document.getElementById('launcher-title').textContent = t.launcherTitle;
+                document.getElementById('steps-title').textContent = t.stepsTitle;
+                document.getElementById('step-1').textContent = t.step1;
+                document.getElementById('step-2').textContent = t.step2Template.replace('{amount}', amountDisplay);
                 document.getElementById('security-note').textContent = t.securityNote;
                 document.getElementById('error-title').textContent = t.errorTitle;
                 document.getElementById('error-desc').textContent = t.errorDesc;
 
-                var banner = document.getElementById('status-banner');
-                if (banner.className.indexOf('visible') !== -1) {
-                    banner.textContent = t.bannerTemplate
+                if (primaryCopyBtn.className.indexOf('copied') !== -1) {
+                    primaryCopyBtn.textContent = t.primaryCtaCopied;
+                } else {
+                    primaryCopyBtn.textContent = t.primaryCta;
+                }
+
+                if (statusBanner.className.indexOf('visible') !== -1) {
+                    statusBanner.textContent = t.bannerTemplate
                         .replace('{phone}', formattedPhone)
                         .replace('{amount}', amountDisplay);
                 }
@@ -560,43 +580,15 @@
             bindCopyButton('copy-amount-btn', amountComma, 'copyAmount');
             bindCopyButton('copy-concept-btn', concept, 'copyConcept');
 
-            var bankGrid = document.getElementById('bank-grid');
-            var statusBanner = document.getElementById('status-banner');
-
-            for (var i = 0; i < SPANISH_BANKS.length; i += 1) {
-                (function (bank) {
-                    var btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'bank-btn';
-
-                    var dot = document.createElement('span');
-                    dot.className = 'bank-dot';
-                    dot.style.backgroundColor = bank.color;
-
-                    var nameSpan = document.createElement('span');
-                    nameSpan.className = 'bank-name';
-                    nameSpan.textContent = bank.name;
-
-                    var arrow = document.createElement('span');
-                    arrow.className = 'bank-arrow';
-                    arrow.textContent = '→';
-
-                    btn.appendChild(dot);
-                    btn.appendChild(nameSpan);
-                    btn.appendChild(arrow);
-
-                    btn.addEventListener('click', function () {
-                        copySyncAndAsync(phone);
-                        statusBanner.textContent = I18N[currentLang].bannerTemplate
-                            .replace('{phone}', formattedPhone)
-                            .replace('{amount}', amountDisplay);
-                        statusBanner.className = 'status-banner visible';
-                        window.location.href = bank.scheme;
-                    });
-
-                    bankGrid.appendChild(btn);
-                })(SPANISH_BANKS[i]);
-            }
+            primaryCopyBtn.addEventListener('click', function () {
+                copySyncAndAsync(phone);
+                primaryCopyBtn.className = 'primary-cta copied';
+                primaryCopyBtn.textContent = I18N[currentLang].primaryCtaCopied;
+                statusBanner.textContent = I18N[currentLang].bannerTemplate
+                    .replace('{phone}', formattedPhone)
+                    .replace('{amount}', amountDisplay);
+                statusBanner.className = 'status-banner visible';
+            });
 
             renderStrings();
         })();
