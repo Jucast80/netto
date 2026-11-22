@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none';">
+    <title>Pago por Bizum · Netto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --surface: #f1f5f9;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-soft: #d1fae5;
+            --bizum: #05c3dd;
+            --bizum-soft: #e0f7fa;
+            --danger: #ef4444;
+            --danger-soft: #fee2e2;
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .card {
+            width: 100%;
+            max-width: 460px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+            padding: 22px 20px;
+            margin: auto 0;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 10px;
+        }
+        .brand {
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: -0.6px;
+            color: var(--text);
+        }
+        .brand span {
+            color: var(--primary);
+        }
+        .lang-toggle {
+            display: inline-flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px;
+            gap: 2px;
+        }
+        .lang-btn {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+        .lang-btn.active {
+            background: var(--text);
+            color: #ffffff;
+        }
+        .badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .fee-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+        .merchant-name {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--muted);
+            margin: 0 0 4px;
+            word-break: break-word;
+        }
+        .amount-hero {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--text);
+            margin: 0 0 18px;
+        }
+        .data-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .data-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-row:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+        .data-info {
+            min-width: 0;
+            flex: 1;
+        }
+        .data-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .data-value {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+            word-break: break-word;
+        }
+        .copy-btn {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        .copy-btn.copied {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+        .launcher-section {
+            margin-bottom: 16px;
+        }
+        .launcher-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 10px;
+            line-height: 1.4;
+        }
+        .status-banner {
+            display: none;
+            background: var(--primary-soft);
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+            border-radius: 12px;
+            padding: 11px 13px;
+            font-size: 12.5px;
+            font-weight: 700;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        .status-banner.visible {
+            display: block;
+        }
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+        .bank-btn {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text);
+            border-radius: 13px;
+            padding: 12px 10px;
+            font-size: 13.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            text-align: left;
+            transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
+        }
+        .bank-btn:active {
+            transform: scale(0.98);
+            background: var(--surface);
+        }
+        .bank-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+        .bank-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .bank-arrow {
+            font-size: 13px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .security-note {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            font-size: 11.5px;
+            color: var(--muted);
+            line-height: 1.45;
+            text-align: center;
+            margin: 0;
+        }
+        .error-box {
+            display: none;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        .error-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: var(--danger-soft);
+            color: var(--danger);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        .error-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 8px;
+            color: var(--text);
+        }
+        .error-desc {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="topbar">
+            <div class="brand">Netto<span>.</span></div>
+            <div class="lang-toggle" role="group" aria-label="Language">
+                <button type="button" class="lang-btn" id="btn-lang-es">ES</button>
+                <button type="button" class="lang-btn" id="btn-lang-en">EN</button>
+            </div>
+        </div>
+
+        <section id="payment-view">
+            <div class="badge-row">
+                <span class="fee-badge" id="fee-badge">Bizum · 0,00 € comisión</span>
+            </div>
+
+            <p class="merchant-name" id="merchant-name">Netto</p>
+            <h1 class="amount-hero" id="amount-hero">0,00 €</h1>
+
+            <div class="data-box">
+                <div class="data-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-phone">Teléfono Bizum</span>
+                        <span class="data-value" id="val-phone">+34 --- -- -- --</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="copy-phone-btn">Copiar teléfono</button>
+                </div>
+
+                <div class="data-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-amount">Importe</span>
+                        <span class="data-value" id="val-amount">0,00 €</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="copy-amount-btn">Copiar importe</button>
+                </div>
+
+                <div class="data-row" id="concept-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-concept">Concepto</span>
+                        <span class="data-value" id="val-concept">-</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="copy-concept-btn">Copiar concepto</button>
+                </div>
+            </div>
+
+            <div class="launcher-section">
+                <h2 class="launcher-title" id="launcher-title">1. Toca tu banco (copia el teléfono automáticamente y abre tu app)</h2>
+                <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
+                <div class="bank-grid" id="bank-grid"></div>
+            </div>
+
+            <p class="security-note" id="security-note">
+                Verifica con el comercio que el destinatario e importe coinciden antes de confirmar el envío.
+            </p>
+        </section>
+
+        <section class="error-box" id="error-view">
+            <div class="error-icon">!</div>
+            <h1 class="error-title" id="error-title">Enlace de pago no válido</h1>
+            <p class="error-desc" id="error-desc">
+                Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var SPANISH_BANKS = Object.freeze([
+                Object.freeze({ id: 'bbva', name: 'BBVA', scheme: 'bbva://', color: '#004481' }),
+                Object.freeze({ id: 'caixabank', name: 'CaixaBank', scheme: 'caixabank://', color: '#007eae' }),
+                Object.freeze({ id: 'imagin', name: 'Imagin', scheme: 'imaginbank://', color: '#05c3dd' }),
+                Object.freeze({ id: 'santander', name: 'Santander', scheme: 'santanderretail://', color: '#ec0000' }),
+                Object.freeze({ id: 'ing', name: 'ING', scheme: 'ingdirect://', color: '#ff6200' }),
+                Object.freeze({ id: 'sabadell', name: 'Sabadell', scheme: 'bancosabadell://', color: '#0075c9' }),
+                Object.freeze({ id: 'bankinter', name: 'Bankinter', scheme: 'bankinter://', color: '#ff7300' }),
+                Object.freeze({ id: 'unicaja', name: 'Unicaja', scheme: 'unicaja://', color: '#1b8a44' }),
+                Object.freeze({ id: 'openbank', name: 'Openbank', scheme: 'openbank://', color: '#e6007e' }),
+                Object.freeze({ id: 'abanca', name: 'Abanca', scheme: 'abanca://', color: '#004990' }),
+                Object.freeze({ id: 'kutxabank', name: 'Kutxabank', scheme: 'kutxabank://', color: '#111827' })
+            ]);
+
+            var I18N = Object.freeze({
+                es: Object.freeze({
+                    pageTitle: 'Pago por Bizum · Netto',
+                    feeBadge: 'Bizum · 0,00 € comisión',
+                    phoneLabel: 'Teléfono Bizum',
+                    amountLabel: 'Importe',
+                    conceptLabel: 'Concepto',
+                    copyPhone: 'Copiar teléfono',
+                    copyAmount: 'Copiar importe',
+                    copyConcept: 'Copiar concepto',
+                    copied: '✓ Copiado',
+                    launcherTitle: '1. Toca tu banco (copia el teléfono automáticamente y abre tu app)',
+                    bannerTemplate: '✓ Teléfono Bizum copiado (+34 {phone}). Entra en Bizum en tu banco, pega el teléfono e indica el importe ({amount}).',
+                    securityNote: 'Verifica con el comercio que el destinatario e importe coinciden antes de confirmar el envío.',
+                    errorTitle: 'Enlace de pago no válido',
+                    errorDesc: 'Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.'
+                }),
+                en: Object.freeze({
+                    pageTitle: 'Bizum Payment · Netto',
+                    feeBadge: 'Bizum · €0.00 fee',
+                    phoneLabel: 'Bizum Phone',
+                    amountLabel: 'Amount',
+                    conceptLabel: 'Concept',
+                    copyPhone: 'Copy phone',
+                    copyAmount: 'Copy amount',
+                    copyConcept: 'Copy concept',
+                    copied: '✓ Copied',
+                    launcherTitle: '1. Tap your bank (auto-copies phone & opens your banking app)',
+                    bannerTemplate: '✓ Bizum phone copied (+34 {phone}). Go to Bizum in your bank app, paste the phone number and enter the amount ({amount}).',
+                    securityNote: 'Verify with the merchant that the recipient and amount match before confirming the payment.',
+                    errorTitle: 'Invalid payment link',
+                    errorDesc: 'The Bizum QR code details are incomplete or invalid. Ask the merchant to generate the QR again.'
+                })
+            });
+
+            function sanitizeText(raw, maxLen) {
+                if (typeof raw !== 'string') return '';
+                return raw
+                    .replace(/[\r\n\x00-\x1F\x7F]+/g, ' ')
+                    .replace(/\s{2,}/g, ' ')
+                    .trim()
+                    .slice(0, maxLen);
+            }
+
+            function normalizePhone(raw) {
+                if (typeof raw !== 'string') return '';
+                var digits = raw.replace(/\D/g, '');
+                if (digits.indexOf('0034') === 0 && digits.length === 13) {
+                    digits = digits.slice(4);
+                } else if (digits.indexOf('34') === 0 && digits.length === 11) {
+                    digits = digits.slice(2);
+                }
+                return digits;
+            }
+
+            function formatPhoneDisplay(digits) {
+                return digits.slice(0, 3) + ' ' + digits.slice(3, 5) + ' ' + digits.slice(5, 7) + ' ' + digits.slice(7, 9);
+            }
+
+            function copySyncAndAsync(text) {
+                try {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.top = '-9999px';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ta.setSelectionRange(0, text.length);
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (_) {
+                    // Fallback handled below
+                }
+
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    navigator.clipboard.writeText(text).catch(function () {});
+                }
+            }
+
+            var params = new URLSearchParams(window.location.search);
+            var rawPhone = params.get('t') || '';
+            var rawAmount = params.get('a') || '';
+            var rawConcept = params.get('c') || '';
+            var rawMerchant = params.get('n') || '';
+
+            var phone = normalizePhone(rawPhone);
+            var isPhoneValid = /^[67]\d{8}$/.test(phone);
+
+            var parsedAmount = Number(String(rawAmount).replace(',', '.'));
+            var roundedAmount = Math.round(parsedAmount * 100) / 100;
+            var isAmountValid = Number.isFinite(roundedAmount) && roundedAmount >= 0.01 && roundedAmount <= 999999.99;
+
+            var merchant = sanitizeText(rawMerchant, 60) || 'Netto';
+            var concept = sanitizeText(rawConcept, 70);
+
+            var browserLang = (navigator.language || 'es').toLowerCase();
+            var currentLang = browserLang.indexOf('es') === 0 ? 'es' : 'en';
+
+            var btnLangEs = document.getElementById('btn-lang-es');
+            var btnLangEn = document.getElementById('btn-lang-en');
+            var paymentView = document.getElementById('payment-view');
+            var errorView = document.getElementById('error-view');
+
+            var formattedPhone = isPhoneValid ? formatPhoneDisplay(phone) : '';
+            var amountComma = isAmountValid ? roundedAmount.toFixed(2).replace('.', ',') : '0,00';
+            var amountDisplay = isAmountValid ? amountComma + ' €' : '0,00 €';
+
+            function renderStrings() {
+                var t = I18N[currentLang];
+                document.documentElement.lang = currentLang;
+                document.title = t.pageTitle;
+
+                btnLangEs.className = 'lang-btn' + (currentLang === 'es' ? ' active' : '');
+                btnLangEn.className = 'lang-btn' + (currentLang === 'en' ? ' active' : '');
+
+                document.getElementById('fee-badge').textContent = t.feeBadge;
+                document.getElementById('lbl-phone').textContent = t.phoneLabel;
+                document.getElementById('lbl-amount').textContent = t.amountLabel;
+                document.getElementById('lbl-concept').textContent = t.conceptLabel;
+                document.getElementById('copy-phone-btn').textContent = t.copyPhone;
+                document.getElementById('copy-amount-btn').textContent = t.copyAmount;
+                document.getElementById('copy-concept-btn').textContent = t.copyConcept;
+                document.getElementById('launcher-title').textContent = t.launcherTitle;
+                document.getElementById('security-note').textContent = t.securityNote;
+                document.getElementById('error-title').textContent = t.errorTitle;
+                document.getElementById('error-desc').textContent = t.errorDesc;
+
+                var banner = document.getElementById('status-banner');
+                if (banner.className.indexOf('visible') !== -1) {
+                    banner.textContent = t.bannerTemplate
+                        .replace('{phone}', formattedPhone)
+                        .replace('{amount}', amountDisplay);
+                }
+            }
+
+            btnLangEs.addEventListener('click', function () {
+                currentLang = 'es';
+                renderStrings();
+            });
+
+            btnLangEn.addEventListener('click', function () {
+                currentLang = 'en';
+                renderStrings();
+            });
+
+            if (!isPhoneValid || !isAmountValid) {
+                paymentView.className = 'hidden';
+                errorView.style.display = 'block';
+                renderStrings();
+                return;
+            }
+
+            document.getElementById('merchant-name').textContent = merchant;
+            document.getElementById('amount-hero').textContent = amountDisplay;
+            document.getElementById('val-phone').textContent = '+34 ' + formattedPhone;
+            document.getElementById('val-amount').textContent = amountDisplay;
+
+            var conceptRow = document.getElementById('concept-row');
+            if (concept.length > 0) {
+                document.getElementById('val-concept').textContent = concept;
+            } else {
+                conceptRow.style.display = 'none';
+            }
+
+            function bindCopyButton(buttonId, valueToCopy, labelKey) {
+                var btn = document.getElementById(buttonId);
+                btn.addEventListener('click', function () {
+                    copySyncAndAsync(valueToCopy);
+                    btn.className = 'copy-btn copied';
+                    btn.textContent = I18N[currentLang].copied;
+                    setTimeout(function () {
+                        btn.className = 'copy-btn';
+                        btn.textContent = I18N[currentLang][labelKey];
+                    }, 1800);
+                });
+            }
+
+            bindCopyButton('copy-phone-btn', phone, 'copyPhone');
+            bindCopyButton('copy-amount-btn', amountComma, 'copyAmount');
+            bindCopyButton('copy-concept-btn', concept, 'copyConcept');
+
+            var bankGrid = document.getElementById('bank-grid');
+            var statusBanner = document.getElementById('status-banner');
+
+            for (var i = 0; i < SPANISH_BANKS.length; i += 1) {
+                (function (bank) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'bank-btn';
+
+                    var dot = document.createElement('span');
+                    dot.className = 'bank-dot';
+                    dot.style.backgroundColor = bank.color;
+
+                    var nameSpan = document.createElement('span');
+                    nameSpan.className = 'bank-name';
+                    nameSpan.textContent = bank.name;
+
+                    var arrow = document.createElement('span');
+                    arrow.className = 'bank-arrow';
+                    arrow.textContent = '→';
+
+                    btn.appendChild(dot);
+                    btn.appendChild(nameSpan);
+                    btn.appendChild(arrow);
+
+                    btn.addEventListener('click', function () {
+                        copySyncAndAsync(phone);
+                        statusBanner.textContent = I18N[currentLang].bannerTemplate
+                            .replace('{phone}', formattedPhone)
+                            .replace('{amount}', amountDisplay);
+                        statusBanner.className = 'status-banner visible';
+                        window.location.href = bank.scheme;
+                    });
+
+                    bankGrid.appendChild(btn);
+                })(SPANISH_BANKS[i]);
+            }
+
+            renderStrings();
+        })();
+    </script>
+</body>
+</html>
