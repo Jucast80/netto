@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none';">
-    <title>Pago por Bizum · Netto</title>
+    <title>Pago por Bizum · Netto App®</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -305,7 +305,7 @@
 <body>
     <main class="card">
         <div class="topbar">
-            <div class="brand">Netto<span>.</span></div>
+            <div class="brand">Netto App<span>®</span></div>
             <div class="lang-toggle" role="group" aria-label="Language">
                 <button type="button" class="lang-btn" id="btn-lang-es">ES</button>
                 <button type="button" class="lang-btn" id="btn-lang-en">EN</button>
@@ -317,7 +317,7 @@
                 <span class="fee-badge" id="fee-badge">Bizum · 0,00 € comisión</span>
             </div>
 
-            <p class="merchant-name" id="merchant-name">Netto</p>
+            <p class="merchant-name" id="merchant-name">Netto App®</p>
             <h1 class="amount-hero" id="amount-hero">0,00 €</h1>
 
             <div class="data-box">
@@ -386,7 +386,7 @@
 
             var I18N = Object.freeze({
                 es: Object.freeze({
-                    pageTitle: 'Pago por Bizum · Netto',
+                    pageTitle: 'Pago por Bizum · Netto App®',
                     feeBadge: 'Bizum · 0,00 € comisión',
                     phoneLabel: 'Teléfono Bizum',
                     amountLabel: 'Importe',
@@ -408,7 +408,7 @@
                     errorDesc: 'Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.'
                 }),
                 en: Object.freeze({
-                    pageTitle: 'Bizum Payment · Netto',
+                    pageTitle: 'Bizum Payment · Netto App®',
                     feeBadge: 'Bizum · €0.00 fee',
                     phoneLabel: 'Bizum Phone',
                     amountLabel: 'Amount',
@@ -490,7 +490,7 @@
             var roundedAmount = Math.round(parsedAmount * 100) / 100;
             var isAmountValid = Number.isFinite(roundedAmount) && roundedAmount >= 0.01 && roundedAmount <= 999999.99;
 
-            var merchant = sanitizeText(rawMerchant, 60) || 'Netto';
+            var merchant = sanitizeText(rawMerchant, 60) || 'Netto App®';
             var concept = sanitizeText(rawConcept, 70);
 
             var browserLang = (navigator.language || 'es').toLowerCase();

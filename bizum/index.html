@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none';">
-    <title>Pago por Bizum · Netto</title>
+    <title>Pago por Bizum · Netto App®</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -305,7 +305,7 @@
 <body>
     <main class="card">
         <div class="topbar">
-            <div class="brand">Netto<span>.</span></div>
+            <div class="brand">Netto App<span>®</span></div>
             <div class="lang-toggle" role="group" aria-label="Language">
                 <button type="button" class="lang-btn" id="btn-lang-es">ES</button>
                 <button type="button" class="lang-btn" id="btn-lang-en">EN</button>
@@ -317,7 +317,7 @@
                 <span class="fee-badge" id="fee-badge">Bizum · 0,00 € comisión</span>
             </div>
 
-            <p class="merchant-name" id="merchant-name">Netto</p>
+            <p class="merchant-name" id="merchant-name">Netto App®</p>
             <h1 class="amount-hero" id="amount-hero">0,00 €</h1>
 
             <div class="data-box">
@@ -360,6 +360,10 @@
                     <span class="step-num">2</span>
                     <span id="step-2">Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce 0,00 €.</span>
                 </div>
+                <div class="step-item" id="step-3-item">
+                    <span class="step-num">3</span>
+                    <span id="step-3">Pega el concepto.</span>
+                </div>
             </div>
 
             <p class="security-note" id="security-note">
@@ -382,7 +386,7 @@
 
             var I18N = Object.freeze({
                 es: Object.freeze({
-                    pageTitle: 'Pago por Bizum · Netto',
+                    pageTitle: 'Pago por Bizum · Netto App®',
                     feeBadge: 'Bizum · 0,00 € comisión',
                     phoneLabel: 'Teléfono Bizum',
                     amountLabel: 'Importe',
@@ -393,16 +397,18 @@
                     copied: '✓ Copiado',
                     primaryCta: 'Copiar teléfono para Bizum',
                     primaryCtaCopied: '✓ Teléfono Bizum copiado',
+                    bannerTemplateWithConcept: '✓ Teléfono copiado ({phone}). En tu banco pon {amount} y pega el concepto: «{concept}».',
                     bannerTemplate: '✓ Teléfono Bizum copiado ({phone}). Abre la app de tu banco → Bizum → Pega el teléfono e introduce {amount}.',
                     stepsTitle: 'Cómo pagar en 10 segundos',
                     step1: 'Toca «Copiar teléfono para Bizum» arriba.',
                     step2Template: 'Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce {amount}.',
+                    step3: 'Pega el concepto.',
                     securityNote: 'Verifica con el comercio que el destinatario e importe coinciden antes de confirmar el envío.',
                     errorTitle: 'Enlace de pago no válido',
                     errorDesc: 'Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.'
                 }),
                 en: Object.freeze({
-                    pageTitle: 'Bizum Payment · Netto',
+                    pageTitle: 'Bizum Payment · Netto App®',
                     feeBadge: 'Bizum · €0.00 fee',
                     phoneLabel: 'Bizum Phone',
                     amountLabel: 'Amount',
@@ -413,10 +419,12 @@
                     copied: '✓ Copied',
                     primaryCta: 'Copy phone for Bizum',
                     primaryCtaCopied: '✓ Bizum phone copied',
+                    bannerTemplateWithConcept: '✓ Phone copied ({phone}). In your bank enter {amount} and paste reference: "{concept}".',
                     bannerTemplate: '✓ Bizum phone copied ({phone}). Open your banking app → Bizum → Paste the phone number and enter {amount}.',
                     stepsTitle: 'How to pay in 10 seconds',
                     step1: 'Tap "Copy phone for Bizum" above.',
                     step2Template: 'Open your banking app, go to Bizum → Send, paste the phone number and enter {amount}.',
+                    step3: 'Paste concept.',
                     securityNote: 'Verify with the merchant that the recipient and amount match before confirming the payment.',
                     errorTitle: 'Invalid payment link',
                     errorDesc: 'The Bizum QR code details are incomplete or invalid. Ask the merchant to generate the QR again.'
@@ -482,7 +490,7 @@
             var roundedAmount = Math.round(parsedAmount * 100) / 100;
             var isAmountValid = Number.isFinite(roundedAmount) && roundedAmount >= 0.01 && roundedAmount <= 999999.99;
 
-            var merchant = sanitizeText(rawMerchant, 60) || 'Netto';
+            var merchant = sanitizeText(rawMerchant, 60) || 'Netto App®';
             var concept = sanitizeText(rawConcept, 70);
 
             var browserLang = (navigator.language || 'es').toLowerCase();
@@ -517,6 +525,16 @@
                 document.getElementById('steps-title').textContent = t.stepsTitle;
                 document.getElementById('step-1').textContent = t.step1;
                 document.getElementById('step-2').textContent = t.step2Template.replace('{amount}', amountDisplay);
+
+                var step3El = document.getElementById('step-3');
+                var step3Item = document.getElementById('step-3-item');
+                if (concept && concept.length > 0) {
+                    step3Item.style.display = 'flex';
+                    step3El.textContent = t.step3;
+                } else {
+                    step3Item.style.display = 'none';
+                }
+
                 document.getElementById('security-note').textContent = t.securityNote;
                 document.getElementById('error-title').textContent = t.errorTitle;
                 document.getElementById('error-desc').textContent = t.errorDesc;
@@ -528,9 +546,15 @@
                 }
 
                 if (statusBanner.className.indexOf('visible') !== -1) {
-                    statusBanner.textContent = t.bannerTemplate
-                        .replace('{phone}', formattedPhone)
-                        .replace('{amount}', amountDisplay);
+                    var bannerMsg = (concept && concept.length > 0)
+                        ? t.bannerTemplateWithConcept
+                            .replace('{phone}', formattedPhone)
+                            .replace('{amount}', amountDisplay)
+                            .replace('{concept}', concept)
+                        : t.bannerTemplate
+                            .replace('{phone}', formattedPhone)
+                            .replace('{amount}', amountDisplay);
+                    statusBanner.textContent = bannerMsg;
                 }
             }
 
@@ -584,9 +608,15 @@
                 copySyncAndAsync(phone);
                 primaryCopyBtn.className = 'primary-cta copied';
                 primaryCopyBtn.textContent = I18N[currentLang].primaryCtaCopied;
-                statusBanner.textContent = I18N[currentLang].bannerTemplate
-                    .replace('{phone}', formattedPhone)
-                    .replace('{amount}', amountDisplay);
+                var bannerMsg = (concept && concept.length > 0)
+                    ? I18N[currentLang].bannerTemplateWithConcept
+                        .replace('{phone}', formattedPhone)
+                        .replace('{amount}', amountDisplay)
+                        .replace('{concept}', concept)
+                    : I18N[currentLang].bannerTemplate
+                        .replace('{phone}', formattedPhone)
+                        .replace('{amount}', amountDisplay);
+                statusBanner.textContent = bannerMsg;
                 statusBanner.className = 'status-banner visible';
             });
 
