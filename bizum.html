@@ -142,36 +142,6 @@
             padding-bottom: 0;
             border-bottom: 0;
         }
-        .data-row.concept-highlight {
-            background: #fffbeb;
-            border: 1.5px solid #fcd34d;
-            border-radius: 12px;
-            padding: 10px 12px;
-            margin-top: 4px;
-        }
-        .concept-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            background: #fef08a;
-            color: #854d0e;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 6px;
-            margin-left: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .step-num-highlight {
-            background: #fef08a !important;
-            color: #854d0e !important;
-            font-weight: 900 !important;
-        }
-        .step-concept-strong {
-            font-weight: 700;
-            color: var(--text);
-        }
         .data-info {
             min-width: 0;
             flex: 1;
@@ -367,9 +337,9 @@
                     <button type="button" class="copy-btn" id="copy-amount-btn">Copiar importe</button>
                 </div>
 
-                <div class="data-row concept-highlight" id="concept-row">
+                <div class="data-row" id="concept-row">
                     <div class="data-info">
-                        <span class="data-label" id="lbl-concept">Concepto <span class="concept-badge" id="lbl-concept-badge">Muy Importante</span></span>
+                        <span class="data-label" id="lbl-concept">Concepto</span>
                         <span class="data-value" id="val-concept">-</span>
                     </div>
                     <button type="button" class="copy-btn" id="copy-concept-btn">Copiar concepto</button>
@@ -391,8 +361,8 @@
                     <span id="step-2">Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce 0,00 €.</span>
                 </div>
                 <div class="step-item" id="step-3-item">
-                    <span class="step-num step-num-highlight">3</span>
-                    <span id="step-3" class="step-concept-strong">Pega el concepto.</span>
+                    <span class="step-num">3</span>
+                    <span id="step-3">Pega el concepto.</span>
                 </div>
             </div>
 
@@ -421,7 +391,6 @@
                     phoneLabel: 'Teléfono Bizum',
                     amountLabel: 'Importe',
                     conceptLabel: 'Concepto',
-                    conceptBadge: 'Obligatorio',
                     copyPhone: 'Copiar teléfono',
                     copyAmount: 'Copiar importe',
                     copyConcept: 'Copiar concepto',
@@ -433,7 +402,7 @@
                     stepsTitle: 'Cómo pagar en 10 segundos',
                     step1: 'Toca «Copiar teléfono para Bizum» arriba.',
                     step2Template: 'Abre la app de tu banco, entra en Bizum → Enviar, pega el teléfono e introduce {amount}.',
-                    step3Template: 'Pega el concepto: «{concept}».',
+                    step3: 'Pega el concepto.',
                     securityNote: 'Verifica con el comercio que el destinatario e importe coinciden antes de confirmar el envío.',
                     errorTitle: 'Enlace de pago no válido',
                     errorDesc: 'Los datos del código QR Bizum están incompletos o no son válidos. Solicita al comercio que genere el QR de nuevo.'
@@ -444,7 +413,6 @@
                     phoneLabel: 'Bizum Phone',
                     amountLabel: 'Amount',
                     conceptLabel: 'Concept',
-                    conceptBadge: 'Required',
                     copyPhone: 'Copy phone',
                     copyAmount: 'Copy amount',
                     copyConcept: 'Copy concept',
@@ -456,7 +424,7 @@
                     stepsTitle: 'How to pay in 10 seconds',
                     step1: 'Tap "Copy phone for Bizum" above.',
                     step2Template: 'Open your banking app, go to Bizum → Send, paste the phone number and enter {amount}.',
-                    step3Template: 'Paste reference: "{concept}".',
+                    step3: 'Paste concept.',
                     securityNote: 'Verify with the merchant that the recipient and amount match before confirming the payment.',
                     errorTitle: 'Invalid payment link',
                     errorDesc: 'The Bizum QR code details are incomplete or invalid. Ask the merchant to generate the QR again.'
@@ -562,13 +530,10 @@
                 var step3Item = document.getElementById('step-3-item');
                 if (concept && concept.length > 0) {
                     step3Item.style.display = 'flex';
-                    step3El.textContent = t.step3Template.replace('{concept}', concept);
+                    step3El.textContent = t.step3;
                 } else {
                     step3Item.style.display = 'none';
                 }
-
-                var conceptBadgeEl = document.getElementById('lbl-concept-badge');
-                if (conceptBadgeEl) conceptBadgeEl.textContent = t.conceptBadge;
 
                 document.getElementById('security-note').textContent = t.securityNote;
                 document.getElementById('error-title').textContent = t.errorTitle;
