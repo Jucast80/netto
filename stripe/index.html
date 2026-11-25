@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none';">
+    <title>Pago con Stripe · Netto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --surface: #f1f5f9;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-soft: #d1fae5;
+            --accent: #635bff;
+            --accent-dark: #4f46e5;
+            --accent-soft: #eef2ff;
+            --danger: #ef4444;
+            --danger-soft: #fee2e2;
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .card {
+            width: 100%;
+            max-width: 460px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+            padding: 22px 20px;
+            margin: auto 0;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 10px;
+        }
+        .brand {
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: -0.6px;
+            color: var(--text);
+        }
+        .brand span {
+            color: var(--primary);
+        }
+        .lang-toggle {
+            display: inline-flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px;
+            gap: 2px;
+        }
+        .lang-btn {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+        .lang-btn.active {
+            background: var(--text);
+            color: #ffffff;
+        }
+        .badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .gateway-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+        .merchant-name {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--muted);
+            margin: 0 0 4px;
+            word-break: break-word;
+        }
+        .amount-hero {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--text);
+            margin: 0 0 18px;
+        }
+        .data-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .data-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-row:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+        .data-info {
+            min-width: 0;
+            flex: 1;
+        }
+        .data-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .data-value {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+            word-break: break-word;
+        }
+        .copy-btn {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        .copy-btn.copied {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+        .primary-cta {
+            appearance: none;
+            width: 100%;
+            border: 0;
+            background: var(--accent);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            padding: 15px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(99, 91, 255, 0.28);
+            transition: transform 0.1s ease, background-color 0.15s ease;
+            margin-bottom: 12px;
+        }
+        .primary-cta:active {
+            transform: scale(0.985);
+            background: var(--accent-dark);
+        }
+        .status-banner {
+            display: none;
+            background: var(--accent-soft);
+            border: 1px solid #c7d2fe;
+            color: #3730a3;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+        .status-banner.visible {
+            display: block;
+        }
+        .steps-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+        }
+        .steps-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin: 0 0 8px;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-bottom: 6px;
+        }
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .security-note {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            font-size: 11.5px;
+            color: var(--muted);
+            line-height: 1.45;
+            text-align: center;
+            margin: 0;
+        }
+        .error-box {
+            display: none;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        .error-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: var(--danger-soft);
+            color: var(--danger);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        .error-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 8px;
+            color: var(--text);
+        }
+        .error-desc {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="topbar">
+            <div class="brand">Netto<span>.</span></div>
+            <div class="lang-toggle" role="group" aria-label="Language">
+                <button type="button" class="lang-btn" id="btn-lang-es">ES</button>
+                <button type="button" class="lang-btn" id="btn-lang-en">EN</button>
+            </div>
+        </div>
+
+        <section id="payment-view">
+            <div class="badge-row">
+                <span class="gateway-badge" id="gateway-badge">Stripe · Bancos ES / Tarjeta</span>
+            </div>
+
+            <p class="merchant-name" id="merchant-name">Netto</p>
+            <h1 class="amount-hero" id="amount-hero">0,00 €</h1>
+
+            <div class="data-box">
+                <div class="data-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-gateway">Pasarela destino</span>
+                        <span class="data-value" id="val-gateway">Stripe Checkout · Bancos ES / Tarjeta</span>
+                    </div>
+                </div>
+
+                <div class="data-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-amount">Importe exacto</span>
+                        <span class="data-value" id="val-amount">0,00 €</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="copy-amount-btn">Copiar importe</button>
+                </div>
+
+                <div class="data-row" id="concept-row">
+                    <div class="data-info">
+                        <span class="data-label" id="lbl-concept">Concepto</span>
+                        <span class="data-value" id="val-concept">-</span>
+                    </div>
+                    <button type="button" class="copy-btn" id="copy-concept-btn">Copiar concepto</button>
+                </div>
+            </div>
+
+            <button type="button" class="primary-cta" id="primary-stripe-btn">Abrir pasarela Stripe y pagar</button>
+
+            <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
+
+            <div class="steps-box">
+                <p class="steps-title" id="steps-title">Cómo pagar con tu banco o tarjeta</p>
+                <div class="step-item">
+                    <span class="step-num">1</span>
+                    <span id="step-1">Toca «Abrir pasarela Stripe y pagar» arriba (el importe exacto se copia automáticamente).</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-num">2</span>
+                    <span id="step-2">En Stripe elige Transferencia bancaria / Banco, Apple Pay, Google Pay o Tarjeta y confirma 0,00 €.</span>
+                </div>
+            </div>
+
+            <p class="security-note" id="security-note">
+                Conexión verificada hacia stripe.com. Verifica que el comercio y el importe coinciden antes de confirmar.
+            </p>
+        </section>
+
+        <section class="error-box" id="error-view">
+            <div class="error-icon">!</div>
+            <h1 class="error-title" id="error-title">Enlace de Stripe no válido</h1>
+            <p class="error-desc" id="error-desc">
+                Los datos del código QR no corresponden a un enlace oficial de Stripe o están incompletos. Solicita al comercio que genere el QR de nuevo.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var I18N = Object.freeze({
+                es: Object.freeze({
+                    pageTitle: 'Pago con Stripe · Netto',
+                    gatewayBadge: 'Stripe · Bancos ES / Tarjeta',
+                    gatewayLabel: 'Pasarela destino',
+                    gatewayValue: 'Stripe Checkout · Bancos ES / Tarjeta',
+                    amountLabel: 'Importe exacto',
+                    conceptLabel: 'Concepto',
+                    copyAmount: 'Copiar importe',
+                    copyConcept: 'Copiar concepto',
+                    copied: '✓ Copiado',
+                    primaryCta: 'Abrir pasarela Stripe y pagar',
+                    redirectBanner: 'Importe ({amount}) copiado. Abriendo la pasarela segura de Stripe en español...',
+                    stepsTitle: 'Cómo pagar con tu banco o tarjeta',
+                    step1: 'Toca «Abrir pasarela Stripe y pagar» arriba (el importe exacto se copia automáticamente).',
+                    step2Template: 'En Stripe elige Transferencia bancaria / Banco (banca española), Apple Pay, Google Pay o Tarjeta y confirma {amount}.',
+                    securityNote: 'Conexión verificada exclusivamente con stripe.com. Verifica que el comercio e importe coinciden antes de confirmar.',
+                    errorTitle: 'Enlace de Stripe no válido',
+                    errorDesc: 'Los datos del código QR no corresponden a un enlace oficial de Stripe o están incompletos. Solicita al comercio que genere el QR de nuevo.'
+                }),
+                en: Object.freeze({
+                    pageTitle: 'Stripe Payment · Netto',
+                    gatewayBadge: 'Stripe · ES Banks / Card',
+                    gatewayLabel: 'Destination gateway',
+                    gatewayValue: 'Stripe Checkout · ES Banks / Card',
+                    amountLabel: 'Exact amount',
+                    conceptLabel: 'Concept',
+                    copyAmount: 'Copy amount',
+                    copyConcept: 'Copy concept',
+                    copied: '✓ Copied',
+                    primaryCta: 'Open Stripe gateway & pay',
+                    redirectBanner: 'Amount ({amount}) copied. Opening secure Stripe Checkout in English...',
+                    stepsTitle: 'How to pay with your bank or card',
+                    step1: 'Tap "Open Stripe gateway & pay" above (the exact amount is copied automatically).',
+                    step2Template: 'Inside Stripe choose Bank Transfer / Pay by Bank, Apple Pay, Google Pay or Card and confirm {amount}.',
+                    securityNote: 'Verified connection exclusively to stripe.com. Confirm that the merchant and amount match before paying.',
+                    errorTitle: 'Invalid Stripe link',
+                    errorDesc: 'The QR code details do not match an official Stripe payment link or are incomplete. Ask the merchant to generate the QR again.'
+                })
+            });
+
+            var BUY_PATH_RE = /^\/(?:test_)?[A-Za-z0-9_-]{6,128}$/;
+            var CHECKOUT_PATH_RE = /^\/c\/pay\/[A-Za-z0-9_-]{6,200}$/;
+
+            function sanitizeText(raw, maxLen) {
+                if (typeof raw !== 'string') return '';
+                return raw
+                    .replace(/[\r\n\x00-\x1F\x7F]+/g, ' ')
+                    .replace(/\s{2,}/g, ' ')
+                    .trim()
+                    .slice(0, maxLen);
+            }
+
+            function validateOfficialStripeUrl(raw) {
+                if (typeof raw !== 'string') return '';
+                var trimmed = raw.replace(/[\r\n\x00-\x1F\x7F]+/g, '').trim();
+                if (!trimmed) return '';
+                var parsed;
+                try {
+                    parsed = new URL(trimmed);
+                } catch (_) {
+                    return '';
+                }
+                if (parsed.protocol !== 'https:' || parsed.username !== '' || parsed.password !== '' || parsed.port !== '') {
+                    return '';
+                }
+                var host = parsed.hostname.toLowerCase();
+                if (host === 'buy.stripe.com' && BUY_PATH_RE.test(parsed.pathname)) {
+                    return 'https://' + host + parsed.pathname;
+                }
+                if (host === 'checkout.stripe.com' && CHECKOUT_PATH_RE.test(parsed.pathname)) {
+                    return 'https://' + host + parsed.pathname;
+                }
+                return '';
+            }
+
+            function copySyncAndAsync(text) {
+                try {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.top = '-9999px';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ta.setSelectionRange(0, text.length);
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (_) {
+                    // Fallback handled below
+                }
+
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    navigator.clipboard.writeText(text).catch(function () {});
+                }
+            }
+
+            function readInitialLang() {
+                try {
+                    var saved = localStorage.getItem('netto_lang');
+                    if (saved === 'es' || saved === 'en') return saved;
+                } catch (_) {
+                    // Ignore storage restriction
+                }
+                var browserLang = (navigator.language || 'es').toLowerCase();
+                return browserLang.indexOf('es') === 0 ? 'es' : 'en';
+            }
+
+            function saveLang(lang) {
+                try {
+                    localStorage.setItem('netto_lang', lang);
+                } catch (_) {
+                    // Ignore storage restriction
+                }
+            }
+
+            var params = new URLSearchParams(window.location.search);
+            var rawStripeUrl = params.get('u') || '';
+            var rawAmount = params.get('a') || '';
+            var rawConcept = params.get('c') || '';
+            var rawMerchant = params.get('n') || '';
+
+            var canonicalStripeUrl = validateOfficialStripeUrl(rawStripeUrl);
+            var isUrlValid = canonicalStripeUrl.length > 0;
+
+            var parsedAmount = Number(String(rawAmount).replace(',', '.'));
+            var roundedAmount = Math.round(parsedAmount * 100) / 100;
+            var isAmountValid = Number.isFinite(roundedAmount) && roundedAmount >= 0.01 && roundedAmount <= 999999.99;
+
+            var merchant = sanitizeText(rawMerchant, 60) || 'Netto';
+            var concept = sanitizeText(rawConcept, 70);
+
+            var currentLang = readInitialLang();
+
+            var btnLangEs = document.getElementById('btn-lang-es');
+            var btnLangEn = document.getElementById('btn-lang-en');
+            var paymentView = document.getElementById('payment-view');
+            var errorView = document.getElementById('error-view');
+            var primaryStripeBtn = document.getElementById('primary-stripe-btn');
+            var statusBanner = document.getElementById('status-banner');
+
+            var amountComma = isAmountValid ? roundedAmount.toFixed(2).replace('.', ',') : '0,00';
+            var amountDot = isAmountValid ? roundedAmount.toFixed(2) : '0.00';
+            var amountDisplay = isAmountValid ? amountComma + ' €' : '0,00 €';
+
+            function renderStrings() {
+                var t = I18N[currentLang];
+                document.documentElement.lang = currentLang;
+                document.title = t.pageTitle;
+
+                btnLangEs.className = 'lang-btn' + (currentLang === 'es' ? ' active' : '');
+                btnLangEn.className = 'lang-btn' + (currentLang === 'en' ? ' active' : '');
+
+                document.getElementById('gateway-badge').textContent = t.gatewayBadge;
+                document.getElementById('lbl-gateway').textContent = t.gatewayLabel;
+                document.getElementById('val-gateway').textContent = t.gatewayValue;
+                document.getElementById('lbl-amount').textContent = t.amountLabel;
+                document.getElementById('lbl-concept').textContent = t.conceptLabel;
+                document.getElementById('copy-amount-btn').textContent = t.copyAmount;
+                document.getElementById('copy-concept-btn').textContent = t.copyConcept;
+                primaryStripeBtn.textContent = t.primaryCta;
+                document.getElementById('steps-title').textContent = t.stepsTitle;
+                document.getElementById('step-1').textContent = t.step1;
+                document.getElementById('step-2').textContent = t.step2Template.replace('{amount}', amountDisplay);
+                document.getElementById('security-note').textContent = t.securityNote;
+                document.getElementById('error-title').textContent = t.errorTitle;
+                document.getElementById('error-desc').textContent = t.errorDesc;
+
+                if (statusBanner.className.indexOf('visible') !== -1) {
+                    statusBanner.textContent = t.redirectBanner.replace('{amount}', amountDisplay);
+                }
+            }
+
+            btnLangEs.addEventListener('click', function () {
+                currentLang = 'es';
+                saveLang('es');
+                renderStrings();
+            });
+
+            btnLangEn.addEventListener('click', function () {
+                currentLang = 'en';
+                saveLang('en');
+                renderStrings();
+            });
+
+            if (!isUrlValid || !isAmountValid) {
+                paymentView.className = 'hidden';
+                errorView.style.display = 'block';
+                renderStrings();
+                return;
+            }
+
+            document.getElementById('merchant-name').textContent = merchant;
+            document.getElementById('amount-hero').textContent = amountDisplay;
+            document.getElementById('val-amount').textContent = amountDisplay;
+
+            var conceptRow = document.getElementById('concept-row');
+            if (concept.length > 0) {
+                document.getElementById('val-concept').textContent = concept;
+            } else {
+                conceptRow.style.display = 'none';
+            }
+
+            function bindCopyButton(buttonId, getValue, labelKey) {
+                var btn = document.getElementById(buttonId);
+                btn.addEventListener('click', function () {
+                    copySyncAndAsync(getValue());
+                    btn.className = 'copy-btn copied';
+                    btn.textContent = I18N[currentLang].copied;
+                    setTimeout(function () {
+                        btn.className = 'copy-btn';
+                        btn.textContent = I18N[currentLang][labelKey];
+                    }, 1800);
+                });
+            }
+
+            bindCopyButton('copy-amount-btn', function () {
+                return currentLang === 'es' ? amountComma : amountDot;
+            }, 'copyAmount');
+            bindCopyButton('copy-concept-btn', function () {
+                return concept;
+            }, 'copyConcept');
+
+            primaryStripeBtn.addEventListener('click', function () {
+                copySyncAndAsync(currentLang === 'es' ? amountComma : amountDot);
+                statusBanner.textContent = I18N[currentLang].redirectBanner.replace('{amount}', amountDisplay);
+                statusBanner.className = 'status-banner visible';
+
+                var dest = new URL(canonicalStripeUrl);
+                dest.searchParams.set('locale', currentLang === 'en' ? 'en' : 'es');
+                if (concept.length > 0) {
+                    dest.searchParams.set('client_reference_id', concept);
+                }
+
+                window.location.assign(dest.toString());
+            });
+
+            renderStrings();
+        })();
+    </script>
+</body>
+</html>
