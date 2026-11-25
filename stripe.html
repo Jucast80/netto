@@ -614,7 +614,15 @@
                 var dest = new URL(canonicalStripeUrl);
                 dest.searchParams.set('locale', currentLang === 'en' ? 'en' : 'es');
                 if (concept.length > 0) {
-                    dest.searchParams.set('client_reference_id', concept);
+                    var safeRef = concept
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^A-Za-z0-9_-]+/g, '_')
+                        .replace(/^_+|_+$/g, '')
+                        .slice(0, 120);
+                    if (safeRef.length > 0) {
+                        dest.searchParams.set('client_reference_id', safeRef);
+                    }
                 }
 
                 window.location.assign(dest.toString());

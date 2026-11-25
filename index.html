@@ -47,7 +47,7 @@
     <!-- PostHog Analytics -->
     <script>
       !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId setPersonProperties".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-      posthog.init('phc_pnDcYzCHdGcATJQcio4xBAcDCvXmZAwipZ9j89k6EMYy',{api_host:'https://eu.i.posthog.com', person_profiles: 'identified_only'})
+      posthog.init('phc_pnDcYzCHdGcATJQcio4xBAcDCvXmZAwipZ9j89k6EMYy',{api_host:'https://eu.i.posthog.com', person_profiles: 'identified_only', autocapture: false})
     </script>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col items-center py-8 px-4">
@@ -413,13 +413,15 @@
                     </div>
                     <p class="mt-2 text-sm text-gray-500" data-i18n="plans.basico.sub">Autónomo Básico</p>
                     <ul class="mt-6 space-y-3 flex-1">
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f1">Facturas y presupuestos ilimitados</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f2">Escáner IA: 50 facturas/mes</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f3">Asesor IA: 5 consultas/día</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f4">Previsión IVA e IRPF (303 y 130)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f5">Conciliación PDF (Manual)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f6">Sincronización Drive (Manual)</span></li>
-                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f7">Soporte y Ayuda</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f1">Facturas y presupuestos oficiales ilimitados (Ley Antifraude)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f2">Cobros con QR: Bizum, Transferencia SEPA y Stripe</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f3">Cobro en Efectivo y Cierre de Caja Diario (Informe Z)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f4">Previsión en tiempo real de IVA e IRPF (Modelos 303 y 130)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f5">Escáner IA: 50 facturas y tickets/mes</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f6">Asesor IA: 5 consultas/día</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f7">Conciliación de extractos bancarios PDF (Manual)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f8">Copia de seguridad en Google Drive (Manual)</span></li>
+                        <li class="flex items-start text-sm"><svg class="flex-shrink-0 w-5 h-5 text-brand mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="min-w-0 leading-snug" data-i18n="plans.basico.f9">Soporte y Ayuda técnica</span></li>
                     </ul>
                     <button onclick="checkout('basico')" class="plan-btn mt-8 block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-center transition-colors" data-i18n="plans.basico.cta">Elegir Plan Básico</button>
                 </div>
@@ -514,7 +516,7 @@
                     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand to-emerald-400 mx-auto mb-4 flex items-center justify-center shadow-lg shadow-brand/30">
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight"><span data-i18n="welcome.title_l1">¡Bienvenido a Netto App®® PRO!</span><br><span data-i18n="welcome.title_l2">Tienes 14 días gratis.</span></h2>
+                    <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight"><span data-i18n="welcome.title_l1">¡Bienvenido a Netto App® PRO!</span><br><span data-i18n="welcome.title_l2">Tienes 14 días gratis.</span></h2>
                     <p class="text-gray-500 text-sm" data-i18n="welcome.subtitle">Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso al Plan Autónomo Pro*.</p>
                 </div>
 
@@ -694,13 +696,15 @@
                 'plans.period_year': '/año',
                 'plans.basico.name': 'Plan Básico',
                 'plans.basico.sub': 'Autónomo Básico',
-                'plans.basico.f1': 'Facturas y presupuestos ilimitados',
-                'plans.basico.f2': 'Escáner IA: 50 facturas/mes',
-                'plans.basico.f3': 'Asesor IA: 5 consultas/día',
-                'plans.basico.f4': 'Previsión IVA e IRPF (303 y 130)',
-                'plans.basico.f5': 'Conciliación PDF (Manual)',
-                'plans.basico.f6': 'Sincronización Drive (Manual)',
-                'plans.basico.f7': 'Soporte y Ayuda',
+                'plans.basico.f1': 'Facturas y presupuestos oficiales ilimitados (Ley Antifraude)',
+                'plans.basico.f2': 'Cobros con QR: Bizum, Transferencia SEPA y Stripe',
+                'plans.basico.f3': 'Cobro en Efectivo y Cierre de Caja Diario (Informe Z)',
+                'plans.basico.f4': 'Previsión en tiempo real de IVA e IRPF (Modelos 303 y 130)',
+                'plans.basico.f5': 'Escáner IA: 50 facturas y tickets/mes',
+                'plans.basico.f6': 'Asesor IA: 5 consultas/día',
+                'plans.basico.f7': 'Conciliación de extractos bancarios PDF (Manual)',
+                'plans.basico.f8': 'Copia de seguridad en Google Drive (Manual)',
+                'plans.basico.f9': 'Soporte y Ayuda técnica',
                 'plans.basico.cta': 'Elegir Plan Básico',
                 'plans.pro.badge': 'MÁS POPULAR',
                 'plans.pro.name': 'Plan Autónomo Pro',
@@ -734,7 +738,7 @@
                 'legal.modal_title': 'Términos',
                 'legal.terms_title': 'Términos de Servicio',
                 'legal.privacy_title': 'Política de Privacidad',
-                'welcome.title_l1': '¡Bienvenido a Netto App®® PRO!',
+                'welcome.title_l1': '¡Bienvenido a Netto App® PRO!',
                 'welcome.title_l2': 'Tienes 14 días gratis.',
                 'welcome.subtitle': 'Queremos que descubras el verdadero poder de automatizar tu contabilidad. Durante los próximos 14 días, cuentas con acceso al Plan Autónomo Pro*.',
                 'welcome.includes_title': 'Tu acceso actual incluye:',
@@ -874,13 +878,15 @@
                 'plans.period_year': '/yr',
                 'plans.basico.name': 'Basic Plan',
                 'plans.basico.sub': 'Essential Freelancer',
-                'plans.basico.f1': 'Unlimited invoices and quotes',
-                'plans.basico.f2': 'AI Scanner: 50 invoices/month',
-                'plans.basico.f3': 'AI Advisor: 5 queries/day',
-                'plans.basico.f4': 'VAT & Income Tax forecast (303 & 130)',
-                'plans.basico.f5': 'PDF Reconciliation (Manual)',
-                'plans.basico.f6': 'Google Drive Sync (Manual)',
-                'plans.basico.f7': 'Support & Help',
+                'plans.basico.f1': 'Unlimited official invoices & quotes (Anti-Fraud Law)',
+                'plans.basico.f2': 'QR Payments: Bizum, SEPA Transfer & Stripe',
+                'plans.basico.f3': 'Cash Payment & Daily Cash Closing (Z-Report)',
+                'plans.basico.f4': 'Real-time VAT & Income Tax forecast (303 & 130)',
+                'plans.basico.f5': 'AI Scanner: 50 invoices & receipts/month',
+                'plans.basico.f6': 'AI Advisor: 5 queries/day',
+                'plans.basico.f7': 'PDF bank statement reconciliation (Manual)',
+                'plans.basico.f8': 'Google Drive backup (Manual)',
+                'plans.basico.f9': 'Technical Support & Help',
                 'plans.basico.cta': 'Choose Basic Plan',
                 'plans.pro.badge': 'MOST POPULAR',
                 'plans.pro.name': 'Freelancer Pro Plan',
@@ -914,7 +920,7 @@
                 'legal.modal_title': 'Terms',
                 'legal.terms_title': 'Terms of Service',
                 'legal.privacy_title': 'Privacy Policy',
-                'welcome.title_l1': 'Welcome to Netto App®® PRO!',
+                'welcome.title_l1': 'Welcome to Netto App® PRO!',
                 'welcome.title_l2': 'You have 14 free days.',
                 'welcome.subtitle': 'We want you to discover the true power of automating your accounting. For the next 14 days, you have access to the Freelancer Pro Plan*.',
                 'welcome.includes_title': 'Your current access includes:',
